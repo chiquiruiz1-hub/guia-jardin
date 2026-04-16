@@ -316,6 +316,17 @@ document.addEventListener("DOMContentLoaded", function () {
   if (typeof plantasExtra !== "undefined") {
     plantasExtra.forEach(function (p) { P.push(p); });
   }
+  if (typeof plantasArboles !== "undefined") {
+    plantasArboles.forEach(function (p) { P.push(p); });
+  }
+  if (typeof plantasHuerto !== "undefined") {
+    plantasHuerto.forEach(function (p) { P.push(p); });
+  }
+  if (typeof plantasVarias !== "undefined") {
+    plantasVarias.forEach(function (p) { P.push(p); });
+  }
+  // Recalcular categorías con las nuevas plantas
+  P.forEach(function(p){ if(CATS.indexOf(p.c)===-1) CATS.push(p.c); });
   init();
   cargarCiudadGuardada();
   mostrarAlertas();
