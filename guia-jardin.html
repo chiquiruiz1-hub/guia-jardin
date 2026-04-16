@@ -1,0 +1,1635 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🌱 Guía de Jardín</title>
+<meta name="description" content="Guía completa de jardinería adaptada a tu ciudad. Más de 80 plantas con información de siembra, cosecha, plagas y más.">
+<meta name="theme-color" content="#0f1a0f">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Jardín">
+<link rel="manifest" id="manifest-placeholder">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{min-height:100vh;background:linear-gradient(160deg,#0a1a0a 0%,#0f2010 40%,#0a1a0f 100%);font-family:Georgia,serif;color:#e8f5e8;padding-bottom:60px}
+@keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.7}}
+button{font-family:Georgia,serif;cursor:pointer}
+.header{text-align:center;padding:40px 20px 20px;position:relative}
+.header .logo{font-size:56px;margin-bottom:8px;filter:drop-shadow(0 4px 12px rgba(74,222,128,0.3))}
+.header h1{font-size:clamp(24px,5vw,48px);font-weight:normal;color:#86efac;margin-bottom:6px;letter-spacing:3px;text-shadow:0 2px 20px rgba(74,222,128,0.2)}
+.header p{color:#6b9c6b;font-style:italic;font-size:13px;letter-spacing:0.5px}
+.cats{max-width:900px;margin:0 auto 16px;padding:0 16px;display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.cat-btn{background:rgba(74,222,128,0.06);border:1px solid rgba(74,222,128,0.18);border-radius:20px;padding:6px 16px;color:#86efac;font-size:12px;transition:all .2s;letter-spacing:0.3px}
+.cat-btn:hover{background:rgba(74,222,128,0.12);border-color:rgba(74,222,128,0.35)}
+.cat-btn.active{background:linear-gradient(135deg,rgba(74,222,128,0.25),rgba(34,197,94,0.2));border-color:rgba(74,222,128,0.55);color:#4ade80;box-shadow:0 2px 8px rgba(74,222,128,0.15)}
+.search-wrap{max-width:600px;margin:0 auto 16px;padding:0 16px}
+.search-box{display:flex;gap:8px;background:rgba(255,255,255,0.06);border:1px solid rgba(134,239,172,0.3);border-radius:50px;padding:8px 8px 8px 22px;transition:border-color .2s,box-shadow .2s}
+.search-box:focus-within{border-color:rgba(74,222,128,0.5);box-shadow:0 0 0 3px rgba(74,222,128,0.08)}
+.search-box input{flex:1;background:none;border:none;outline:none;color:#e8f5e8;font-size:14px;font-family:Georgia,serif}
+.search-box input::placeholder{color:#4a6b4a}
+.btn-buscar{background:linear-gradient(135deg,#4ade80,#22c55e);border:none;border-radius:50px;padding:8px 20px;color:#0f1a0f;font-size:13px;font-weight:bold}
+.count{text-align:center;color:#4a6b4a;font-size:12px;margin-bottom:14px;font-style:italic}
+.grid{max-width:1100px;margin:0 auto;padding:0 16px;display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px}
+.plant-card{background:rgba(255,255,255,0.04);border:1px solid rgba(134,239,172,0.12);border-radius:18px;padding:18px 16px;cursor:pointer;transition:all .25s cubic-bezier(0.4,0,0.2,1);animation:fadeIn .3s ease;position:relative;overflow:hidden}
+.plant-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(74,222,128,0.03),transparent);opacity:0;transition:opacity .25s}
+.plant-card:hover{background:rgba(74,222,128,0.08);border-color:rgba(74,222,128,0.4);transform:translateY(-4px);box-shadow:0 8px 32px rgba(74,222,128,0.12)}
+.plant-card:hover::before{opacity:1}
+.plant-card .emoji{font-size:34px;margin-bottom:7px}
+.plant-card .name{color:#86efac;font-size:14px;margin-bottom:3px}
+.plant-card .cat-label{color:#4a6b4a;font-size:10px;text-transform:uppercase;letter-spacing:1px}
+.plant-card .dif{font-size:10px;margin-top:5px;border-radius:10px;padding:2px 8px;display:inline-block}
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:100;overflow-y:auto;padding:20px}
+.overlay.open{display:flex;align-items:flex-start;justify-content:center}
+.modal{background:#111e11;border:1px solid rgba(134,239,172,0.25);border-radius:22px;padding:26px;max-width:700px;width:100%;margin:auto;animation:fadeIn .25s ease}
+.modal-header{display:flex;align-items:center;gap:14px;margin-bottom:14px;flex-wrap:wrap}
+.modal-emoji{font-size:48px}
+.modal-name{font-size:clamp(18px,4vw,28px);color:#86efac;font-weight:normal;margin-bottom:5px}
+.badge{border-radius:10px;padding:3px 10px;font-size:11px}
+.modal-desc{color:#a3c4a3;font-size:13px;line-height:1.7;font-style:italic;margin-bottom:16px}
+.epoca-box{background:rgba(74,222,128,0.1);border:1px solid rgba(74,222,128,0.3);border-radius:12px;padding:12px 16px;margin-bottom:14px;display:flex;gap:10px}
+.epoca-title{color:#4ade80;font-size:10px;font-weight:bold;text-transform:uppercase;letter-spacing:1px;margin-bottom:3px}
+.epoca-text{color:#c8e6c9;font-size:13px;line-height:1.5}
+.datos-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));gap:8px;margin-bottom:14px}
+.dato{background:rgba(255,255,255,0.04);border:1px solid rgba(134,239,172,0.12);border-radius:10px;padding:10px 8px;text-align:center}
+.dato-icon{font-size:16px;margin-bottom:3px}
+.dato-label{font-size:9px;color:#6b9c6b;text-transform:uppercase;letter-spacing:1px;margin-bottom:2px}
+.dato-val{font-size:11px;color:#c8e6c9;line-height:1.3}
+.pasos-title{color:#86efac;font-weight:normal;font-size:16px;margin-bottom:10px}
+.paso{background:rgba(255,255,255,0.03);border:1px solid rgba(134,239,172,0.1);border-radius:10px;padding:10px 12px;margin-bottom:7px;cursor:pointer}
+.paso.active{background:rgba(74,222,128,0.1);border-color:rgba(74,222,128,0.3)}
+.paso-header{display:flex;align-items:center;gap:10px}
+.paso-num{background:rgba(74,222,128,0.15);border:1px solid rgba(74,222,128,0.3);color:#4ade80;border-radius:50%;width:24px;height:24px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:bold;flex-shrink:0}
+.paso-tit{color:#c8e6c9;font-size:13px;font-weight:bold;flex:1}
+.paso-arr{color:#4ade80;font-size:10px}
+.paso-desc{display:none;margin:7px 0 0 34px;color:#a3c4a3;font-size:12px;line-height:1.6}
+.paso.active .paso-desc{display:block}
+.tips-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;margin-top:12px}
+.tips{border-radius:14px;padding:16px}
+.tips.green{background:rgba(74,222,128,0.06);border:1px solid rgba(74,222,128,0.2)}
+.tips.red{background:rgba(248,113,113,0.06);border:1px solid rgba(248,113,113,0.2)}
+.tips h4{font-weight:normal;font-size:13px;margin-bottom:8px}
+.tips.green h4{color:#4ade80}
+.tips.red h4{color:#f87171}
+.tips ul{padding-left:14px}
+.tips li{font-size:12px;line-height:1.5;margin-bottom:5px}
+.tips.green li{color:#a3c4a3}
+.tips.red li{color:#fca5a5}
+.btn-cerrar{background:none;border:1px solid rgba(134,239,172,0.3);border-radius:30px;padding:8px 24px;color:#86efac;font-size:13px;margin-top:18px;display:block;margin-left:auto}
+
+/* ===== PANEL LATERAL ===== */
+.panel-btn{position:fixed;bottom:24px;right:24px;background:linear-gradient(135deg,#4ade80,#22c55e);border:none;border-radius:50%;width:56px;height:56px;font-size:22px;cursor:pointer;z-index:200;box-shadow:0 4px 16px rgba(74,222,128,0.4)}
+.panel{position:fixed;top:0;right:-420px;width:400px;height:100vh;background:#0f1a0f;border-left:1px solid rgba(134,239,172,0.2);z-index:300;transition:right .3s ease;overflow-y:auto;padding:0}
+.panel.open{right:0}
+.panel-header{background:rgba(74,222,128,0.1);padding:20px;border-bottom:1px solid rgba(134,239,172,0.2);display:flex;align-items:center;justify-content:space-between}
+.panel-header h2{color:#86efac;font-weight:normal;font-size:18px;margin:0}
+.panel-close{background:none;border:1px solid rgba(134,239,172,0.3);border-radius:50%;width:32px;height:32px;color:#86efac;font-size:16px;cursor:pointer}
+.panel-tabs{display:flex;border-bottom:1px solid rgba(134,239,172,0.15)}
+.panel-tab{flex:1;background:none;border:none;padding:12px;color:#6b9c6b;font-size:13px;cursor:pointer;font-family:Georgia,serif;border-bottom:2px solid transparent}
+.panel-tab.active{color:#4ade80;border-bottom-color:#4ade80}
+.panel-content{padding:16px;display:none}
+.panel-content.active{display:block}
+/* Diario */
+.diario-form{background:rgba(255,255,255,0.04);border:1px solid rgba(134,239,172,0.15);border-radius:12px;padding:14px;margin-bottom:14px}
+.diario-form input,.diario-form textarea,.diario-form select{width:100%;background:rgba(255,255,255,0.06);border:1px solid rgba(134,239,172,0.2);border-radius:8px;padding:8px 10px;color:#e8f5e8;font-family:Georgia,serif;font-size:13px;margin-bottom:8px;outline:none}
+.diario-form textarea{height:70px;resize:none}
+.btn-guardar{background:linear-gradient(135deg,#4ade80,#22c55e);border:none;border-radius:8px;padding:8px 18px;color:#0f1a0f;font-size:13px;font-weight:bold;cursor:pointer;width:100%}
+.entrada{background:rgba(255,255,255,0.04);border:1px solid rgba(134,239,172,0.12);border-radius:10px;padding:12px;margin-bottom:8px}
+.entrada-header{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.entrada-emoji{font-size:20px}
+.entrada-planta{color:#86efac;font-size:13px;font-weight:bold}
+.entrada-fecha{color:#4a6b4a;font-size:11px;margin-left:auto}
+.entrada-texto{color:#a3c4a3;font-size:12px;line-height:1.5}
+.entrada-tipo{font-size:10px;border-radius:6px;padding:2px 7px;background:rgba(74,222,128,0.15);color:#4ade80;margin-left:6px}
+.btn-borrar{background:none;border:none;color:#f87171;font-size:11px;cursor:pointer;float:right}
+/* Favoritos */
+.fav-item{background:rgba(255,255,255,0.04);border:1px solid rgba(134,239,172,0.12);border-radius:10px;padding:10px 12px;margin-bottom:8px;display:flex;align-items:center;gap:10px;cursor:pointer}
+.fav-item:hover{background:rgba(74,222,128,0.09);border-color:rgba(74,222,128,0.3)}
+.fav-emoji{font-size:24px}
+.fav-nombre{color:#86efac;font-size:13px;flex:1}
+.btn-unfav{background:none;border:none;color:#f87171;font-size:14px;cursor:pointer}
+/* Comentarios */
+.com-form{background:rgba(255,255,255,0.04);border:1px solid rgba(134,239,172,0.15);border-radius:12px;padding:14px;margin-bottom:14px}
+.com-form input,.com-form textarea{width:100%;background:rgba(255,255,255,0.06);border:1px solid rgba(134,239,172,0.2);border-radius:8px;padding:8px 10px;color:#e8f5e8;font-family:Georgia,serif;font-size:13px;margin-bottom:8px;outline:none}
+.com-form textarea{height:60px;resize:none}
+.com-item{background:rgba(255,255,255,0.04);border:1px solid rgba(134,239,172,0.12);border-radius:10px;padding:12px;margin-bottom:8px}
+.com-header{display:flex;align-items:center;gap:8px;margin-bottom:5px}
+.com-autor{color:#4ade80;font-size:12px;font-weight:bold}
+.com-planta{color:#4a6b4a;font-size:11px}
+.com-fecha{color:#4a6b4a;font-size:10px;margin-left:auto}
+.com-texto{color:#a3c4a3;font-size:12px;line-height:1.5}
+/* Tiempo */
+.tiempo-box{background:rgba(74,222,128,0.08);border:1px solid rgba(134,239,172,0.2);border-radius:14px;padding:20px;text-align:center;margin-bottom:14px}
+.tiempo-temp{font-size:48px;color:#86efac;margin:8px 0}
+.tiempo-desc{color:#a3c4a3;font-size:14px}
+.tiempo-consejo{background:rgba(251,191,36,0.1);border:1px solid rgba(251,191,36,0.3);border-radius:10px;padding:12px;color:#fde68a;font-size:12px;line-height:1.5;margin-top:10px}
+.loading-txt{color:#4a6b4a;font-size:13px;text-align:center;padding:20px;font-style:italic}
+.panel-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:299}
+.panel-overlay.open{display:block}
+
+@media(max-width:640px){
+  .header h1{font-size:28px;letter-spacing:1px}
+  .header .logo{font-size:44px}
+  .grid{grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;padding:0 12px}
+  .plant-card{padding:14px 12px}
+  .plant-card .emoji{font-size:28px}
+  .cats{padding:0 12px;gap:6px}
+  .cat-btn{padding:5px 12px;font-size:11px}
+  .search-wrap{padding:0 12px}
+  #PL{width:100vw !important;max-width:100vw !important}
+  #PL.open-panel{right:0 !important}
+  .modal{padding:20px 16px;border-radius:16px}
+  .modal-emoji{font-size:40px}
+  .datos-grid{grid-template-columns:repeat(2,1fr)}
+  #alertas-cosecha{padding:0 12px}
+}
+@media(max-width:400px){
+  .grid{grid-template-columns:repeat(2,1fr)}
+  .plant-card .name{font-size:13px}
+}
+</style>
+</head>
+<body>
+<div class="header">
+  <div id="btn-instalar" onclick="instalarApp()" style="display:none;position:fixed;bottom:90px;right:24px;background:linear-gradient(135deg,#3b82f6,#1d4ed8);border:none;border-radius:50px;padding:10px 18px;color:#fff;font-size:13px;cursor:pointer;z-index:200;align-items:center;gap:8px;box-shadow:0 4px 16px rgba(59,130,246,0.4)">
+    <span>📱</span><span>Instalar app</span>
+  </div>
+  <div class="logo">🌱</div>
+  <h1>Guía de Jardín</h1>
+  <p>Más de 100 plantas · <span id="ciudad-header">Adaptada a Burgos</span> · Gratis y sin registro</p>
+</div>
+<div id="alertas-cosecha" style="max-width:900px;margin:0 auto 12px;padding:0 16px;display:none"></div>
+<div class="search-wrap">
+  <div class="search-box">
+    <input type="text" id="SI" placeholder="Buscar planta, síntoma o plaga... ej: pulgon, mildiu, tomate" oninput="filtrar()" autocomplete="off">
+    <button class="btn-buscar" onclick="filtrar()">🔍</button>
+  </div>
+</div>
+<div class="cats" id="CT"></div>
+<div class="count" id="CN"></div>
+<div class="grid" id="GR"></div>
+<div class="overlay" id="OV" onclick="cerrar(event)">
+  <div class="modal" id="MD"></div>
+</div>
+<script>
+var P=[
+{n:"Tomate",e:"🍅",c:"Hortalizas",d:"Moderado",desc:"El rey del huerto. Necesita calor, sol y agua regular. Muy productivo de julio a octubre.",ep:"Trasplanta en mayo, tras las ultimas heladas. Cosecha de julio a octubre.",dat:{p:"30 cm profundidad",s:"50-60 cm",r:"2-3 veces/semana",sol:"Sol pleno 6h+",co:"70-90 dias tras trasplante"},pa:[{t:"Preparar suelo",d:"Cava 30 cm, añade compost. Suelo rico y bien drenado."},{t:"Trasplantar en mayo",d:"Cuando no haya heladas. Entierra el tallo profundo."},{t:"Poner tutores",d:"Coloca estacas antes de que crezca. Ata el tallo."},{t:"Riego y abono",d:"Riega en la base. Abona con potasio cuando aparezcan flores."},{t:"Quitar chupones",d:"Elimina brotes entre el tallo y ramas para concentrar energia en frutos."}],co:["Rota cultivos, no plantes tomates en el mismo sitio cada año","Planta albahaca cerca, mejoran mutuamente","El riego irregular causa el rajado de los frutos"],er:["No regar por las hojas, causa hongos","No trasplantar antes de mayo en Burgos","Exceso de nitrogeno da hojas pero pocos frutos"],enf:[{e:"🦠",n:"Mildiu",s:"Manchas amarillas en hojas que se vuelven marrones. Se extiende rapido con humedad.",c:"Elimina hojas afectadas. Trata con caldo bordeles. Riega en la base, nunca por arriba."},{e:"🐛",n:"Polilla del tomate",s:"Galerias en hojas y frutos con agujeros y podredumbre interior.",c:"Trampas con feromonas. Bacillus thuringiensis. Elimina hojas muy afectadas."},{e:"🐜",n:"Pulgon",s:"Colonias en brotes tiernos. Hojas rizadas y pegajosas.",c:"Jabon potasico diluido. Planta albahaca cerca. Favorece mariquitas."},{e:"🍂",n:"Podredumbre apical",s:"Mancha negra en la punta del fruto. No es hongo, es falta de calcio por riego irregular.",c:"Riego constante y regular. Añade calcio con cascara de huevo triturada."}]},
+{n:"Pimiento",e:"🫑",c:"Hortalizas",d:"Moderado",desc:"Necesita mas calor que el tomate. Variedades dulces, morrones e italianos.",ep:"Trasplanta en junio en Burgos. Cosecha de agosto a octubre.",dat:{p:"25 cm planta",s:"40-50 cm",r:"2 veces/semana",sol:"Sol pleno",co:"90-110 dias"},pa:[{t:"Semillero en febrero",d:"En interior a 25 grados. Mas exigente en calor que el tomate."},{t:"Trasplante en junio",d:"Espera a junio en Burgos, necesita suelo calido."},{t:"Poner tutores",d:"Especialmente para variedades morronas que pesan mucho."},{t:"Riego regular",d:"Sin encharcamiento. El estres hidrico hace picar mas los pimientos."}],co:["Los pimientos rojos son los verdes maduros, espera mas","Planta en lugar muy soleado y resguardado","Las variedades italianas son mas faciles en Burgos"],er:["Frio por debajo de 10 grados lo paraliza","Riego irregular provoca pudricion apical","No plantar antes de junio en Burgos"],enf:[{e:"🦠",n:"Botrytis (moho gris)",s:"Pelusa gris en tallos y frutos. Aparece con humedad y temperaturas frescas.",c:"Elimina partes afectadas. Mejora la ventilacion. Trata con fungicida de cobre. Evita mojar las plantas."},{e:"🐜",n:"Pulgon",s:"Colonias en brotes tiernos. Hojas rizadas y pegajosas.",c:"Jabon potasico. Favorece insectos beneficiosos. Planta cerca de plantas aromaticas."},{e:"🦟",n:"Arañuela roja",s:"Puntitos amarillos en hojas. Telarañas finas en el enves. Hojas secas y caidas.",c:"Aumenta la humedad ambiental. Trata con acaricida o jabon potasico. Riega el follaje en dias calurosos."}]},
+{n:"Pepino",e:"🥒",c:"Hortalizas",d:"Facil",desc:"Crece rapido y da abundante cosecha. Trepador, necesita guia o red.",ep:"Siembra en mayo directamente. Cosecha en julio-agosto.",dat:{p:"2-3 cm",s:"50 cm",r:"Cada 2 dias",sol:"Sol pleno",co:"55-65 dias"},pa:[{t:"Siembra directa en mayo",d:"Cuando el suelo este calido, mas de 15 grados."},{t:"Aclarar",d:"Deja solo la planta mas fuerte por posicion."},{t:"Poner red",d:"Coloca red para que trepe. Produce mas y ocupa menos."},{t:"Riego abundante",d:"Nunca dejes secar el suelo, son 95% agua."}],co:["Recoge pronto para que la planta siga produciendo","Planta cerca de judias","Los pepinos amargos se deben a estres hidrico"],er:["No plantar antes de mayo","El encharcamiento pudre raices","Dejar pepinos viejos frena la produccion"],enf:[{e:"⬜",n:"Oidio (polvo blanco)",s:"Polvo blanco harinoso en hojas y tallos. Muy comun en pepinos con calor y sequia.",c:"Pulveriza con bicarbonato sodico (1 cucharada por litro de agua). Trata con azufre mojable. Mejora la ventilacion."},{e:"🦠",n:"Mildiu",s:"Manchas angulosas amarillas en el haz de las hojas. Moho grisaceo en el enves.",c:"Elimina hojas afectadas. Trata con cobre. Riega en la base. Rota los cultivos cada año."},{e:"🐛",n:"Minador de hojas",s:"Galerías sinuosas de color claro dentro de las hojas.",c:"Elimina hojas muy afectadas. Trata con neem o spinosad. Coloca trampas amarillas pegajosas."}]},
+{n:"Calabacin",e:"🫛",c:"Hortalizas",d:"Facil",desc:"La planta mas productiva del huerto. Con 2 plantas tendras mas de los que puedas comer.",ep:"Siembra en mayo. Produccion de junio a septiembre.",dat:{p:"2-3 cm",s:"80-100 cm",r:"2-3 veces/semana",sol:"Sol pleno o semisombra",co:"50-60 dias"},pa:[{t:"Siembra en mayo",d:"Directamente a 3 cm. Germina en 1 semana con calor."},{t:"Dejar solo 1 planta",d:"Aclara cuando tengan 4 hojas."},{t:"Riego abundante",d:"Mucha agua, especialmente cuando crecen los frutos."},{t:"Recoger pronto",d:"Con 15-20 cm de longitud. Si los dejas crecer, baja la produccion."}],co:["Con 2 plantas tienes suficiente para una familia","Las flores son comestibles rebozadas","Planta flores cerca para atraer abejas"],er:["Poca distancia entre plantas causa hongos","Riego insuficiente da frutos amargos","Dejar calabacines grandes agota la planta"],enf:[{e:"⬜",n:"Oidio",s:"Polvo blanco en hojas, especialmente las viejas. Muy comun al final del verano.",c:"Elimina hojas viejas afectadas. Trata con bicarbonato o azufre. Es normal al final de la temporada."},{e:"🦠",n:"Mildiu",s:"Manchas amarillas en el haz y moho en el enves. Con lluvia y frio.",c:"Elimina partes afectadas. Trata con cobre. Evita regar por encima."},{e:"🐝",n:"Falta de polinizacion",s:"Los frutitos se amarillean y caen antes de crecer. No es enfermedad, es falta de abejas.",c:"Planta flores cerca para atraer abejas. Poliniza a mano con un pincel pasando de flor macho a flor hembra."}]},
+{n:"Lechuga",e:"🥬",c:"Hortalizas",d:"Facil",desc:"Perfecta para principiantes. Crece rapido y se puede cultivar casi todo el año.",ep:"Siembra en marzo-abril y agosto-septiembre. Evita el verano caluroso.",dat:{p:"0.5 cm",s:"25-30 cm",r:"Frecuente y suave",sol:"Semisombra en verano",co:"45-60 dias"},pa:[{t:"Sembrar superficial",d:"Apenas cubre la semilla. Necesita luz para germinar."},{t:"Trasplantar",d:"Con 4-5 hojas y 8 cm de altura."},{t:"Riego suave",d:"Con suavidad, tiene raices superficiales."},{t:"Cosechar",d:"Puedes coger hojas externas desde el principio."}],co:["Siembra cada 2 semanas para produccion continua","Va bien en maceta y balcon","Planta cerca de zanahorias y rabanos"],er:["El calor la hace espigar y amargar","No regar con agua fria en verano","Exceso de nitrogeno da hojas flojas"],enf:[{e:"🐌",n:"Babosas y caracoles",s:"Agujeros irregulares en las hojas, especialmente de noche. Rastro de baba plateada.",c:"Pon trampas de cerveza. Esparce ceniza o cascara de huevo alrededor. Sal o granulos anti-babosas ecologicos."},{e:"🦠",n:"Botritis (podredumbre gris)",s:"Zonas marrones y blandas en la base de las hojas. Pelusa gris.",c:"Elimina hojas externas afectadas. Mejora el drenaje y la ventilacion. Evita mojar el corazon."},{e:"🐜",n:"Pulgon de la lechuga",s:"Colonias de pulgones verdes entre las hojas internas. Hojas deformadas.",c:"Jabon potasico. Riega con fuerza para arrastrarlos. En casos graves usa piretrina natural."}]},
+{n:"Zanahoria",e:"🥕",c:"Hortalizas",d:"Moderado",desc:"Necesita suelo profundo y suelto. En suelos pedregosos crece deforme.",ep:"Siembra en marzo-abril y julio-agosto. Cosecha 90-120 dias despues.",dat:{p:"1-2 cm",s:"5-8 cm",r:"Regular sin encharcar",sol:"Sol o semisombra",co:"90-120 dias"},pa:[{t:"Suelo profundo y suelto",d:"Cava 30 cm, elimina piedras. Añade arena si el suelo es arcilloso."},{t:"Siembra directa",d:"En lineas, mezcla semillas con arena para distribuirlas."},{t:"Aclareo",d:"Cuando tengan 5 cm, deja 5-8 cm entre plantas. Crucial."},{t:"Riego regular",d:"La irregularidad resquebraja las zanahorias."}],co:["Planta cerca de puerros y cebollas","Deja algunas florecer para semillas","Las baby estan listas en 60-70 dias"],er:["Suelo con piedras deforma las raices","Exceso de nitrogeno da hojas y poca raiz","Sembrar muy espeso sin aclarar"],enf:[{e:"🪰",n:"Mosca de la zanahoria",s:"Galerías rojizas en la raiz. Hojas con tono rojizo-bronceado. La larva destroza la zanahoria.",c:"Cubre con malla anti-insectos. Planta cerca de cebolla y puerro que las repelen. Rota cultivos."},{e:"🦠",n:"Alternaria (mancha de la hoja)",s:"Manchas marrones con halo amarillo en las hojas. Se extiende con humedad.",c:"Elimina hojas afectadas. Trata con cobre. Evita el riego por aspersion."},{e:"🐛",n:"Gusano de alambre",s:"Agujeros en la raiz. Larvas amarillas y duras en el suelo al cavar.",c:"Trabaja bien el suelo en otoño para exponer las larvas al frio y a los pajaros. Nematodos beneficiosos."}]},
+{n:"Cebolla",e:"🧅",c:"Hortalizas",d:"Facil",desc:"Cultivo basico de cualquier huerto. Facil y se conserva muy bien.",ep:"Planta bulbillos en marzo-abril. Cosecha en julio-agosto cuando el tallo se dobla.",dat:{p:"3-5 cm bulbillo",s:"10-15 cm",r:"Moderado",sol:"Sol pleno",co:"90 dias desde bulbillo"},pa:[{t:"Suelo bien trabajado",d:"Abonado en otoño anterior si es posible."},{t:"Plantar bulbillos",d:"Punta hacia arriba, asomando ligeramente del suelo."},{t:"Riego moderado",d:"Deja de regar cuando el tallo empiece a doblarse."},{t:"Curar",d:"Deja secar al sol 2-3 semanas antes de guardar."}],co:["Trenza las cebollas para conservarlas","Planta cerca de zanahorias","La cebolla morada tiene mas propiedades"],er:["Exceso de riego al final pudre el bulbo","No cosechar en tiempo humedo","Plantar muy profundo retrasa el desarrollo"]},
+{n:"Ajo",e:"🧄",c:"Hortalizas",d:"Facil",desc:"Un diente se convierte en cabeza entera. Planta en otoño y cosecha en verano.",ep:"Planta en octubre-noviembre. Cosecha en junio-julio cuando las hojas se secan.",dat:{p:"5 cm",s:"15 cm",r:"Minimo",sol:"Sol pleno",co:"8-9 meses"},pa:[{t:"Separar dientes",d:"Los mas grandes daran mejor cosecha."},{t:"Plantar en otoño",d:"Octubre-noviembre, punta hacia arriba, 5 cm de profundidad."},{t:"Poco riego",d:"El invierno humedo de Burgos suele ser suficiente."},{t:"Cosechar",d:"Cuando en junio-julio las hojas se secan y doblan."}],co:["Deja secar las cabezas a la sombra 2-3 semanas","El ajo morado es excelente para Castilla","Guarda las mejores cabezas para el año siguiente"],er:["Plantar en primavera da cabezas muy pequeñas","Exceso de agua pudre los bulbos","Cosechar con hojas verdes: espera a que se sequen"],enf:[{e:"🦠",n:"Rust (roya del ajo)",s:"Polvillo anaranjado o amarillo en las hojas. Las hojas se secan prematuramente.",c:"Elimina hojas muy afectadas. Trata con fungicida de azufre. Rota cultivos. Cosecha cuando antes si el ataque es severo."},{e:"🦟",n:"Thrips",s:"Rayas plateadas en las hojas. Insectos muy pequenos en el interior de las hojas.",c:"Trampas azules pegajosas. Jabon potasico. Riega por aspersion para ahogarlos."},{e:"🦠",n:"Penicillium (moho azul en almacen)",s:"Bulbos con moho azul-verdoso en almacen. Olor desagradable.",c:"Asegurate de que los bulbos esten bien secos antes de guardar. Almacena en lugar fresco, seco y ventilado."}]},
+{n:"Puerro",e:"🌱",c:"Hortalizas",d:"Facil",desc:"Muy resistente al frio. Puedes mantenerlo en el huerto durante el invierno burgales.",ep:"Trasplanta en mayo-junio. Cosecha de octubre a marzo.",dat:{p:"1 cm semilla",s:"15 cm",r:"Moderado",sol:"Sol o semisombra",co:"150-180 dias"},pa:[{t:"Semillero en febrero",d:"Semillas negras y pequeñas. En interior."},{t:"Trasplante en junio",d:"Haz agujeros con un palo. Mete el puerrito y riega."},{t:"Aporcado",d:"Cubre gradualmente el tallo blanco para blanquearlo."},{t:"Cosecha invernal",d:"Aguanta heladas. Cosecha segun necesites."}],co:["El frio mejora su sabor","Las variedades de invierno son mas resistentes","Excelente en sopas y guisos burgaleses"],er:["Trasplantar muy pequeño dificulta el arraigo","Sin aporcado da puerros cortos","Encharcar el suelo pudre las raices"],enf:[{e:"🪰",n:"Mosca de la cebolla",s:"Larvas blancas en la base del puerro. La planta se marchita y muere.",c:"Malla anti-insectos. Rota cultivos. Trata el suelo con nematodos beneficiosos."},{e:"🦠",n:"Rust (roya)",s:"Polvillo anaranjado en las hojas. Muy visible y caracteristico.",c:"Elimina hojas muy afectadas. Trata con fungicida de azufre. Rota cultivos. Evita el exceso de nitrogeno."}]},
+{n:"Espinaca",e:"🌿",c:"Hortalizas",d:"Facil",desc:"Prefiere el frio. Perfecta para las primaveras y otoños de Burgos.",ep:"Siembra en marzo-abril y agosto-septiembre. Evita el verano. Cosecha en 40-60 dias.",dat:{p:"2 cm",s:"15 cm",r:"Regular",sol:"Sol o semisombra",co:"40-60 dias"},pa:[{t:"Siembra directa",d:"Germina bien con fresco, 10-20 grados."},{t:"Aclarado",d:"A 15 cm cuando tengan 5 cm de altura."},{t:"Riego regular",d:"Humedad constante sin encharcar."},{t:"Cosechar",d:"Corta hojas externas. Varias cosechas por planta."}],co:["Riquisima recien cogida","Las de hoja lisa aguantan mas el frio","Mezcla con lechugas para ensaladas"],er:["El calor hace espigar rapidisimo","Suelo acido impide absorcion de nutrientes","Sembrar muy espeso sin aclarar"]},
+{n:"Acelga",e:"🌿",c:"Hortalizas",d:"Facil",desc:"Muy productiva y resistente. Con pocas plantas tendras hojas durante muchos meses.",ep:"Siembra en abril-mayo y agosto. Produccion de verano a primavera siguiente.",dat:{p:"2-3 cm",s:"30-40 cm",r:"Regular",sol:"Sol o semisombra",co:"60-80 dias"},pa:[{t:"Siembra",d:"Directamente. Cada semilla tiene varias semillitas dentro."},{t:"Aclarado",d:"Deja solo 1 planta cada 30 cm cuando tengan 10 cm."},{t:"Cosecha",d:"Corta hojas externas dejando el corazon. Seguira produciendo."},{t:"Invierno",d:"En Burgos aguanta heladas hasta -5 grados."}],co:["La acelga de pencas rojas es muy decorativa","Excelente para comer cruda en ensalada","Una planta puede producir durante 12-18 meses"],er:["Cortar todas las hojas a la vez mata la planta","Suelo encharcado pudre el cuello","Poca luz da hojas debiles"]},
+{n:"Judia verde",e:"🫘",c:"Hortalizas",d:"Facil",desc:"Muy agradecida. Fija nitrogeno y mejora el suelo. Hay variedades enanas y trepadoras.",ep:"Siembra directa en mayo. Cosecha de julio a septiembre.",dat:{p:"4-5 cm",s:"8-10 cm",r:"Moderado",sol:"Sol pleno",co:"55-70 dias"},pa:[{t:"Siembra en mayo",d:"Directamente a 5 cm. Riega bien tras la siembra."},{t:"Soporte para trepadoras",d:"Coloca cañas o red antes de que crezcan."},{t:"Riego en floracion",d:"Especialmente cuando esten en flor."},{t:"Cosecha frecuente",d:"Recoge antes de que se formen semillas dentro."}],co:["Las enanas van bien en maceta","No tocar plantas mojadas, transmites enfermedades","Deja secar vainas para semilla del año siguiente"],er:["Frio por debajo de 10 grados las mata","Dejar vainas maduras frena la produccion","Riego excesivo provoca caida de flores"]},
+{n:"Guisante",e:"🫛",c:"Hortalizas",d:"Facil",desc:"Cultivo de temporada fria, perfecto para la primavera burgalesa. Fija nitrogeno.",ep:"Siembra en febrero-marzo. Cosecha en mayo-junio.",dat:{p:"4-5 cm",s:"8-10 cm",r:"Moderado",sol:"Sol pleno",co:"70-90 dias"},pa:[{t:"Siembra temprana",d:"Febrero-marzo directamente. Aguanta heladas ligeras."},{t:"Red de soporte",d:"Los guisantes se enredan con zarcillos."},{t:"Riego",d:"Moderado. Demasiada agua en floracion hace caer flores."},{t:"Cosechar",d:"Cuando vainas esten llenas pero aun verdes."}],co:["Los tirabeques se comen con vaina","El frio mejora su sabor dulce","Deja secar algunas vainas para semilla"],er:["Calor excesivo hace caer las flores","Plantar tarde en abril reduce la cosecha","Mojar hojas favorece el oidio"]},
+{n:"Brocoli",e:"🥦",c:"Hortalizas",d:"Moderado",desc:"Nutritivo. Prefiere temperaturas frescas. El otoño burgales es ideal.",ep:"Siembra en junio-julio para cosechar en otoño-invierno.",dat:{p:"1 cm semilla",s:"50-60 cm",r:"Regular",sol:"Sol pleno",co:"80-100 dias"},pa:[{t:"Semillero en junio",d:"Siembra en junio, trasplanta en agosto."},{t:"Suelo fertil",d:"Agradece suelo bien abonado."},{t:"Riego regular",d:"Especialmente cuando forma la cabeza."},{t:"Cosechar",d:"Corta antes de que abra en flores. Luego salen brotes laterales."}],co:["Tras la cabeza principal salen brotes semanas","El frio mejora el sabor","Planta cerca de aromaticas"],er:["Calor hace subir a flor rapido","Los pulgones se instalan entre flores","Falta de agua hace la cabeza pequeña"],enf:[{e:"🦋",n:"Oruga de la col (Pieris)",s:"Agujeros grandes en las hojas. Orugas verdes o amarillas comiendo rapidamente.",c:"Malla anti-insectos desde el trasplante. Recoge orugas a mano. Bacillus thuringiensis es muy eficaz."},{e:"🐜",n:"Pulgon de la col",s:"Colonias de pulgones grisaceos entre las hojas y en la cabeza.",c:"Chorro de agua a presion. Jabon potasico. Planta cerca de tomillo y salvia."},{e:"⬜",n:"Hernia de la col (Plasmodiophora)",s:"Raices con bultos y deformaciones. La planta se marchita aunque el suelo este humedo.",c:"Sin cura. Arranca y destruye. Encala el suelo para subir el pH. No plantes cruciferas en ese sitio varios años."}]},
+{n:"Patata",e:"🥔",c:"Hortalizas",d:"Facil",desc:"El cultivo mas versatil. Burgos es zona de tradicion patatera.",ep:"Planta en abril. Cosecha julio-agosto (tempranas) o septiembre-octubre (tardias).",dat:{p:"10-15 cm",s:"30-35 cm",r:"Moderado",sol:"Sol pleno",co:"90-120 dias"},pa:[{t:"Verdeo previo",d:"2-3 semanas antes deja los tuberculos a la luz para que broten."},{t:"Plantacion en abril",d:"En surcos, 15 cm profundidad, brote hacia arriba."},{t:"Aporcado",d:"Cubre los tallos con tierra cuando tengan 20 cm. Repite 2-3 veces."},{t:"Cosechar",d:"Cuando las hojas amarilleen y se sequen."}],co:["Guarda los pequeños para semilla del año siguiente","La variedad Kennebec va muy bien en Burgos","No plantes donde hubo tomates"],er:["Plantar antes de abril arriesga heladas","No aporcado da muy poca cosecha","Cosechar con suelo mojado pudre en almacen"],enf:[{e:"🦠",n:"Mildiu",s:"Manchas marrones en hojas con halo amarillo. Tuberculos con manchas oscuras.",c:"Trata con caldo bordeles en julio. Elimina plantas muy afectadas. Rota cultivos. Usa variedades resistentes."},{e:"🐛",n:"Escarabajo de Colorado",s:"Larvas naranjas y adultos comiendo las hojas. Pueden defoliar la planta.",c:"Recoge larvas y adultos a mano. Bacillus thuringiensis. Rota cultivos cada año."},{e:"🦠",n:"Sarna",s:"Costras corchosas en el tuberculo. Estetica, no afecta al interior.",c:"Encala el suelo si es muy acido. Rota cultivos. Usa semilla certificada."}]},
+{n:"Maiz",e:"🌽",c:"Hortalizas",d:"Moderado",desc:"El maiz dulce de huerto es delicioso. Necesita espacio y calor.",ep:"Siembra en mayo directamente. Cosecha en agosto-septiembre.",dat:{p:"3-4 cm",s:"30 cm",r:"Abundante",sol:"Sol pleno",co:"80-90 dias"},pa:[{t:"Siembra en mayo",d:"Cuando el suelo este calido y sin heladas."},{t:"Plantar en bloque",d:"Al menos 4 filas. Necesita polinizacion por viento entre plantas."},{t:"Riego abundante",d:"Mucha agua en formacion de la mazorca."},{t:"Cosechar",d:"Cuando los hilos esten marrones y secos."}],co:["El maiz dulce hay que comerlo el dia de la cosecha","Planta judias y calabaza entre el maiz: Los Tres Hermanos","Se benefician mutuamente"],er:["Plantar en fila unica: no hay polinizacion suficiente","Cosechar tarde pierde el dulzor","Suelo pobre da mazorcas pequeñas"]},
+{n:"Rabano",e:"🌱",c:"Hortalizas",d:"Facil",desc:"El cultivo mas rapido del huerto. En 25-30 dias puedes cosechar.",ep:"Siembra en marzo-abril y septiembre. Evita el calor veraniego.",dat:{p:"1-2 cm",s:"5 cm",r:"Regular",sol:"Sol o semisombra",co:"25-35 dias"},pa:[{t:"Siembra directa",d:"En lineas cada 2-3 semanas para cosecha continua."},{t:"Aclarado",d:"Aclara a 5 cm para que engorden."},{t:"Riego regular",d:"La irregularidad los hace huecos y muy picantes."},{t:"Cosechar rapido",d:"No esperes demasiado, se vuelven huecos y leñosos."}],co:["Ideal para enseñar a niños por su rapidez","Perfectos entre otros cultivos mas lentos","Los daikon son mas suaves"],er:["Calor los hace espigar","Retraso en cosecha los arruina","Suelo compacto deforma las raices"]},
+{n:"Remolacha",e:"🫙",c:"Hortalizas",d:"Facil",desc:"Da raiz dulce y nutritiva. Sus hojas tambien son comestibles.",ep:"Siembra en abril-mayo. Cosecha en verano-otoño.",dat:{p:"2-3 cm",s:"10 cm",r:"Regular",sol:"Sol o semisombra",co:"60-70 dias"},pa:[{t:"Siembra",d:"Cada semilla tiene varias semillitas. Siembra y luego aclara."},{t:"Aclarado",d:"Deja 10 cm. Las que sacas son deliciosas como microgreens."},{t:"Riego regular",d:"La sequia hace raices fibrosas y poco dulces."},{t:"Cosecha",d:"Cuando la raiz sobresalga y tenga 5-8 cm de diametro."}],co:["Las hojas jovenes son deliciosas en ensalada","La variedad Chioggia a rayas es muy decorativa","Conserva bien en arena humeda en bodega"],er:["Suelo muy acido impide el desarrollo","Exceso de nitrogeno da hojas pero raiz pequeña","Cosechar muy tarde hace raices leñosas"]},
+{n:"Nabo",e:"🌱",c:"Hortalizas",d:"Facil",desc:"De los cultivos mas rapidos y nutritivos. Muy resistente al frio.",ep:"Siembra en agosto-septiembre en Burgos. Cosecha en 6-8 semanas.",dat:{p:"1 cm",s:"15 cm",r:"Regular",sol:"Sol o semisombra",co:"45-60 dias"},pa:[{t:"Siembra directa",d:"En agosto-septiembre directamente en el suelo."},{t:"Aclarado",d:"Aclara a 15 cm cuando tengan 5 cm."},{t:"Riego regular",d:"La irregularidad da nabos fibrosos."},{t:"Cosechar jovenes",d:"Los nabos jovenes de 5-8 cm son los mas tiernos."}],co:["Las hojas jovenes tambien son comestibles","El frio mejora su sabor haciendolos mas dulces","Excelente en pucheros y cocidos burgaleses"],er:["Sembrar en primavera: el calor los hace espigar","Cosechar muy tarde: se hacen fibrosos","Riego irregular da nabos rajados"]},
+{n:"Berenjena",e:"🍆",c:"Hortalizas",d:"Dificil",desc:"Necesita mucho calor. En Burgos mejor en invernadero o años muy calidos.",ep:"Trasplanta en junio en zona muy resguardada. Cosecha agosto-octubre.",dat:{p:"1 cm semilla",s:"50-60 cm",r:"Abundante",sol:"Sol pleno, calor",co:"100-120 dias"},pa:[{t:"Semillero en febrero",d:"En interior con calor (25-28 grados). Germina lento."},{t:"Trasplante tardio",d:"No trasplantes hasta junio. Busca el lugar mas calido."},{t:"Riego y abono",d:"Necesita mucha agua y abono regular."},{t:"Cosecha",d:"Recoge antes de que esten completamente maduras."}],co:["En Burgos mejor en invernadero o tunel de plastico","Las variedades italianas largas suelen dar mejor resultado","Planta junto a pimientos"],er:["Frio por debajo de 15 grados la paraliza","Raramente da buena cosecha al aire libre en Burgos","Arañuela roja: vigila el enves de las hojas"]},
+{n:"Hinojo",e:"🌿",c:"Hortalizas",d:"Moderado",desc:"El hinojo de bulbo da un sabor anisado delicioso.",ep:"Siembra en julio-agosto para bulbos en otoño.",dat:{p:"1 cm",s:"30 cm",r:"Regular",sol:"Sol pleno",co:"90-100 dias"},pa:[{t:"Siembra en verano",d:"Siembra en julio-agosto directamente."},{t:"Aporcado",d:"Cuando el bulbo empiece a formarse, cubelo con tierra."},{t:"Sin trasplante",d:"No tolera bien el trasplante."},{t:"Cosecha",d:"Cuando el bulbo tenga el tamaño de una naranja."}],co:["El frio mejora el sabor del bulbo","Las hojas plumosas son aromaticas y decorativas","Las semillas son el anis de las recetas tradicionales"],er:["Planta cerca de otras hortalizas: inhibe su crecimiento","Sembrar en primavera: el calor hace espigar rapido","Sin aporcado el bulbo es pequeño"]},
+{n:"Fresa",e:"🍓",c:"Frutas",d:"Facil",desc:"Ideales para el huerto familiar. Dan fruta el primer año y se multiplican solas.",ep:"Planta en septiembre-octubre para cosechar el verano siguiente.",dat:{p:"Cuello a nivel del suelo",s:"30 cm",r:"Regular",sol:"Sol pleno",co:"Mayo-junio del año siguiente"},pa:[{t:"Suelo bien drenado",d:"Rico en materia organica, ligeramente acido."},{t:"Plantar correctamente",d:"El cogollo debe quedar a nivel del suelo."},{t:"Riego regular",d:"Muy sensibles a la sequia en floracion."},{t:"Multiplicar",d:"En verano enraiza los estolones en macetitas."}],co:["Cambia la plantacion cada 3-4 años","Mulch de paja bajo las fresas","Las remontantes dan fruta en verano y otoño"],er:["Enterrar la corona pudre la planta","Suelo encharcado causa pudricion gris","No renovar cada 3-4 años reduce produccion"],enf:[{e:"🍓",n:"Podredumbre gris (Botrytis)",s:"Frutos con pelusa gris. Flores y frutos marrones y blandos. Muy comun con lluvia.",c:"Pon paja bajo las fresas para que no toquen la tierra. Elimina frutos afectados. Trata con fungicida biologico. Mejora la ventilacion."},{e:"🐌",n:"Babosas",s:"Frutos con agujeros. Rastro de baba plateada.",c:"Trampas de cerveza. Granulos anti-babosas ecologicos. Malla de cobre alrededor."},{e:"🦟",n:"Arañuela roja",s:"Hojas con puntitos amarillos y telarañas finas en el enves.",c:"Riega el follaje para aumentar humedad. Jabon potasico. Acaricida ecologico en casos graves."}]},
+{n:"Frambuesa",e:"🫐",c:"Frutas",d:"Facil",desc:"Perfecta para el clima de Burgos. Aguanta el frio y produce abundantemente.",ep:"Planta en invierno. Cosecha en julio (verano) o septiembre-octubre (otoñales).",dat:{p:"5-8 cm",s:"50 cm",r:"Regular",sol:"Sol o semisombra",co:"2 año"},pa:[{t:"Plantacion invernal",d:"Planta cañas en invierno cuando estan dormidas."},{t:"Soporte",d:"Alambres horizontales para sujetar los tallos."},{t:"Poda",d:"Tras la cosecha corta los tallos que ya fructificaron."},{t:"Multiplicar",d:"En primavera salen brotes del suelo para trasplantar."}],co:["Las variedades otoñales son muy productivas en Burgos","No necesitan casi abono","Planta aprovechando una pared como soporte"],er:["No podar tras cosecha reduce drasticamente la produccion","Suelo encharcado es su mayor enemigo","Zona con encharcamientos mata las raices"],enf:[{e:"🦠",n:"Didymella (cancro del frambueso)",s:"Manchas purpuras en los tallos que se vuelven grises con puntitos negros. Los tallos se secan.",c:"Poda los tallos afectados por debajo de la zona enferma. Desinfecta las tijeras. Trata con cobre en otoño."},{e:"🐛",n:"Gorgojo de la frambuesa",s:"Flores sin abrir que se secan y caen. Dentro hay una larva pequena.",c:"Recoge y destruye flores caidas. Trata con piretrina en brotacion de flores. Coloca trampas."},{e:"🦟",n:"Arañuela roja",s:"Hojas bronceadas con telarañas finas en el enves en verano caluroso.",c:"Jabon potasico. Aumenta la humedad. Acaricida en casos graves."}]},
+{n:"Arandano",e:"🫐",c:"Frutas",d:"Moderado",desc:"Ideal para Burgos, aguanta el frio. Necesita suelo acido.",ep:"Planta en invierno o primavera. Cosecha en julio-agosto desde el 2-3 año.",dat:{p:"30 cm hoyo",s:"120-150 cm",r:"Regular, agua sin cal",sol:"Sol o semisombra",co:"Julio-agosto"},pa:[{t:"Suelo acido es clave",d:"pH 4.5-5.5. Usa turba y tierra de brezo."},{t:"Plantar en grupo",d:"Al menos 2 variedades para mejor polinizacion."},{t:"Riego con agua acida",d:"Si el agua de Burgos es calcarea, usa agua de lluvia."},{t:"Paciencia",d:"A partir del 3er año la cosecha es abundante."}],co:["Mulch de corteza de pino mantiene la acidez","Perfecto en maceta con sustrato acido","Planta con azaleas y rododendros"],er:["Suelo alcalino: las hojas amarillean","Agua calcarea mata lentamente la planta","Poda excesiva los primeros años retrasa produccion"]},
+{n:"Mora",e:"🫐",c:"Frutas",d:"Facil",desc:"Muy resistente y productiva. Ideal para vallados y zonas dificiles.",ep:"Planta en invierno. Cosecha en agosto-septiembre.",dat:{p:"10 cm",s:"2-3 metros",r:"Minimo tras arraigo",sol:"Sol o semisombra",co:"Agosto-septiembre"},pa:[{t:"Plantacion",d:"En invierno en cualquier suelo."},{t:"Soporte fuerte",d:"La mora adulta puede pesar mucho."},{t:"Poda",d:"Poda los tallos que han fructificado."},{t:"Cosecha",d:"Recoge cuando esten bien negras y se desprendan facilmente."}],co:["Las variedades sin espinas facilitan mucho la recoleccion","Ideal para cubrir vallas","Congela las moras en bandeja y luego en bolsa"],er:["Sin control se convierte en una maraña incontrolable","Sin poda se hace invasora","Cosechar antes de estar madura: acida y poco dulce"]},
+{n:"Grosella roja",e:"🍒",c:"Frutas",d:"Facil",desc:"Perfectas para el clima de Burgos. Aguantan muy bien el frio y producen en abundancia.",ep:"Planta en invierno. Cosecha en junio-julio.",dat:{p:"30 cm hoyo",s:"100-150 cm",r:"Regular",sol:"Sol o semisombra",co:"2 año"},pa:[{t:"Plantacion invernal",d:"Planta en invierno cuando esta dormida."},{t:"Poda anual",d:"Elimina las ramas mas viejas."},{t:"Cosecha",d:"Cuando los racimos esten brillantes y translucidos."},{t:"Multiplicar",d:"Esquejes de ramas en invierno enraizan muy bien."}],co:["Perfectas para mermeladas y jaleas","Las grosellas negras tienen mas propiedades","Muy productivas con poco espacio"],er:["Sin poda da muchos racimos pequeños","Pulgones en brotes tiernos: vigila","Suelo encharcado las debilita"]},
+{n:"Manzano",e:"🍎",c:"Arboles frutales",d:"Facil",desc:"El arbol frutal mas adaptado al clima de Burgos. Excelentes variedades para Castilla.",ep:"Planta en invierno. Cosecha segun variedad: julio-octubre.",dat:{p:"60-80 cm hoyo",s:"4-6 metros",r:"Primeros 3 años",sol:"Sol pleno",co:"3-5 años para cosecha significativa"},po:{cu:"Diciembre a febrero, en reposo invernal",co:"Elimina ramas que se crucen o vayan hacia el centro. Corta ramas viejas improductivas. Deja la estructura abierta para que entre luz y aire. El manzano fructifica en madera de 2-3 años."},pa:[{t:"Variedad adecuada",d:"Golden, Fuji, Reineta, Granny Smith. Pide en vivero variedades para zona fria."},{t:"Plantacion invernal",d:"Haz hoyo grande, añade compost. Coloca tutor."},{t:"Poda de formacion",d:"Los primeros 3 años forma la estructura."},{t:"Poda anual",d:"Cada invierno poda para airear y renovar."}],co:["Necesitas 2 variedades para polinizacion cruzada","El aclareo en junio da manzanas mas grandes","La Reineta Gris es excelente para Burgos"],er:["Sin podar da fruta pequeña y arbol desordenado","Sin polinizador cosecha muy escasa","En zonas con encharcamientos muere"],enf:[{e:"🍎",n:"Moteado del manzano (Venturia)",s:"Manchas verde-oscuro o marrones en hojas y frutos. Los frutos se agrietan. La enfermedad mas comun del manzano.",c:"Recoge y destruye hojas caidas en otoño. Trata con cobre en brotacion y tras la floracion. Elige variedades resistentes."},{e:"🐛",n:"Carpocapsa (gusano de la manzana)",s:"Agujero de entrada en el fruto con serrín. Larva rosada en el interior comiendo las pepitas.",c:"Trampas con feromonas para capturar machos. Trata con Bacillus thuringiensis en eclosion de huevos. Recoge frutos caidos."},{e:"🦠",n:"Fuego bacteriano",s:"Brotes y flores que se secan y quedan colgando como quemados. Muy grave y contagioso.",c:"Poda partes afectadas con tijeras desinfectadas (lejia). Trata con cobre. Notifica si el caso es grave (enfermedad de cuarentena)."}]},
+{n:"Peral",e:"🍐",c:"Arboles frutales",d:"Moderado",desc:"Florece pronto en primavera. Las heladas tardias de Burgos son el mayor riesgo.",ep:"Planta en invierno. Cosecha segun variedad: agosto-octubre.",dat:{p:"60-80 cm hoyo",s:"4-6 metros",r:"Primeros años",sol:"Sol pleno",co:"4-6 años"},po:{cu:"Enero a febrero, en reposo total",co:"Poda menos intensa que el manzano. Elimina ramas cruzadas y chupones. Respeta las ramillas cortas con yemas de flor (espolones). Forma piramidal o en vaso."},pa:[{t:"Variedad de floracion tardia",d:"Elige variedades tardias: Conferencia, Blanquilla, Williams."},{t:"Plantacion invernal",d:"Arraiga bien en suelos profundos castellanos."},{t:"Proteccion en floracion",d:"Si hay riesgo de heladas en floracion, cubre con agrotela."},{t:"Aclareo",d:"En junio aclara los frutos, deja 1 cada 10-15 cm."}],co:["La Conferencia es la mas resistente a heladas tardias","El peral en espaldera aprovecha el calor de las paredes","Recoge antes de que esten completamente blandas"],er:["Las heladas en floracion pueden arruinar la cosecha entera","Sin aclareo los frutos son pequeños","Suelo encharcado le afecta mas que al manzano"],enf:[{e:"🍐",n:"Psila del peral",s:"Hojas pegajosas cubiertas de melaza negra. Insecto pequeno que chupa la savia.",c:"Trata con aceite de neem en invierno. Pulverizaciones con jabon potasico en primavera. Favorece insectos beneficiosos."},{e:"🦠",n:"Moteado del peral",s:"Manchas oscuras en hojas y frutos. Frutos deformes y con costra.",c:"Igual que en el manzano: cobre en brotacion. Recoge hojas caidas en otoño."},{e:"🐛",n:"Carpocapsa",s:"Gusano en el interior del fruto comiendo las pepitas.",c:"Trampas de feromonas. Bacillus thuringiensis en el momento de eclosion de huevos."}]},
+{n:"Cerezo",e:"🍒",c:"Arboles frutales",d:"Facil",desc:"Crece muy bien en Burgos. La zona de La Ribera es famosa por sus cerezas.",ep:"Planta en invierno. Cosecha en junio. Floracion espectacular en primavera.",dat:{p:"60-80 cm hoyo",s:"5-8 metros",r:"Minimo tras arraigo",sol:"Sol pleno",co:"4-6 años"},po:{cu:"Verano (julio-agosto), NUNCA en invierno",co:"El cerezo es muy sensible a las enfermedades por las heridas de poda en invierno. Poda en verano tras la cosecha. Solo elimina ramas muertas, cruzadas o que bajen al suelo. Poda mínima."},pa:[{t:"Variedad autofertil",d:"Navalinda o Lapins son buenas opciones."},{t:"Suelo bien drenado",d:"Los suelos calizos burgaleses le van bien."},{t:"Poca poda",d:"Solo elimina ramas muertas o que se crucen."},{t:"Cosechar rapido",d:"Tras la lluvia, recoge antes de que se agrieten."}],co:["La lluvia agrieta las cerezas: recoge rapido","Malla anti-pajaros necesaria","La zona de Hontoria produce cerezas excelentes"],er:["Suelos encharcados favorecen enfermedades","Sin malla anti-pajaros perderás la cosecha","Poda excesiva en verano debilita el arbol"],enf:[{e:"🍒",n:"Monilia (podredumbre parda)",s:"Flores y frutos que se pudren y quedan momificados. Muy comun con lluvia.",c:"Elimina frutos momificados. Trata en floracion. Evita zonas con humedad elevada."},{e:"🪰",n:"Mosca de la cereza",s:"Gusanito blanco dentro de la cereza.",c:"Trampas cromaticas amarillas. Kaolin como barrera. Recoge cerezas caidas inmediatamente."},{e:"🦠",n:"Cribado",s:"Manchas marrones en hojas con agujero redondo en el centro.",c:"Poda ramas afectadas en verano. Trata con cobre tras la cosecha."}]},
+{n:"Ciruelo",e:"🍑",c:"Arboles frutales",d:"Facil",desc:"Se adapta muy bien a Burgos. Muy productivo una vez establecido.",ep:"Planta en invierno. Cosecha en julio-septiembre segun variedad.",dat:{p:"60-80 cm hoyo",s:"4-5 metros",r:"Minimo tras arraigo",sol:"Sol pleno",co:"3-5 años"},po:{cu:"Verano (julio-agosto) tras la cosecha",co:"Como el cerezo, evita podar en invierno. Elimina ramas cruzadas y chupones de la base. Aclara el centro para que entre luz. Poda de rejuvenecimiento cada 5-6 años."},pa:[{t:"Eleccion de variedad",d:"Claudia Verde, Santa Rosa son buenas para Burgos."},{t:"Plantacion",d:"En invierno en suelo bien drenado."},{t:"Aclarado",d:"En junio aclara para tener ciruelas mas grandes."},{t:"Cosecha",d:"Cuando esten blandas al tacto y de color intenso."}],co:["Tolera suelos calizos mejor que otros frutales","Excelente para mermeladas","Las claudias verdes son las mas finas"],er:["Sin riego los primeros 3 años el arbol sufre","Monilia: frutos se pudren en el arbol","Sin aclarar da cosechas de ciruelas pequeñas"]},
+{n:"Nogal",e:"🌰",c:"Arboles frutales",d:"Facil",desc:"Arbol majestuoso muy adaptado a Burgos. Produce nueces en abundancia.",ep:"Planta en invierno. Cosecha en septiembre-octubre cuando las nueces caen solas.",dat:{p:"80 cm hoyo",s:"10-12 metros",r:"Minimo tras arraigo",sol:"Sol pleno",co:"8-10 años produccion plena"},po:{cu:"Verano (junio-julio), nunca en invierno ni primavera",co:"El nogal sangra mucho si se poda en invierno o primavera. Solo poda en verano. Intervención mínima: elimina ramas muertas o que se crucen. No necesita poda regular."},pa:[{t:"Mucho espacio",d:"Arbol grande, 15-20 metros. Nada bajo el."},{t:"Plantacion",d:"En invierno en suelo profundo."},{t:"Paciencia",d:"A partir del año 8-10 produce en abundancia."},{t:"Cosecha",d:"Recoge del suelo cuando caigan. Secalas a la sombra."}],co:["Excelente arbol de sombra para el jardin","La madera es muy valiosa","Muy longevos, centenarios en Burgos"],er:["Planta cerca del huerto: la nogalina inhibe tomates","Zona humeda: el exceso de humedad pudre raices","Impaciente: no produce hasta los 8-10 años"]},
+{n:"Membrillo",e:"🍋",c:"Arboles frutales",d:"Facil",desc:"El membrillo crece muy bien en Burgos. Resistente al frio y da abundante cosecha.",ep:"Planta en invierno. Cosecha en octubre. Floracion en primavera.",dat:{p:"60 cm hoyo",s:"4-5 metros",r:"Minimo tras arraigo",sol:"Sol pleno",co:"4-6 años"},po:{cu:"Febrero-marzo, antes de que brote",co:"Poda moderada. Elimina ramas que se crucen y chupones vigorosos del interior. Mantén una copa abierta en vaso. Renueva ramas viejas de más de 5 años cortándolas en la base."},pa:[{t:"Plantacion invernal",d:"Muy facil de plantar y adaptar."},{t:"Poca poda",d:"Solo elimina ramas enfermas."},{t:"Cosecha tardia",d:"Espera hasta octubre. Mejoran tras las primeras heladas."},{t:"Conserva",d:"No se come fresco. Usalo para dulce de membrillo."}],co:["Excelente para dulce de membrillo casero","Muy resistente y practicamente sin plagas","La floracion rosada en primavera es preciosa"],er:["Comerlo fresco: es muy astringente","En zonas encharcadas sufre de cuello","Sin cosechar en octubre los frutos caen y se pudren"]},
+{n:"Rosa",e:"🌹",c:"Flores",d:"Moderado",desc:"La reina del jardin. Las rosas arbustivas y antiguas van especialmente bien en Burgos.",ep:"Planta en invierno o primavera. Floracion de mayo a octubre.",dat:{p:"40-50 cm hoyo",s:"60-100 cm",r:"Regular en la base",sol:"Sol pleno minimo 6h",co:"Floracion mayo-octubre"},pa:[{t:"Variedad para clima frio",d:"Rosas arbustivas, English Roses de David Austin. Mas resistentes."},{t:"Plantar con injerto enterrado",d:"El bulto del injerto debe quedar bajo tierra en climas frios."},{t:"Poda en marzo-abril",d:"Deja 3-5 yemas. Corta en angulo sobre yema hacia fuera."},{t:"Riego en la base",d:"Nunca mojes las hojas. Abona en primavera y verano."}],co:["Las arbustivas necesitan menos cuidado","El ajo plantado cerca repele pulgones","En Burgos florecen especialmente bien en junio"],er:["Regar las hojas causa la mancha negra","No podar: pocas flores","Pulgones al inicio de primavera: jabon potasico"],enf:[{e:"⚫",n:"Mancha negra",s:"Manchas negras circulares en las hojas. Las hojas amarillean y caen. Muy comun en rosas.",c:"Elimina y destruye hojas caidas. Trata con fungicida de cobre o azufre. Riega SIEMPRE en la base. Elige variedades resistentes."},{e:"⬜",n:"Oidio",s:"Polvo blanco en brotes tiernos, hojas y capullos. Brotes deformes.",c:"Trata con azufre mojable. Poda los brotes muy afectados. Mejora la ventilacion entre plantas."},{e:"🐜",n:"Pulgon de la rosa",s:"Colonias de pulgones verdes o negros en los capullos y brotes tiernos.",c:"Jabon potasico. El ajo plantado cerca los repele. Favorece mariquitas. Elimina a mano los primeros focos."}]},
+{n:"Lavanda",e:"💜",c:"Flores",d:"Facil",desc:"Perfecta para Burgos. Resistente al frio, aromatica y decorativa. Atrae abejas.",ep:"Planta en primavera. Floracion en junio-julio.",dat:{p:"30 cm hoyo",s:"40-60 cm",r:"Minimo",sol:"Sol pleno",co:"Floracion junio-julio"},pa:[{t:"Suelo drenado",d:"Odia el suelo humedo. Los suelos pedregosos de Burgos son perfectos."},{t:"Sin abono",d:"Prefiere suelo pobre. El abono da hojas y pocas flores."},{t:"Poda tras floracion",d:"Poda un tercio tras florecer para mantener compacta."},{t:"Sin riego",d:"Una vez establecida practicamente no necesita riego."}],co:["Planta en talud para mejor drenaje","Junto a rosas repele pulgones","Las flores secas repelen polillas en armarios"],er:["Suelo humedo o encharcado: muere en semanas","Exceso de abono: mucha hoja, poca flor","Sin poda se hace leñosa y florece poco"],enf:[{e:"🦠",n:"Podredumbre de cuello",s:"La planta se seca de repente desde la base. Cuello podrido.",c:"Sin cura. Arranca y destruye. Mejora el drenaje. Evita riego excesivo."},{e:"🐛",n:"Cicadelidos",s:"Puntitos blancos en hojas. Insectos saltadores.",c:"Jabon potasico o piretrina. Generalmente no es grave."}]},
+{n:"Girasol",e:"🌻",c:"Flores",d:"Facil",desc:"Alegre, facil y vistoso. Da semillas comestibles. Perfecto para niños.",ep:"Siembra directa en mayo. Floracion en agosto-septiembre.",dat:{p:"2-3 cm",s:"30-60 cm segun variedad",r:"Moderado",sol:"Sol pleno",co:"Semillas en septiembre"},pa:[{t:"Siembra directa en mayo",d:"Pon 2-3 semillas y deja la mas fuerte."},{t:"Soporte",d:"Las variedades altas necesitan estaca."},{t:"Riego en la base",d:"Resistentes a la sequia una vez grandes."},{t:"Semillas",d:"Cuando la parte trasera este marron, corta y cuelga a secar."}],co:["Perfecto para el fondo del jardin","Las variedades multiflora dan muchas flores","Deja cabezas para los pajaros en invierno"],er:["Sembrar antes de mayo: el frio retrasa germinacion","Sin soporte las altas se doblan con el viento","Demasiada sombra: crecen torcidos buscando el sol"]},
+{n:"Tulipan",e:"🌷",c:"Flores",d:"Facil",desc:"La flor de la primavera. Los bulbos se plantan en otoño y florecen con el buen tiempo.",ep:"Planta bulbos en octubre-noviembre. Floracion en marzo-mayo.",dat:{p:"15-20 cm",s:"10-15 cm",r:"Lluvia invernal",sol:"Sol pleno o semisombra",co:"Floracion primaveral"},pa:[{t:"Planta en otoño",d:"Octubre-noviembre. El frio invernal es necesario para que florezcan."},{t:"Profundidad correcta",d:"3 veces el diametro del bulbo."},{t:"No cortar hojas",d:"Hasta que esten completamente amarillas."},{t:"Guardar bulbos",d:"En verano desentierra y guarda en lugar fresco y seco."}],co:["Combina variedades de floracion temprana, media y tardia","En maceta forzados para tener flores en invierno","Los tulipanes de jardin se naturalizan"],er:["Cortar hojas verdes: el bulbo no recarga","Suelo encharcado pudre los bulbos","Plantar en primavera: necesitan frio"]},
+{n:"Geranio",e:"🌺",c:"Flores",d:"Facil",desc:"La planta de balcon por excelencia. Florece todo el verano.",ep:"Exterior en mayo. Recoge en octubre. Puede pasar el invierno en interior.",dat:{p:"En maceta",s:"30 cm en maceta",r:"Deja secar entre riegos",sol:"Sol pleno",co:"Floracion mayo-octubre"},pa:[{t:"Maceta con drenaje",d:"Con agujeros. La raiz podrida es su principal problema."},{t:"Riego moderado",d:"Riega cuando el sustrato este seco en superficie."},{t:"Abono floral",d:"Cada 2 semanas con fertilizante rico en potasio."},{t:"Invernada",d:"En octubre lleva al interior. Recorta a la mitad."}],co:["Elimina flores marchitas para estimular nuevas","El geranio hiedra cae precioso en balcones","Los esquejes enraizan facil en agosto"],er:["Exceso de riego: raiz podrida","Dejar flores marchitas: menos flores nuevas","En Burgos si lo dejas fuera en invierno muere"]},
+{n:"Hortensia",e:"💐",c:"Flores",d:"Moderado",desc:"Grandes flores espectaculares. Prefiere semisombra y suelo humedo.",ep:"Planta en primavera. Floracion de julio a octubre.",dat:{p:"40 cm hoyo",s:"100-150 cm",r:"Abundante en verano",sol:"Semisombra",co:"Floracion julio-octubre"},pa:[{t:"Semisombra",d:"Sol de mañana y sombra de tarde. En pleno sol se quema."},{t:"Suelo humedo y acido",d:"Riega abundantemente. Suelo ligeramente acido."},{t:"Color de flores",d:"Acido=azul, alcalino=rosa. Sulfato de aluminio para azul."},{t:"Poda suave",d:"Solo elimina flores secas y ramas dañadas."}],co:["Las flores secas son muy decorativas en otoño","Perfecta junto a helechos y hostas","Protege en invierno con un poco de paja"],er:["Sol directo de tarde: hojas y flores quemadas","Sin riego suficiente: flores pequeñas","Poda excesiva elimina yemas del año siguiente"],enf:[{e:"🐜",n:"Pulgon de la hortensia",s:"Colonias en brotes tiernos y bajo las hojas. Hojas deformes y pegajosas.",c:"Jabon potasico. Elimina a mano los primeros focos. Riega con fuerza para arrastrarlos."},{e:"⬜",n:"Oidio",s:"Polvo blanco en hojas al final del verano. Mas comun en zonas con poca ventilacion.",c:"Trata con bicarbonato o azufre. Poda para mejorar la ventilacion. Elige ubicacion mas aireada."},{e:"🟡",n:"Clorosis ferrica",s:"Hojas nuevas amarillas con nervios verdes. La planta tiene falta de hierro por suelo alcalino.",c:"Aplica quelato de hierro al suelo o foliar. Acidifica el suelo con turba o azufre. El agua calcarea agrava el problema."}]},
+{n:"Dalia",e:"🌸",c:"Flores",d:"Moderado",desc:"Florecen en verano y otoño. Gran variedad de colores y formas.",ep:"Planta tuberculos en mayo. Floracion de julio a octubre. Desentierra en noviembre.",dat:{p:"10-15 cm tuberculo",s:"60-90 cm",r:"Regular",sol:"Sol pleno",co:"Floracion julio-octubre"},pa:[{t:"Plantacion en mayo",d:"Sin heladas. La punta de crecimiento hacia arriba."},{t:"Soporte desde el inicio",d:"Las variedades altas necesitan tutor desde que se planta."},{t:"Desyemado",d:"Pellizca el brote central a 30 cm para que ramifique."},{t:"Conservar en invierno",d:"Desentierra en noviembre. Guarda en lugar fresco y seco."}],co:["Las de pompon y bola son las mas faciles","Cortar flores para jarrones estimula mas produccion","Divide los tuberculos para multiplicar tus plantas"],er:["Dejar tuberculos en tierra en Burgos en invierno: las heladas los matan","Sin soporte las altas se doblan","Riego excesivo pudre el tuberculo"]},
+{n:"Amapola",e:"🌺",c:"Flores",d:"Facil",desc:"La flor silvestre mas espectacular. Facil de sembrar, efimera pero muy vistosa.",ep:"Siembra en otoño (mejor) o primavera. Floracion en mayo-junio.",dat:{p:"Apenas cubre la semilla",s:"20 cm",r:"Ninguno",sol:"Sol pleno",co:"Floracion mayo-junio"},pa:[{t:"Siembra otoñal",d:"Siembra en octubre mezclando las semillas con arena."},{t:"Sin trasplante",d:"Las amapolas no toleran el trasplante."},{t:"Nada mas",d:"No necesitan nada mas. La lluvia invernal es suficiente."},{t:"Recoger semillas",d:"Cuando las cabezas esten marrones, recoge semillas."}],co:["Combina con centaureas azules para efecto de pradera","Las amapolas orientales perennes vuelven cada año","Deja las cabezas para que se resiembren solas"],er:["Trasplantar: mueren siempre","Sembrar muy tarde en primavera: no florecen","Regar en exceso si el suelo drena mal"]},
+{n:"Margarita",e:"🌼",c:"Flores",d:"Facil",desc:"La flor del campo mas querida. Muy resistente, se naturaliza y vuelve cada año.",ep:"Siembra en otoño o primavera. Floracion en mayo-junio.",dat:{p:"0.5 cm",s:"20-30 cm",r:"Minimo",sol:"Sol o semisombra",co:"Floracion mayo-junio"},pa:[{t:"Siembra directa",d:"En otoño o primavera directamente."},{t:"Poca atencion",d:"Una vez germinada, la margarita se cuida sola."},{t:"Resiembra sola",d:"Deja que forme semillas. Tendras margaritas cada año."},{t:"Division",d:"Cada 2-3 años divide las matas para rejuvenecerlas."}],co:["Se naturaliza y vuelve cada año sola","Ideal para bordes y zonas naturales","Combina con lavanda y amapolas"],er:["Riego excesivo en suelos arcillosos pudre las raices","Sombra excesiva: pocas flores","Arrancarla tras florecer: no se resiembra"]},
+{n:"Clavel",e:"🌸",c:"Flores",d:"Facil",desc:"El clavel es una flor tradicional muy aromatica. Muy resistente y duradera.",ep:"Planta en primavera. Floracion de mayo a octubre.",dat:{p:"En suelo o maceta",s:"20-30 cm",r:"Moderado",sol:"Sol pleno",co:"Floracion mayo-octubre"},pa:[{t:"Suelo bien drenado",d:"El clavel odia el suelo encharcado."},{t:"Plantacion",d:"En primavera en suelo bien trabajado."},{t:"Desyemado",d:"Elimina brotes laterales para flores mas grandes."},{t:"Riego moderado",d:"Riega sin mojar las flores."}],co:["Los claveles de balcon aguantan mejor la lluvia","Perfecto para jarrones","Se multiplica facilmente por esquejes en verano"],er:["Suelo encharcado: raiz podrida","Mojar las flores acorta su vida","Sin eliminar flores marchitas: menos flores nuevas"]},
+{n:"Zinnia",e:"🌸",c:"Flores",d:"Facil",desc:"Una de las flores mas coloridas y faciles del verano. Atrae mariposas.",ep:"Siembra en mayo directamente. Floracion de julio a octubre.",dat:{p:"1 cm",s:"30 cm",r:"Regular",sol:"Sol pleno",co:"Floracion julio-octubre"},pa:[{t:"Siembra directa en mayo",d:"Cuando el suelo este calido."},{t:"Sin trasplante",d:"No tolera bien el trasplante."},{t:"Riego en la base",d:"El agua en las flores causa hongos."},{t:"Cosecha de flores",d:"Cortar las flores estimula mas produccion."}],co:["Atrae mariposas por decenas en verano","Perfecta para crear pantallas de color","Corta flores para jarrones constantemente"],er:["Mojar las flores: hongos en los petalos","Sembrar antes de mayo: el frio las frena","Poca luz: crecen debiles y con pocas flores"]},
+{n:"Pensamiento",e:"🌸",c:"Flores",d:"Facil",desc:"La flor del invierno y primavera. Aguanta heladas y alegra los meses mas frios.",ep:"Planta en otoño (septiembre-octubre). Floracion de otoño a primavera.",dat:{p:"En maceta o suelo",s:"15-20 cm",r:"Moderado",sol:"Sol o semisombra",co:"Floracion otoño-primavera"},pa:[{t:"Compra en otoño",d:"Se venden en viveros en septiembre-octubre."},{t:"Resistente al frio",d:"Aguanta hasta -10 grados. Sin proteccion en Burgos."},{t:"Riego moderado",d:"En invierno con lluvia es suficiente."},{t:"Renovar en verano",d:"Con el calor se agota. Sustituye por plantas de verano."}],co:["Perfecto para jardineras de invierno","Los Mammoth aguantan mas el frio","Ideal para balcones en el gris del invierno burgales"],er:["Dejar en verano: el calor los agota","Riego excesivo en invierno: raiz podrida","Sin eliminar flores marchitas: menos flores nuevas"]},
+{n:"Albahaca",e:"🌿",c:"Aromaticas",d:"Moderado",desc:"La reina de las aromaticas de verano. Perfecta con tomates. Necesita calor.",ep:"Siembra en mayo en exterior. Cosecha toda la temporada de verano.",dat:{p:"0.5 cm",s:"20-25 cm",r:"Regular",sol:"Sol pleno, calor",co:"Junio-septiembre"},pa:[{t:"Semillero en interior",d:"Marzo-abril en interior a 20-22 grados. O compra plantas en mayo."},{t:"Trasplante en mayo",d:"No trasplantes hasta mayo. El frio la mata."},{t:"Pellizcar continuamente",d:"Para que ramifique y de mas hojas."},{t:"Evitar que florezca",d:"Elimina tallos florales. Una vez florece, las hojas amargan."}],co:["Planta cerca de tomates: repele plagas","Perfecta en maceta en cocina o balcon soleado","Congela en cubitos de aceite para invierno"],er:["Frio por debajo de 12 grados: ennegrece y muere","Dejar florecer: las hojas amargan","Agua fria en las hojas la daña"]},
+{n:"Perejil",e:"🌿",c:"Aromaticas",d:"Moderado",desc:"Imprescindible en la cocina. Bienal: el segundo año florece y muere.",ep:"Siembra en marzo-abril y agosto. Germina lento (3-4 semanas).",dat:{p:"1 cm",s:"20 cm",r:"Regular",sol:"Sol o semisombra",co:"Todo el año con proteccion"},pa:[{t:"Paciencia en la germinacion",d:"Tarda 3-4 semanas. Mantén humedo. No desesperes."},{t:"En maceta",d:"Perfecto en maceta en la cocina."},{t:"Cosecha continua",d:"Corta hojas externas, dejando el centro."},{t:"Proteccion invernal",d:"Aguanta en interior o bajo plastico."}],co:["Remoja semillas 24h antes para acelerar germinacion","El liso es mas aromatico, el rizado mas decorativo","Siembra escalonado para tener siempre fresco"],er:["Suelo encharcado: raiz podrida","Cortar el cogollo central: la planta para","El 2 año florece y muere: planta nuevo cada año"],enf:[{e:"🪰",n:"Mosca de la zanahoria",s:"Hojas que amarillean y mueren. Larvas en la raiz.",c:"Malla anti-insectos. Planta cerca de cebolla. Rota cultivos cada año."},{e:"🦋",n:"Oruga de la mariposa limon",s:"Orugas listadas verde y negras con puntos naranjas comiendo las hojas.",c:"Recoge las orugas a mano, son pocas y la planta aguanta. Son las orugas de una mariposa bonita, decide si vale la pena tratar."}]},
+{n:"Menta",e:"🌿",c:"Aromaticas",d:"Facil",desc:"Muy invasora. Siempre en maceta. Muy resistente y aromatica.",ep:"Planta en primavera o otoño. Crece casi todo el año excepto lo mas frio.",dat:{p:"En maceta siempre",s:"Maceta propia",r:"Regular, le gusta la humedad",sol:"Sol o semisombra",co:"Primavera-otoño"},pa:[{t:"SIEMPRE EN MACETA",d:"Es invasora. En suelo colonizara todo el jardin."},{t:"Plantacion facil",d:"Compra una planta o esqueje con raiz."},{t:"Riego regular",d:"A diferencia de otras aromaticas, le gusta la humedad."},{t:"Renovar cada 2-3 años",d:"Se agota. Divide o planta nueva."}],co:["Perfecta en maceta junto a la puerta de la cocina","Hay menta de manzana, chocolate, piña...","Repele los ratones y la mayoria de insectos"],er:["Plantar en suelo del jardin: te arrepentiras","Dejar secar en exceso: pierde aromas","Sin renovar cada 2-3 años da hojas pequeñas"],enf:[{e:"🦠",n:"Roya de la menta",s:"Polvillo anaranjado en las hojas. Las hojas se deforman y caen.",c:"Elimina y destruye toda la parte aerea afectada. La planta rebrota del rizoma. Rota la maceta a lugar con mas ventilacion."},{e:"⬜",n:"Oidio",s:"Polvo blanco en hojas. Comun en menta con poca ventilacion.",c:"Trata con bicarbonato. Mejora la ventilacion. Cosecha y usa las hojas, luego corta todo y deja rebrotar."}]},
+{n:"Romero",e:"🌿",c:"Aromaticas",d:"Facil",desc:"Arbusto aromatico resistente al frio y sequia. Jardines de bajo mantenimiento.",ep:"Planta en primavera o otoño. Dura muchos años sin apenas cuidados.",dat:{p:"30 cm hoyo",s:"60-80 cm",r:"Minimo",sol:"Sol pleno",co:"Todo el año"},pa:[{t:"Suelo drenado",d:"Odia el suelo humedo. Los suelos pedregosos de Burgos son perfectos."},{t:"Sin abono",d:"Prefiere suelo pobre."},{t:"Sin riego",d:"Una vez establecido practicamente no necesita riego."},{t:"Poda tras florecer",d:"Poda ligeramente para mantener forma compacta."}],co:["Espectacular junto a lavanda","Excelente para bordes de caminos","Las flores son comestibles y decorativas en ensaladas"],er:["Suelo encharcado: muere en semanas","Poda excesiva en madera vieja: no rebrota","Exceso de abono: pierde aroma"],enf:[{e:"🦠",n:"Oidio",s:"Polvo blanco en hojas y tallos jovenes. Con humedad y poca ventilacion.",c:"Trata con azufre mojable. Mejora la ventilacion. El romero en suelo bien drenado rara vez lo sufre."},{e:"🐛",n:"Spittlebug (salivazo)",s:"Espuma blanca entre las ramas como saliva. Dentro hay una ninfa verde.",c:"Elimina la espuma con agua a presion. No es grave. Recoge las ninfas a mano."}]},
+{n:"Tomillo",e:"🌿",c:"Aromaticas",d:"Facil",desc:"Aromatico, medicinal, culinario y decorativo. Muy resistente.",ep:"Planta en primavera. Florece en mayo-junio. Muy longevo.",dat:{p:"Poco, raices superficiales",s:"30-40 cm",r:"Minimo",sol:"Sol pleno",co:"Todo el año"},pa:[{t:"Suelo pobre y drenado",d:"Prefiere suelo pobre, pedregoso y seco. Sin abono."},{t:"Sol maximo",d:"En sombra crece debil y sin aroma."},{t:"Sin riego",d:"Resiste la sequia perfectamente."},{t:"Poda tras floracion",d:"Poda un poco para mantener la planta compacta."}],co:["Perfecto para cubrir suelos secos y pedregosos","Las flores atraen muchisimas abejas","Hay tomillo limon, rastrero, de jardin..."],er:["Suelo rico y humedo: sin aroma y pudre","Riego frecuente: su principal amenaza","Sombra: plantas debiles sin aroma"],enf:[{e:"🦠",n:"Podredumbre de raiz",s:"La planta se seca de repente. Las raices estan marrones y podridas.",c:"Sin cura. Arranca y destruye. El tomillo en suelo muy humedo siempre muere. Planta nuevo en lugar con mejor drenaje."}]},
+{n:"Oregano",e:"🌿",c:"Aromaticas",d:"Facil",desc:"Imprescindible en la cocina mediterranea. Vuelve cada año y casi no necesita cuidados.",ep:"Planta en primavera. Florece en verano. Perenne, vuelve cada año.",dat:{p:"En suelo o maceta",s:"30-40 cm",r:"Minimo",sol:"Sol pleno",co:"Antes de florecer para maximo aroma"},pa:[{t:"Planta o semilla",d:"Germina facil con calor."},{t:"Poca atencion",d:"Solo riega esporadicamente el primer verano."},{t:"Cosechar antes de florecer",d:"Mayor aroma justo antes de florecer."},{t:"Invierno",d:"Pierde hojas en invierno pero rebrota en primavera."}],co:["El oregano seco es mas aromatico que el fresco","Deja florecer algunos tallos, atrae polinizadores","Planta con tomillo y romero"],er:["Suelo encharcado: muere","Sin sol suficiente: poco aroma","Cosechar cuando ya ha florecido: menos aroma"]},
+{n:"Salvia",e:"🌿",c:"Aromaticas",d:"Facil",desc:"Aromatica, medicinal y decorativa. Flores azul-violeta preciosas. Muy resistente.",ep:"Planta en primavera. Florece en mayo-junio. Perenne.",dat:{p:"30 cm hoyo",s:"50-60 cm",r:"Minimo",sol:"Sol pleno",co:"Primavera-verano"},pa:[{t:"Plantacion primaveral",d:"En lugar muy soleado con suelo bien drenado."},{t:"Poda tras floracion",d:"Poda un tercio para estimular crecimiento nuevo."},{t:"Sin riego",d:"Resiste perfectamente la sequia."},{t:"Renovar cada 3-4 años",d:"La planta se hace muy leñosa. Planta nueva de esqueje."}],co:["La salvia tricolor o purpurea son muy decorativas","Repele la mariposa de la col","Infusion de salvia: remedio para la garganta"],er:["Suelo humedo y frio: pudre el cuello","Poda en madera vieja: no rebrota","Sin renovar: planta muy leñosa y pocas hojas"]},
+{n:"Cilantro",e:"🌿",c:"Aromaticas",d:"Moderado",desc:"Aroma muy particular. Se va a flor con el calor rapidamente.",ep:"Siembra en marzo-abril y agosto-septiembre. Evita el verano caluroso.",dat:{p:"1 cm",s:"15 cm",r:"Regular",sol:"Sol o semisombra",co:"Hojas en 3-4 semanas"},pa:[{t:"Siembra directa",d:"No tolera el trasplante. Siembra donde quieras que crezca."},{t:"Temperatura fresca",d:"Germina mejor con 15-20 grados."},{t:"Siembra escalonada",d:"Cada 3 semanas para tener siempre hojas frescas."},{t:"Semillas",d:"Si se va a flor, las semillas (coriandro) tambien son muy aromaticas."}],co:["Las semillas son el coriandro, especia diferente","En semisombra se retrasa el espigado","Remoja las semillas 24h antes de sembrar"],er:["Trasplantar: no tolera el movimiento","Calor veraniego hace espigar muy rapido","Sembrar en pleno sol en verano: espiga en dias"]},
+{n:"Eneldo",e:"🌿",c:"Aromaticas",d:"Facil",desc:"Muy aromatico y decorativo. Sus hojas plumosas son preciosas y utiles en cocina.",ep:"Siembra en abril-mayo. Crece rapido. Se va a flor en verano.",dat:{p:"0.5 cm",s:"20-25 cm",r:"Moderado",sol:"Sol pleno",co:"Hojas en 6-8 semanas"},pa:[{t:"Siembra directa",d:"No tolera bien el trasplante."},{t:"Aclara",d:"Aclara a 20 cm para plantas fuertes."},{t:"Cosecha de hojas",d:"Corta continuamente para retrasar la floracion."},{t:"Semillas",d:"Deja algunas plantas florecer. Las semillas son muy aromaticas."}],co:["Fantastico con pepinos, salmon y pescados","No plantes cerca del hinojo: se hibridan","Deja algunas plantas resiembren solas"],er:["Trasplantar: se resiente","Plantar cerca de hinojo: se hibridan","Sin cosechar regularmente: espiga rapido"]},
+{n:"Cebollino",e:"🌿",c:"Aromaticas",d:"Facil",desc:"Facil, perenne y muy util en cocina. Sus flores son comestibles y decorativas.",ep:"Siembra en primavera. Perenne, vuelve cada año. Cosecha todo el año.",dat:{p:"1 cm",s:"20-25 cm",r:"Regular",sol:"Sol o semisombra",co:"Todo el año"},pa:[{t:"Siembra en primavera",d:"Germina facilmente."},{t:"Division",d:"Cada 2-3 años divide las matas para rejuvenecerlas."},{t:"Cosecha",d:"Corta con tijeras a 3-4 cm del suelo. Rebrota en semanas."},{t:"Flores comestibles",d:"Las flores moradas son comestibles y decorativas en ensaladas."}],co:["Perfecto en maceta en la cocina","Las flores atraen abejas","Excelente con ensaladas, sopas y tortillas"],er:["Sin division cada 2-3 años pierde vigor","Cortar a ras del suelo sin dejar 3-4 cm: se debilita","Suelo encharcado pudre las raices"]},
+{n:"Manzanilla",e:"🌼",c:"Medicinales",d:"Facil",desc:"Facil de cultivar y da flores medicinales para infusiones relajantes.",ep:"Siembra en primavera. Florece en junio-julio. Perenne en Burgos.",dat:{p:"Apenas cubre la semilla",s:"20-30 cm",r:"Minimo",sol:"Sol pleno",co:"Flores en junio-julio"},pa:[{t:"Siembra",d:"Directamente en primavera. Semillas muy pequeñas."},{t:"Sin abono",d:"Prefiere suelo pobre. El abono da hojas pero pocas flores."},{t:"Cosechar flores",d:"Cuando esten completamente abiertas. Secalas a la sombra."},{t:"Perenne",d:"Vuelve cada año. En otoño corta los tallos secos."}],co:["Seca las flores en papel de periodico a la sombra","La infusion fresca es mas aromatica","Se resiembra sola y coloniza el jardin"],er:["Cosechar flores cerradas: menos aroma","Secar al sol: pierde propiedades","Suelo rico: muchas hojas, pocas flores medicinales"]},
+{n:"Melisa",e:"🌿",c:"Medicinales",d:"Facil",desc:"Toronjil. Delicioso aroma a limon. Relajante. Muy resistente en Burgos.",ep:"Planta en primavera. Perenne, vuelve cada año.",dat:{p:"En suelo o maceta",s:"40-50 cm",r:"Moderado",sol:"Sol o semisombra",co:"Hojas antes de la floracion"},pa:[{t:"Plantacion",d:"Compra planta o siembra en primavera."},{t:"Cosechar antes de florecer",d:"Para maximo aroma a limon."},{t:"Invierno",d:"Pierde hojas pero rebrota con fuerza en primavera."},{t:"Control",d:"Puede extenderse. Controla si no quieres que colonice."}],co:["Perfecta mezclada con menta para infusiones","Atrae abejas por sus flores blancas","Seca hojas para usar en invierno"],er:["Dejar florecer si quieres hojas aromaticas","Suelo muy seco: menos aroma","Sin control puede volverse invasora"]},
+{n:"Equinacea",e:"🌸",c:"Medicinales",d:"Facil",desc:"Medicinal e inmunologica. Sus flores rosas son preciosas y aguanta perfectamente el invierno burgales.",ep:"Planta en primavera. Florece en julio-septiembre. Perenne muy resistente.",dat:{p:"30 cm hoyo",s:"40-50 cm",r:"Minimo",sol:"Sol pleno",co:"Flores en verano"},pa:[{t:"Plantacion",d:"En primavera en suelo bien drenado."},{t:"Sin cortar flores",d:"Deja flores secas en otoño-invierno, decorativas y alimento de pajaros."},{t:"Division",d:"Cada 3-4 años divide para rejuvenecer."},{t:"Raices medicinales",d:"Las raices del tercer año tienen propiedades medicinales."}],co:["Perfecta en jardines de pradera","Las cabezas florales secas muy decorativas en invierno","Ayuda al sistema inmunitario en infusion de raiz"],er:["Suelo encharcado: muere","Podar en otoño: pierdes alimento para pajaros","Sin division cada 4 años: la mata se agota"]},
+{n:"Valeriana",e:"🌸",c:"Medicinales",d:"Facil",desc:"Propiedades relajantes en sus raices. Crece silvestre en Burgos.",ep:"Planta en primavera. Florece en mayo-junio. Perenne.",dat:{p:"En suelo humedo",s:"50-60 cm",r:"Regular",sol:"Sol o semisombra",co:"Raices en otoño del 2 año"},pa:[{t:"Suelo humedo",d:"Prefiere zonas con algo de humedad."},{t:"Floracion en umbela",d:"Sus flores blancas atraen mariposas e insectos."},{t:"Raices medicinales",d:"Las raices del segundo año son las medicinales."},{t:"Perenne",d:"Vuelve cada año y se resiembra sola."}],co:["Los gatos son muy atraidos por su raiz","Perfecto para zonas humedas del jardin","Las flores atraen mariposas en gran cantidad"],er:["Suelo seco: crece pequeña","Sin control puede ser bastante colonizadora","Sin recoleccion de raices deja que se resiiembre"]},
+{n:"Aloe vera",e:"🌵",c:"Interior",d:"Facil",desc:"La planta medicinal de interior mas util. Su gel cura quemaduras y picaduras.",ep:"Interior todo el año en Burgos. En verano puede salir al exterior soleado.",dat:{p:"En maceta",s:"En maceta",r:"Cada 3-4 semanas",sol:"Mucha luz",co:"Ornamental y medicinal"},pa:[{t:"Mucha luz",d:"Necesita la ventana mas soleada de la casa."},{t:"Muy poco riego",d:"El aloe acumula agua en sus hojas. Riega muy esporadicamente."},{t:"Sustrato de cactus",d:"O mezcla universal con mucha arena."},{t:"Usar el gel",d:"Corta una hoja por la base y aplica el gel en quemaduras."}],co:["El gel es excelente para quemaduras solares y picaduras","Produce hijuelos que puedes trasplantar","Muy resistente al olvido"],er:["Exceso de riego: la raiz y base se pudren","Sin luz suficiente: se pone palida","Sustrato normal retiene demasiada agua"]},
+{n:"Potus",e:"🌿",c:"Interior",d:"Facil",desc:"La planta de interior mas resistente. Aguanta poca luz, olvidos y casi cualquier condicion.",ep:"Todo el año en interior.",dat:{p:"En maceta",s:"En maceta",r:"Solo cuando el suelo este seco",sol:"Poca luz, luz indirecta",co:"Ornamental"},pa:[{t:"Luz indirecta",d:"Tolera muy poca luz pero crece mejor con luz indirecta."},{t:"Riego esporadico",d:"Solo cuando el sustrato este completamente seco."},{t:"Esquejes faciles",d:"Un tallo en agua. En 2-3 semanas tendras raices."},{t:"Abono en primavera",d:"Un abono mensual en primavera-verano."}],co:["Purifica el aire del hogar","Los esquejes en agua son perfectos como regalo","Puede ser toxico para perros y gatos"],er:["Exceso de riego: raiz podrida","Sol directo: hojas quemadas","Maceta sin drenaje: acumula agua"]},
+{n:"Cactus",e:"🌵",c:"Interior",d:"Facil",desc:"Perfectos para personas olvidadizas. Muy poca atencion y flores sorprendentes.",ep:"Interior todo el año. En verano al exterior soleado.",dat:{p:"Maceta especial cactus",s:"En maceta",r:"Cada 2-4 semanas",sol:"Mucha luz, sol directo",co:"Ornamental"},pa:[{t:"Sustrato de cactus",d:"Con mucha arena y perlita. El drenaje es critico."},{t:"Maxima luz",d:"En la ventana mas soleada. Sin luz se deforman."},{t:"Riego muy esporadico",d:"Verano: cada 2 semanas. Invierno: 1 vez al mes."},{t:"Invierno fresco",d:"Muchos florecen mejor si pasan el invierno fresco."}],co:["El frio y sequia invernal estimulan la floracion","Maceta de terracota mejor que plastico","Los cactus de Navidad tienen necesidades distintas"],er:["Exceso de riego: raiz podrida sin remedio","Poca luz: crecen flacos y deformes","Sustrato normal retiene demasiada humedad"]},
+{n:"Orquidea",e:"🌸",c:"Interior",d:"Moderado",desc:"La mas facil de las orquideas. Con los cuidados correctos vuelve a florecer cada año.",ep:"Florece en invierno-primavera. Con cuidados, florece cada año.",dat:{p:"Sustrato de orquideas",s:"Maceta transparente",r:"Cada 10-14 dias",sol:"Luz indirecta brillante",co:"Floracion 2-4 meses"},pa:[{t:"Sustrato de orquideas",d:"Corteza de pino especifica. Las raices necesitan aire."},{t:"Luz sin sol",d:"Brillante indirecta. Detras de cortina fina es ideal."},{t:"Riego por inmersion",d:"Cada 10-14 dias sumerge 10 minutos, luego escurre."},{t:"Para reflorecer",d:"Coloca en lugar mas fresco 4-6 semanas. Estimula nueva vara."}],co:["Corta la vara por la 1 articulacion: puede sacar otra","Maceta transparente para ver el estado de raices","Raices verdes=bien hidratadas, grisaceas=necesitan agua"],er:["Exceso de riego: raices podridas","Sol directo: quema las hojas","Sustrato normal retiene demasiada agua"]},
+{n:"Lavanda arbustiva",e:"💜",c:"Arbustos",d:"Facil",desc:"Forma matas grandes muy aromaticas. Perfecta para jardines de bajo mantenimiento en Burgos.",ep:"Planta en primavera. Floracion en junio-julio. Muy longeva.",dat:{p:"30 cm hoyo",s:"60-80 cm",r:"Minimo",sol:"Sol pleno",co:"Floracion junio-julio"},pa:[{t:"Suelo pobre",d:"Prefiere suelo pobre y pedregoso."},{t:"Sin abono nunca",d:"El abono da mucha hoja y poca flor."},{t:"Poda anual",d:"Tras la floracion, poda un tercio. Nunca en madera vieja."},{t:"Longevidad",d:"Una lavanda bien cuidada dura 15-20 años."}],co:["Planta en grupo de 3-5 para efecto paisajistico","Hidcote y Munstead son las mas resistentes al frio","Las flores secas conservan el aroma meses"],er:["Suelo humedo o arcilloso: muere","Poda en madera vieja: no rebrota","Exceso de abono: plantas grandes, pocas flores"]},
+{n:"Laurel",e:"🌿",c:"Arbustos",d:"Facil",desc:"Arbusto mediterraneo adaptado a Burgos en zonas resguardadas. Hojas imprescindibles en cocina.",ep:"Planta en primavera. Crece lento pero muy longevo.",dat:{p:"40 cm hoyo",s:"200-300 cm libre",r:"Minimo",sol:"Sol o semisombra",co:"Hojas todo el año"},pa:[{t:"Zona resguardada",d:"Los vientos muy frios del norte pueden dañarlo."},{t:"Poda a gusto",d:"Admite todas las formas: arbol, bola, piramide, seto."},{t:"Hojas todo el año",d:"Usa hojas frescas o secalas. Las secas tienen mas aroma."},{t:"Crecimiento lento",d:"Crece lento los primeros años. Paciencia."}],co:["Perfecto en maceta grande como arbol de terraza","Imprescindible para guisos y estofados","Las hojas de laurel son mas aromaticas secas"],er:["Heladas muy fuertes con viento norte pueden dañar hojas","Exceso de agua en suelo mal drenado","Sin poda se hace muy grande"]},
+{n:"Boj",e:"🌿",c:"Arbustos",d:"Facil",desc:"El arbusto para setos y topiaria mas clasico. Muy resistente al frio de Burgos.",ep:"Planta en otoño o primavera. Crece muy lento pero muy longevo.",dat:{p:"30 cm hoyo",s:"30-50 cm para seto",r:"Minimo",sol:"Sol o semisombra",co:"Ornamental"},pa:[{t:"Plantacion",d:"Se adapta a casi cualquier suelo y condicion."},{t:"Poda 1-2 veces al año",d:"En mayo y agosto para mantener forma."},{t:"Paciencia",d:"Crece muy lento. Para un seto de 50 cm necesitas varios años."},{t:"Sin riego",d:"Una vez establecido no necesita riego en Burgos."}],co:["El boj enano Suffruticosa es perfecto para borduras","Resistente a -20 grados","Alternativas por enfermedad: Ilex crenata, Euonymus"],er:["La polilla del boj puede devastar la planta en dias","Suelo muy humedo favorece hongos","Sin poda regular pierde la forma"]},
+{n:"Forsitia",e:"🌼",c:"Arbustos",d:"Facil",desc:"El primer arbusto en florecer. Sus ramas amarillas en febrero anuncian la primavera.",ep:"Planta en otoño. Floracion en febrero-marzo antes de sacar hojas.",dat:{p:"40 cm hoyo",s:"150-200 cm",r:"Minimo",sol:"Sol o semisombra",co:"Floracion febrero-marzo"},pa:[{t:"Plantacion otoñal",d:"Planta en octubre-noviembre."},{t:"Poda inmediatamente tras florecer",d:"Solo justo despues de florecer."},{t:"Sin abono",d:"Prefiere suelo normal sin abono."},{t:"Longevidad",d:"Arbusto de larga vida con poco mantenimiento."}],co:["Sus flores amarillas en febrero son un espectaculo","Perfecta para cortar ramas y llevar al interior","Muy resistente al frio de Burgos"],er:["Podar en otoño: eliminas todas las yemas de flor","Sombra excesiva: pocas flores","Sin podar tras florecer se hace muy grande"]},
+{n:"Lilo",e:"💜",c:"Arbustos",d:"Facil",desc:"El lilo tiene un perfume extraordinario en mayo. Muy resistente al frio de Burgos.",ep:"Planta en otoño o primavera. Floracion en mayo. Muy longevo.",dat:{p:"50 cm hoyo",s:"200-300 cm",r:"Minimo",sol:"Sol pleno",co:"Floracion mayo"},pa:[{t:"Plantacion",d:"En otoño o primavera en suelo bien drenado."},{t:"Sin abono excesivo",d:"El exceso de nitrogeno da hojas pero pocas flores."},{t:"Poda suave tras florecer",d:"Elimina flores marchitas inmediatamente."},{t:"Paciencia",d:"Los primeros 2-3 años casi no florece. Luego es espectacular."}],co:["El perfume en mayo llena todo el jardin","Cortados son preciosos en jarrones","Muy longevos: ejemplares centenarios en Burgos"],er:["Sin eliminar flores marchitas: menos flores el año siguiente","Suelo encharcado: muere","Exceso de abono: hojas pero sin flores"]},
+{n:"Narciso",e:"🌼",c:"Bulbos",d:"Facil",desc:"Anuncia la primavera. Se naturalizan y vuelven cada año sin desenterrarlos.",ep:"Planta en octubre-noviembre. Floracion en febrero-abril.",dat:{p:"15 cm",s:"10-15 cm",r:"Lluvia invernal",sol:"Sol o semisombra",co:"Floracion primaveral"},pa:[{t:"Planta en otoño",d:"Octubre, punta hacia arriba, 15 cm profundidad."},{t:"Se naturalizan solos",d:"A diferencia de los tulipanes, se pueden dejar indefinidamente."},{t:"No cortar hojas",d:"Hasta que esten completamente amarillas."},{t:"Multiplicacion",d:"Cada año el bulbo se divide. Separa en otoño."}],co:["Los roedores no comen bulbos de narciso, son toxicos","Perfectos naturalizados bajo arboles","Combina variedades de floracion en diferentes epocas"],er:["Cortar hojas verdes: el bulbo no recarga","Mezclar con otras flores en jarron: toxicos para ellas","Suelo encharcado pudre los bulbos"]},
+{n:"Jacinto",e:"💐",c:"Bulbos",d:"Facil",desc:"Perfume extraordinario. Sus flores densas y coloridas son espectaculares en primavera.",ep:"Planta en octubre-noviembre. Floracion en marzo-abril.",dat:{p:"15 cm",s:"15 cm",r:"Lluvia invernal",sol:"Sol o semisombra",co:"Floracion marzo-abril"},pa:[{t:"Plantacion otoñal",d:"Necesitan frio para florecer."},{t:"Forzar en interior",d:"En jarron especial de jacinto para flores en enero."},{t:"Tras la floracion",d:"Deja las hojas hasta que amarilleen."},{t:"Renovar bulbos",d:"El jacinto florece bien el primer año. Los siguientes puede decaer."}],co:["El perfume del jacinto es de los mas intensos del jardin","Perfecto en maceta en terraza","El jacinto en agua con niños es una actividad preciosa"],er:["Suelo encharcado pudre el bulbo","El perfume puede ser excesivo en interior pequeño","Sin frio invernal no florece"]},
+{n:"Gladiolo",e:"🌸",c:"Bulbos",d:"Facil",desc:"Da espigas altas con muchas flores. Perfecto para cortar y poner en jarrones.",ep:"Planta cormos en abril-mayo en Burgos. Floracion en agosto-septiembre.",dat:{p:"10-15 cm",s:"15-20 cm",r:"Regular",sol:"Sol pleno",co:"Floracion agosto-septiembre"},pa:[{t:"Planta en abril-mayo",d:"Cuando no haya heladas. A 10-15 cm de profundidad."},{t:"Soporte",d:"Las variedades altas necesitan tutores para no doblarse."},{t:"Plantacion escalonada",d:"Planta cada 2 semanas para floracion continua."},{t:"Guardar cormos",d:"En noviembre desentierra y guarda en lugar fresco y seco."}],co:["Perfectos para cortar, las flores duran mucho en jarron","Con plantacion escalonada tienes flores durante meses","Los cormos se multiplican solos"],er:["Dejar en tierra en Burgos en invierno: las heladas los matan","Sin soporte las espigas altas se doblan","Sin desenterrar en otoño: se pierden"]},
+{n:"Cebolla ornamental",e:"💜",c:"Bulbos",d:"Facil",desc:"Los aliums dan flores en bola de colores sorprendentes. Muy resistentes.",ep:"Planta en otoño. Floracion en mayo-junio.",dat:{p:"15-20 cm",s:"15-20 cm",r:"Minimo",sol:"Sol pleno",co:"Floracion mayo-junio"},pa:[{t:"Plantacion otoñal",d:"En suelo bien drenado."},{t:"Sin mantenimiento",d:"De lo mas facil que existe."},{t:"Flores secas decorativas",d:"Las cabezas florales secas son muy decorativas en invierno."},{t:"Naturalizacion",d:"Se naturalizan y multiplican solos con los años."}],co:["Perfecto entre rosas, ocultan las piernas de los rosales","Las flores secas son muy decorativas","El Allium Purple Sensation es espectacular"],er:["Suelo muy humedo: bulbos podridos","Plantarlos solos: mejor en grupo de 5-7","Podar las flores secas antes de tiempo"]},
+{n:"Nenufar",e:"🌸",c:"Acuaticas",d:"Moderado",desc:"Flores preciosas en estanques. Habitat ideal para ranas y peces.",ep:"Planta en mayo. Floracion de junio a septiembre.",dat:{p:"Cesta a 30-60 cm",s:"1 metro por planta",r:"Agua del estanque",sol:"Sol pleno",co:"Floracion junio-septiembre"},pa:[{t:"Cesta con arcilla",d:"Planta en cesta de plastico con sustrato pesado de arcilla."},{t:"Profundidad correcta",d:"Sumerge a 30-60 cm segun la variedad."},{t:"Abono de estanque",d:"Usa pastillas especiales para plantas acuaticas."},{t:"Invierno",d:"Aguanta el invierno en el fondo del estanque si no se congela."}],co:["Cubre el 50-60% de la superficie para evitar algas","Las variedades enanas para estanques pequeños","Las flores duran 3-4 dias pero florecen continuamente"],er:["Sustrato normal: enturbia el agua","Sin suficiente sol: pocas flores","Fertilizante normal en el agua: algas explosivas"]},
+{n:"Glicinia",e:"💜",c:"Trepadoras",d:"Moderado",desc:"Una de las plantas mas espectaculares. Racimos de flores moradas en primavera inolvidables.",ep:"Planta en otoño o primavera. Floracion en abril-mayo.",dat:{p:"60 cm hoyo",s:"4-5 metros",r:"Minimo tras arraigo",sol:"Sol pleno",co:"Floracion abril-mayo"},pa:[{t:"Soporte muy resistente",d:"La adulta pesa cientos de kilos. Pared o pergola de hierro."},{t:"Lugar muy soleado",d:"Sin sol pleno no florece."},{t:"Poda de verano",d:"En agosto corta tallos nuevos dejando 5-6 hojas."},{t:"Paciencia",d:"Puede tardar 3-5 años en florecer. Merece la espera."}],co:["La injertada florece antes que la de semilla","Su aroma en mayo llena todo el jardin","Ejemplares centenarios en viejas casonas burgalesas"],er:["Soporte debil: lo destruira en años","Poda solo en invierno: florece mucho menos","Sombra: no florece por muy bien que crezca"]},
+{n:"Madreselva",e:"🌸",c:"Trepadoras",d:"Facil",desc:"Perfume extraordinario en junio. Crece rapido y es muy resistente al frio burgales.",ep:"Planta en otoño o primavera. Floracion en junio-julio.",dat:{p:"30 cm hoyo",s:"200-300 cm",r:"Minimo",sol:"Sol o semisombra",co:"Floracion junio-julio"},pa:[{t:"Plantacion",d:"Se adapta a casi cualquier condicion."},{t:"Soporte",d:"Red o celosia para que se enrede. Crece muy rapido."},{t:"Poda tras floracion",d:"Para mantenerla controlada."},{t:"Bayas toxicas",d:"Los frutos rojos atraen pajaros pero son toxicos para personas."}],co:["El aroma en junio es extraordinario","Atrae mariposas y abejorros","Muy resistente al frio de Burgos"],er:["Sin poda se hace incontrolable","Los frutos son toxicos para niños","Confundir con otras trepadoras toxicas: identificar bien"]},
+{n:"Hiedra",e:"🌿",c:"Trepadoras",d:"Facil",desc:"La trepadora mas resistente y versatil. Cubre muros y zonas de sombra.",ep:"Planta en cualquier epoca. Crece todo el año. Muy resistente.",dat:{p:"30 cm hoyo",s:"100 cm para suelo",r:"Minimo",sol:"Sombra a sol pleno",co:"Cobertura todo el año"},pa:[{t:"En cualquier condicion",d:"Sombra total, sol pleno, suelo seco o humedo."},{t:"Pegarse al muro",d:"Los primeros años puede necesitar guias."},{t:"Control",d:"Puede ser invasora. Poda 1-2 veces al año."},{t:"Toxicidad",d:"Las bayas son toxicas. Cuidado con niños y mascotas."}],co:["Perfecta para cubrir muros feos rapidamente","Excelente cubridora para zonas de sombra","La hiedra irlandesa y la canaria son mas grandes"],er:["Sin control se mete bajo tejas dañando la construccion","Las bayas son toxicas para mascotas y niños","En muros viejos puede introducirse en grietas"]},
+{n:"Hosta",e:"🌿",c:"Sombra",d:"Facil",desc:"La reina de la sombra. Grandes hojas texturadas perfectas bajo arboles.",ep:"Planta en primavera. Las hojas salen en mayo. En invierno desaparecen.",dat:{p:"30 cm hoyo",s:"40-80 cm segun variedad",r:"Regular",sol:"Sombra o semisombra",co:"Follaje primavera-otoño"},pa:[{t:"Sombra",d:"Prefiere la sombra. En sol directo las hojas se queman."},{t:"Suelo humedo",d:"Mantén el suelo humedo. Necesita agua regular."},{t:"Division",d:"Cada 3-4 años divide para obtener mas plantas."},{t:"Proteger de caracoles",d:"Los caracoles las adoran. Barrera de cobre o trampa de cerveza."}],co:["Combinadas con helechos crean jardin de sombra impresionante","Las variedades con bordes amarillos iluminan zonas oscuras","Las flores en verano son bonus decorativo"],er:["Sol directo: hojas quemadas","Sin proteccion de caracoles: llenas de agujeros","Suelo seco: hojas marchitas"]},
+{n:"Helecho",e:"🌿",c:"Sombra",d:"Facil",desc:"Plantas ancestrales perfectas para zonas humedas y sombrías. Muy resistentes en Burgos.",ep:"Planta en primavera o otoño. Los resistentes son perennes.",dat:{p:"20-30 cm hoyo",s:"50-80 cm",r:"Regular",sol:"Sombra o semisombra",co:"Follaje primavera-otoño"},pa:[{t:"Sombra y humedad",d:"Perfectos bajo arboles."},{t:"Suelo acido y rico",d:"Añade turba o compost."},{t:"Sin poda en otoño",d:"Las frondas viejas protegen el rizoma en invierno."},{t:"Division en primavera",d:"Para obtener mas plantas."}],co:["El Dryopteris es el mas resistente para Burgos","Combina con hostas para jardin de sombra completo","Las frondas nuevas desenrollandose en primavera son preciosas"],er:["Sol directo: hojas quemadas","Suelo seco: se debilita","Cortar en otoño: quita proteccion invernal"]},
+{n:"Festuca azul",e:"🌾",c:"Gramineas",d:"Facil",desc:"Matas de hojas azuladas preciosas. Muy resistente y de bajo mantenimiento.",ep:"Planta en primavera o otoño. Siempreverde en Burgos.",dat:{p:"20 cm hoyo",s:"30-40 cm",r:"Minimo",sol:"Sol pleno",co:"Ornamental todo el año"},pa:[{t:"Suelo drenado",d:"No soporta encharcamiento."},{t:"Sol pleno",d:"El color azul mas intenso con pleno sol."},{t:"Division cada 2-3 años",d:"La mata muere por el centro. Divide y replanta las partes externas."},{t:"Sin abono",d:"El abono pierde el color azul caracteristico."}],co:["Perfecta entre piedras y jardines secos","Combina con lavanda y plantas de colores calidos","La variedad Elijah Blue tiene el azul mas intenso"],er:["Suelo humedo o encharcado: muere","Abono excesivo: pierde el color azul","Sin dividir cada 2-3 años: muere por el centro"]},
+{n:"Miscanthus",e:"🌾",c:"Gramineas",d:"Facil",desc:"Graminea ornamental grande y espectacular. Sus plumeros en otoño son preciosos.",ep:"Planta en primavera. Plumeros en otoño-invierno. Muy resistente al frio burgales.",dat:{p:"40 cm hoyo",s:"100-150 cm",r:"Minimo",sol:"Sol pleno",co:"Ornamental, mejor en otoño"},pa:[{t:"Plantacion primaveral",d:"En mayo en lugar soleado."},{t:"Sin abono",d:"El abono excesivo hace que se tumbe."},{t:"Poda en febrero",d:"Corta toda la mata a 10-15 cm en febrero. Rebrota con fuerza."},{t:"Plumeros de otoño",d:"Los plumeros en otoño son su mejor momento."}],co:["Los plumeros son preciosos en arreglos secos","Fantastico como pantalla o divisor","La variedad Zebrinus tiene rayas amarillas transversales"],er:["Sin cortar en invierno: antistetica","Division necesaria cada 4-5 años","Demasiado abono: cañas debiles que se doblan"]}
+,
+{n:"Higuera",e:"🌿",c:"Arboles frutales",d:"Moderado",desc:"La higuera puede vivir en Burgos en zonas muy resguardadas o en maceta grande. Da brevas en junio e higos en agosto.",ep:"Planta en primavera en zona protegida. Cosecha: brevas en junio, higos en agosto-septiembre.",dat:{p:"60 cm hoyo",s:"5-6 metros",r:"Minimo",sol:"Sol pleno maximo",co:"3-4 años"},po:{cu:"Febrero-marzo, antes de que brote",co:"Poda minima. Elimina solo ramas dañadas por el frio en primavera cuando ya hayan brotado. No cortes la madera que dio brevas el año anterior. Forma en vaso abierto para aprovechar el calor."},pa:[{t:"Zona sur resguardada",d:"Planta junto a pared sur muy resguardada. El microclima junto a la pared es clave."},{t:"Proteccion invernal",d:"En Burgos envuelve el tronco con paja o tela de saco en invierno. Puede perder ramas con heladas fuertes."},{t:"Poda minima",d:"Solo elimina ramas dañadas por el frio en primavera, cuando ya hayan brotado."},{t:"Cosecha",d:"Las brevas en junio en madera del año anterior. Los higos en agosto-septiembre cuando esten blandos y se abran por abajo."}],co:["En Burgos la breva de junio suele ser mas segura que los higos","En maceta grande se puede meter en interior en invierno","Ideal para espaldera en pared sur soleada"],er:["Zona fria sin proteccion: muere cada invierno","Exceso de riego da higos acuosos y poco dulces","Poda excesiva elimina la madera que da las brevas"],enf:[{e:"🦠",n:"Botrytis en higos",s:"Higos con pelusa gris antes de madurar. Muy comun con lluvias en agosto.",c:"Mejora la ventilacion podando. Elimina higos afectados. En Burgos, un verano humedo puede arruinar la cosecha."},{e:"🐛",n:"Cocchinilla (cochinilla)",s:"Protuberancias marrones o blancas en ramas. La planta pierde vigor.",c:"Trata con aceite de neem en invierno. Cepilla las ramas con alcohol. Insecticida sistemico en casos graves."},{e:"🦟",n:"Arañuela roja",s:"Hojas bronceadas con puntitos amarillos en verano caluroso.",c:"Riega el follaje. Jabon potasico. Acaricida en casos graves."}]},
+{n:"Melocotonero",e:"🍑",c:"Arboles frutales",d:"Moderado",desc:"Necesita calor en verano y frio en invierno. En Burgos puede funcionar en zonas resguardadas y años calidos.",ep:"Planta en invierno. Cosecha en julio-agosto. Las heladas en floracion son el mayor riesgo.",dat:{p:"60 cm hoyo",s:"4-5 metros",r:"Moderado en verano",sol:"Sol pleno maximo",co:"3-4 años"},po:{cu:"Febrero-marzo, antes de que brote",co:"Poda anual imprescindible. El melocotonero fructifica SOLO en ramas del año anterior. Elimina ramas de mas de 2 años. Deja ramas nuevas vigorosas con yemas mixtas. Corta siempre a 3-4 cm de la base. Sin poda anual la fruta es pequena y el arbol se agota."},pa:[{t:"Variedad de floracion tardia",d:"Elige variedades tardias para evitar heladas. Consulta en vivero local de Burgos."},{t:"Lugar mas calido",d:"Planta en el lugar mas soleado y resguardado. Una pared sur es ideal."},{t:"Poda anual",d:"El melocotonero necesita poda anual mas intensa. Fructifica en ramas de 1 año."},{t:"Aclareo de frutos",d:"En junio aclara frutos, deja uno cada 15-20 cm para que engorden bien."}],co:["En espaldera junto a pared sur da los mejores resultados en Burgos","La variedad Redhaven es buena para climas frios","Aclara frutos en junio para tener melocotones grandes"],er:["Heladas en floracion frecuentes en Burgos: elige variedad tardia","Sin poda anual: mucha fruta pequeña","La perforadora del melocotonero: agujeros en el tronco, tratar con cobre"],enf:[{e:"🔴",n:"Lepra o abolladura (Taphrina)",s:"Hojas rizadas, abombadas y de color rojizo desde la brotacion. Muy comun y visible. La enfermedad mas frecuente del melocotonero.",c:"Trata con cobre en otoño tras la caida de hojas y en primavera antes de que brote. Una vez aparece no tiene cura ese año. El arbol se recupera solo."},{e:"🦠",n:"Monilia",s:"Flores y frutos que se pudren rapidamente. Frutos momificados colgando.",c:"Elimina flores y frutos afectados. Trata con fungicida en floracion. Evita plantar en zonas muy humedas."},{e:"🐛",n:"Barrenillo del melocotonero",s:"Agujeros en el tronco con gomosidad y serrín. Larvas dentro del tronco.",c:"Aplica pasta cicatrizante con cobre en las heridas. Inyecta insecticida en los agujeros. Poda las ramas muy afectadas."}]},
+{n:"Almendro",e:"🌸",c:"Arboles frutales",d:"Facil",desc:"Florece muy pronto en febrero y es precioso. En Burgos las heladas tardias son el mayor riesgo. Elige variedades de floracion tardia.",ep:"Planta en invierno. Cosecha en agosto-septiembre. Floracion en febrero-marzo con riesgo de heladas.",dat:{p:"60 cm hoyo",s:"5-6 metros",r:"Minimo, muy resistente a sequia",sol:"Sol pleno",co:"4-6 años"},po:{cu:"Diciembre-enero, en pleno reposo invernal",co:"Poda de formacion los primeros 3 años para crear estructura en vaso abierto. Despues poda de mantenimiento minima: elimina ramas secas, cruzadas y chupones vigorosos. No necesita poda intensa anual como el melocotonero."},pa:[{t:"Variedad tardia CRUCIAL",d:"En Burgos es imprescindible elegir variedad de floracion tardia: Marcona tardia, Largueta tardia."},{t:"Suelo calizo",d:"Le encantan los suelos calizos castellanos. Se adapta perfectamente a la zona."},{t:"Sin riego",d:"Una vez establecido, el almendro practicamente no necesita riego."},{t:"Cosecha",d:"En agosto-septiembre, cuando la cascara exterior se abre sola, estan listos."}],co:["La floracion en febrero es espectacular pero arriesgada","Planta en ladera con buena ventilacion para evitar heladas en hondonadas","2 variedades mejoran mucho la produccion"],er:["Variedades de floracion temprana: las heladas arruinan la cosecha cada año","Zona con encharcamientos: muere con facilidad","Suelo acido: necesita suelo alcalino o neutro como el de Burgos"],enf:[{e:"🦠",n:"Monilia",s:"Flores que se secan sin caer. Ramas con gomosidad.",c:"Trata con fungicida en floracion. Poda ramas afectadas. El año siguiente trata preventivamente."},{e:"🔴",n:"Lepra (Taphrina)",s:"Hojas rizadas y de color rojizo similar al melocotonero.",c:"Trata con cobre en otoño y primavera antes de brotar."},{e:"🐛",n:"Pulgon negro",s:"Colonias de pulgones negros en brotes tiernos en primavera.",c:"Jabon potasico. Tratamiento a principios de primavera antes de que la colonia sea grande."}]},
+{n:"Kiwi",e:"🥝",c:"Arboles frutales",d:"Moderado",desc:"El kiwi puede cultivarse en Burgos. Necesita soporte muy fuerte y una planta macho por cada 6 hembras.",ep:"Planta en invierno. Cosecha en octubre-noviembre. Tarda 3-5 años en fructificar.",dat:{p:"60 cm hoyo",s:"4-5 metros",r:"Regular",sol:"Sol o semisombra",co:"3-5 años"},po:{cu:"Enero-febrero, en reposo invernal",co:"Poda anual necesaria. Elimina los brotes que ya fructificaron dejando 2-3 yemas en la base. Deja las ramas jovenes del año que seran las productoras. Ata horizontalmente para estimular mas fructificacion. En verano aclara brotes excesivos."},pa:[{t:"Macho y hembra",d:"Necesitas 1 planta macho por cada 6 hembras para fructificar."},{t:"Soporte muy fuerte",d:"Las ramas adultas pesan mucho. Pergola o espaldera robusta."},{t:"Poda anual",d:"Fructifica en ramas del año anterior. Poda despues de la cosecha."},{t:"Riego regular",d:"Especialmente en verano durante el crecimiento del fruto."}],co:["La variedad Hayward es la mas productiva","En Burgos protege del viento del norte","Los kiwi baby son autofertiles y mas faciles"],er:["Sin planta macho: nunca dara frutos las hembras","Sin soporte fuerte: las ramas se rompen por el peso","Heladas en floracion pueden danar la cosecha"]}
+];
+
+var CATS=["Todas"];
+P.forEach(function(p){if(CATS.indexOf(p.c)===-1)CATS.push(p.c);});
+var filtro="Todas",busq="";
+
+function init(){
+  var ce=document.getElementById("CT");
+  CATS.forEach(function(c){
+    var b=document.createElement("button");
+    b.className="cat-btn"+(c==="Todas"?" active":"");
+    b.textContent=c;
+    b.onclick=function(){
+      document.querySelectorAll(".cat-btn").forEach(function(x){x.classList.remove("active");});
+      b.classList.add("active");
+      filtro=c;
+      render();
+    };
+    ce.appendChild(b);
+  });
+  render();
+}
+
+function filtrar(){
+  busq=document.getElementById("SI").value;
+  render();
+}
+
+function render(){
+  var dc={"Facil":"#4ade80","Moderado":"#facc15","Dificil":"#f87171"};
+  var lista=P.filter(function(p){
+    var mc=filtro==="Todas"||p.c===filtro;
+    function norm(s){return (s||"").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"");}
+    var nb=norm(busq);
+    if(!busq){ return mc; }
+    var enNombre = norm(p.n).indexOf(nb)>-1;
+    var enCat = norm(p.c).indexOf(nb)>-1;
+    var enDesc = norm(p.desc).indexOf(nb)>-1;
+    var enEnf = false;
+    if(p.enf){ p.enf.forEach(function(e){ if(norm(e.n).indexOf(nb)>-1||norm(e.s).indexOf(nb)>-1||norm(e.c).indexOf(nb)>-1) enEnf=true; }); }
+    var enPasos = false;
+    if(p.pa){ p.pa.forEach(function(paso){ if(norm(paso.t).indexOf(nb)>-1||norm(paso.d).indexOf(nb)>-1) enPasos=true; }); }
+    var mb = enNombre||enCat||enDesc||enEnf||enPasos;
+    return mc&&mb;
+  });
+  document.getElementById("CN").textContent=lista.length+" plantas encontradas";
+  document.getElementById("GR").innerHTML=lista.map(function(p){
+    var col=dc[p.d]||"#888";
+    return '<div class="plant-card" onclick="abrir(\''+p.n.replace(/'/g,"\\'")+'\')">'
+      +'<div class="emoji">'+p.e+'</div>'
+      +'<div class="name">'+p.n+'</div>'
+      +'<div class="cat-label">'+p.c+'</div>'
+      +'<span class="dif badge" style="background:'+col+'22;color:'+col+';border:1px solid '+col+'44">'+p.d+'</span>'
+      +'</div>';
+  }).join("");
+}
+
+function abrir(nombre){
+  var p=null;
+  for(var i=0;i<P.length;i++){if(P[i].n===nombre){p=P[i];break;}}
+  if(!p)return;
+  var dc={"Facil":"#4ade80","Moderado":"#facc15","Dificil":"#f87171"};
+  var col=dc[p.d]||"#888";
+  var datos=[
+    {icon:"📏",label:"Profundidad",val:p.dat.p},
+    {icon:"↔️",label:"Espaciado",val:p.dat.s},
+    {icon:"💧",label:"Riego",val:p.dat.r},
+    {icon:"☀️",label:"Sol",val:p.dat.sol},
+    {icon:"⏰",label:"Cosecha/Floracion",val:p.dat.co}
+  ].filter(function(d){return d.val;});
+
+  var html="";
+  html+='<div class="modal-header">';
+  html+='<span class="modal-emoji">'+p.e+'</span>';
+  html+='<div><div class="modal-name">'+p.n+'</div>';
+  html+='<span class="badge" style="background:'+col+'22;border:1px solid '+col+'44;color:'+col+'">'+p.d+'</span>';
+  html+=' <span style="color:#4a6b4a;font-size:11px">'+p.c+'</span>';
+  html+='</div><div style="margin-top:8px"><button id="btn-fav-modal" onclick="toggleFavModal()" style="background:none;border:1px solid rgba(251,191,36,0.35);border-radius:20px;padding:5px 14px;color:#fbbf24;font-size:12px;cursor:pointer">⭐ Añadir a favoritos</button></div></div>';
+  html+='<p class="modal-desc">'+p.desc+'</p>';
+
+  if(p.po){
+    html+='<div class="epoca-box" style="background:rgba(251,191,36,0.1);border-color:rgba(251,191,36,0.4);margin-bottom:10px">';
+    html+='<span style="font-size:22px;flex-shrink:0">✂️</span>';
+    html+='<div><div class="epoca-title" style="color:#fbbf24">Poda - cuando y como</div>';
+    html+='<div style="color:#fbbf24;font-size:11px;font-weight:bold;margin-bottom:4px">'+p.po.cu+'</div>';
+    html+='<div class="epoca-text">'+p.po.co+'</div></div></div>';
+  }
+
+  html+='<div class="epoca-box"><span style="font-size:22px;flex-shrink:0">🗓️</span>';
+  html+='<div><div class="epoca-title">Cuando plantar en Burgos</div>';
+  html+='<div class="epoca-text">'+p.ep+'</div></div></div>';
+
+  html+='<div class="datos-grid">';
+  datos.forEach(function(d){
+    html+='<div class="dato"><div class="dato-icon">'+d.icon+'</div>';
+    html+='<div class="dato-label">'+d.label+'</div>';
+    html+='<div class="dato-val">'+d.val+'</div></div>';
+  });
+  html+='</div>';
+
+  html+='<div class="pasos-title">Pasos para plantar</div>';
+  p.pa.forEach(function(paso,i){
+    html+='<div class="paso" onclick="this.classList.toggle(\'active\');this.querySelector(\'.paso-arr\').textContent=this.classList.contains(\'active\')?\'▲\':\'▼\'">';
+    html+='<div class="paso-header">';
+    html+='<span class="paso-num">'+(i+1)+'</span>';
+    html+='<span class="paso-tit">'+paso.t+'</span>';
+    html+='<span class="paso-arr">▼</span></div>';
+    html+='<p class="paso-desc">'+paso.d+'</p></div>';
+  });
+
+  html+='<div class="tips-grid">';
+  html+='<div class="tips green"><h4>💡 Consejos</h4><ul>';
+  p.co.forEach(function(c){html+='<li>'+c+'</li>';});
+  html+='</ul></div>';
+  html+='<div class="tips red"><h4>⚠️ Errores a evitar</h4><ul>';
+  p.er.forEach(function(e){html+='<li>'+e+'</li>';});
+  html+='</ul></div></div>';
+
+  if(p.enf && p.enf.length>0){
+    html+='<div style="margin-top:16px">';
+    html+='<div style="color:#f87171;font-size:15px;font-weight:bold;margin-bottom:10px">🦠 Plagas y enfermedades</div>';
+    p.enf.forEach(function(en){
+      html+='<div style="background:rgba(248,113,113,0.06);border:1px solid rgba(248,113,113,0.2);border-radius:12px;padding:12px 14px;margin-bottom:8px">';
+      html+='<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">';
+      html+='<span style="font-size:18px">'+en.e+'</span>';
+      html+='<span style="color:#fca5a5;font-size:13px;font-weight:bold">'+en.n+'</span></div>';
+      html+='<div style="margin-bottom:5px"><span style="color:#f87171;font-size:10px;text-transform:uppercase;letter-spacing:1px">Síntomas: </span>';
+      html+='<span style="color:#fecaca;font-size:12px;line-height:1.5">'+en.s+'</span></div>';
+      html+='<div><span style="color:#4ade80;font-size:10px;text-transform:uppercase;letter-spacing:1px">Tratamiento: </span>';
+      html+='<span style="color:#a3c4a3;font-size:12px;line-height:1.5">'+en.c+'</span></div></div>';
+    });
+    html+='</div>';
+  }
+
+  html+='<button class="btn-cerrar" onclick="cerrar()">✕ Cerrar</button>';
+  document.getElementById("MD").innerHTML=html;
+  document.getElementById("OV").classList.add("open");
+  document.body.style.overflow="hidden";
+}
+
+function cerrar(e){
+  if(!e||e.target===document.getElementById("OV")){
+    document.getElementById("OV").classList.remove("open");
+    document.body.style.overflow="";
+  }
+}
+
+document.addEventListener("DOMContentLoaded",function(){
+  document.getElementById("SI").value="";
+  if(typeof plantasExtra !== "undefined"){
+    plantasExtra.forEach(function(p){ P.push(p); });
+  }
+  init();
+  cargarCiudadGuardada();
+  mostrarAlertas();
+  // Conectar el botón principal del panel de forma segura
+  // Botón panel principal
+  var btnMain = document.getElementById("btn-panel-main");
+  if(btnMain){
+    btnMain.addEventListener("click", function(){
+      var pl = document.getElementById("PL");
+      var po = document.getElementById("PO");
+      if(pl && po){
+        pl.style.right = "0";
+        po.style.display = "block";
+        document.body.style.overflow = "hidden";
+        poblarSelects();
+        cargarDiario();
+        var fecha = document.getElementById("df-fecha");
+        if(fecha) fecha.value = new Date().toISOString().split("T")[0];
+      }
+    });
+  }
+  // Botones de ciudad
+  document.querySelectorAll(".btn-ciudad").forEach(function(btn){
+    btn.addEventListener("click", function(){
+      var ci = document.getElementById("ciudad-input");
+      if(ci) ci.value = btn.getAttribute("data-ciudad");
+    });
+  });
+  // Botón entrar al jardín
+  var btnEntrar = document.getElementById("btn-entrar-jardin");
+  if(btnEntrar){
+    btnEntrar.addEventListener("click", function(){
+      var ci = document.getElementById("ciudad-input");
+      var ciudad = ci ? ci.value.trim() : "Burgos";
+      if(!ciudad) ciudad = "Burgos";
+      if(typeof guardarCiudad === "function"){
+        guardarCiudad(ciudad);
+      } else {
+        localStorage.setItem("jardin_ciudad", ciudad);
+        var ov = document.getElementById("bienvenida-overlay");
+        if(ov) ov.style.display = "none";
+      }
+    });
+  }
+  // Botón saltar ciudad
+  var btnSaltar = document.getElementById("btn-saltar-ciudad");
+  if(btnSaltar){
+    btnSaltar.addEventListener("click", function(){
+      if(typeof guardarCiudad === "function"){
+        guardarCiudad("Burgos");
+      } else {
+        localStorage.setItem("jardin_ciudad", "Burgos");
+        var ov = document.getElementById("bienvenida-overlay");
+        if(ov) ov.style.display = "none";
+      }
+    });
+  }
+  var ci = document.getElementById("ciudad-input");
+  if(ci) ci.addEventListener("keydown", function(e){ if(e.key==="Enter") confirmarCiudad(); });
+});
+</script>
+
+
+<!-- Modal de bienvenida con ciudad -->
+<div id="bienvenida-overlay" style="display:flex;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:600;align-items:center;justify-content:center">
+  <div style="background:#111e11;border:1px solid rgba(134,239,172,0.25);border-radius:24px;padding:32px;width:360px;max-width:90vw;text-align:center">
+    <div style="font-size:52px;margin-bottom:12px">🌱</div>
+    <h2 style="color:#86efac;font-weight:normal;font-size:24px;margin:0 0 8px">Guía de Jardín</h2>
+    <p style="color:#6b9c6b;font-size:13px;margin:0 0 24px;line-height:1.6">Para darte consejos adaptados a tu clima, dinos dónde estás</p>
+
+    <input type="text" id="ciudad-input" placeholder="Escribe tu ciudad... ej: Tarragona" 
+      autocomplete="off"
+      style="width:100%;background:rgba(255,255,255,0.06);border:1px solid rgba(134,239,172,0.3);border-radius:10px;padding:12px 16px;color:#e8f5e8;font-family:Georgia,serif;font-size:14px;margin-bottom:8px;outline:none;box-sizing:border-box;text-align:center">
+    
+    <div id="ciudad-sugerencias" style="margin-bottom:14px;display:flex;flex-wrap:wrap;gap:6px;justify-content:center">
+      <button class="btn-ciudad" data-ciudad="Burgos" style="background:rgba(74,222,128,0.1);border:1px solid rgba(74,222,128,0.25);border-radius:16px;padding:4px 12px;color:#86efac;font-size:12px;cursor:pointer">Burgos</button>
+      <button class="btn-ciudad" data-ciudad="Madrid" style="background:rgba(74,222,128,0.1);border:1px solid rgba(74,222,128,0.25);border-radius:16px;padding:4px 12px;color:#86efac;font-size:12px;cursor:pointer">Madrid</button>
+      <button class="btn-ciudad" data-ciudad="Barcelona" style="background:rgba(74,222,128,0.1);border:1px solid rgba(74,222,128,0.25);border-radius:16px;padding:4px 12px;color:#86efac;font-size:12px;cursor:pointer">Barcelona</button>
+      <button class="btn-ciudad" data-ciudad="Valencia" style="background:rgba(74,222,128,0.1);border:1px solid rgba(74,222,128,0.25);border-radius:16px;padding:4px 12px;color:#86efac;font-size:12px;cursor:pointer">Valencia</button>
+      <button class="btn-ciudad" data-ciudad="Sevilla" style="background:rgba(74,222,128,0.1);border:1px solid rgba(74,222,128,0.25);border-radius:16px;padding:4px 12px;color:#86efac;font-size:12px;cursor:pointer">Sevilla</button>
+      <button class="btn-ciudad" data-ciudad="Tarragona" style="background:rgba(74,222,128,0.1);border:1px solid rgba(74,222,128,0.25);border-radius:16px;padding:4px 12px;color:#86efac;font-size:12px;cursor:pointer">Tarragona</button>
+      <button class="btn-ciudad" data-ciudad="Zaragoza" style="background:rgba(74,222,128,0.1);border:1px solid rgba(74,222,128,0.25);border-radius:16px;padding:4px 12px;color:#86efac;font-size:12px;cursor:pointer">Zaragoza</button>
+      <button class="btn-ciudad" data-ciudad="Bilbao" style="background:rgba(74,222,128,0.1);border:1px solid rgba(74,222,128,0.25);border-radius:16px;padding:4px 12px;color:#86efac;font-size:12px;cursor:pointer">Bilbao</button>
+    </div>
+
+    <button id="btn-entrar-jardin" style="width:100%;background:linear-gradient(135deg,#4ade80,#22c55e);border:none;border-radius:10px;padding:12px;color:#0f1a0f;font-size:15px;font-weight:bold;cursor:pointer;font-family:Georgia,serif;margin-bottom:10px">Entrar al jardín 🌿</button>
+    <button id="btn-saltar-ciudad" style="background:none;border:none;color:#4a6b4a;font-size:12px;cursor:pointer;font-family:Georgia,serif">Continuar sin especificar ciudad</button>
+  </div>
+</div>
+
+<!-- Modal de Login/Registro -->
+<div id="auth-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.8);z-index:500;align-items:center;justify-content:center">
+  <div style="background:#111e11;border:1px solid rgba(134,239,172,0.25);border-radius:20px;padding:28px;width:340px;max-width:90vw">
+    <div style="text-align:center;margin-bottom:20px">
+      <div style="font-size:40px;margin-bottom:8px">🌱</div>
+      <h2 style="color:#86efac;font-weight:normal;font-size:20px;margin:0 0 4px">Mi Jardín</h2>
+      <p style="color:#6b9c6b;font-size:12px;margin:0">Tu diario y favoritos privados</p>
+    </div>
+
+    <!-- Tabs login/registro -->
+    <div style="display:flex;border-bottom:1px solid rgba(134,239,172,0.15);margin-bottom:18px">
+      <button id="tab-login" onclick="authTab('login')" style="flex:1;background:none;border:none;border-bottom:2px solid #4ade80;padding:10px;color:#4ade80;font-size:13px;cursor:pointer;font-family:Georgia,serif">Entrar</button>
+      <button id="tab-reg" onclick="authTab('reg')" style="flex:1;background:none;border:none;border-bottom:2px solid transparent;padding:10px;color:#6b9c6b;font-size:13px;cursor:pointer;font-family:Georgia,serif">Registrarse</button>
+    </div>
+
+    <div id="auth-error" style="display:none;background:rgba(248,113,113,0.1);border:1px solid rgba(248,113,113,0.3);border-radius:8px;padding:10px;color:#fca5a5;font-size:12px;margin-bottom:12px;text-align:center"></div>
+    <div id="auth-ok" style="display:none;background:rgba(74,222,128,0.1);border:1px solid rgba(74,222,128,0.3);border-radius:8px;padding:10px;color:#86efac;font-size:12px;margin-bottom:12px;text-align:center"></div>
+
+    <input type="email" id="auth-email" placeholder="Tu email" style="width:100%;background:rgba(255,255,255,0.06);border:1px solid rgba(134,239,172,0.2);border-radius:8px;padding:10px 12px;color:#e8f5e8;font-family:Georgia,serif;font-size:13px;margin-bottom:10px;outline:none;box-sizing:border-box">
+    <input type="password" id="auth-pass" placeholder="Contraseña" style="width:100%;background:rgba(255,255,255,0.06);border:1px solid rgba(134,239,172,0.2);border-radius:8px;padding:10px 12px;color:#e8f5e8;font-family:Georgia,serif;font-size:13px;margin-bottom:16px;outline:none;box-sizing:border-box">
+
+    <button id="auth-btn" onclick="doAuth()" style="width:100%;background:linear-gradient(135deg,#4ade80,#22c55e);border:none;border-radius:10px;padding:12px;color:#0f1a0f;font-size:14px;font-weight:bold;cursor:pointer;font-family:Georgia,serif">Entrar</button>
+
+    <button onclick="cerrarAuth()" style="width:100%;background:none;border:none;padding:10px;color:#4a6b4a;font-size:12px;cursor:pointer;margin-top:8px;font-family:Georgia,serif">Usar sin cuenta (datos compartidos)</button>
+  </div>
+</div>
+
+<!-- Panel lateral de jardín -->
+<div id="PO" onclick="cerrarPanel()" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:499"></div>
+
+<button id="btn-panel-main" style="position:fixed;bottom:24px;right:24px;background:linear-gradient(135deg,#4ade80,#22c55e);border:none;border-radius:50%;width:56px;height:56px;font-size:22px;cursor:pointer;z-index:400;box-shadow:0 4px 16px rgba(74,222,128,0.4)">🌿</button>
+
+<div id="PL" style="position:fixed;top:0;right:-500px;width:400px;max-width:100vw;height:100vh;background:#0f1a0f;border-left:1px solid rgba(134,239,172,0.2);z-index:500;transition:right .3s ease;display:flex;flex-direction:column">
+  <div style="background:rgba(20,50,20,0.98);padding:14px 16px;border-bottom:2px solid rgba(74,222,128,0.4);flex-shrink:0;min-height:90px">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+      <div><h2 style="color:#86efac;font-weight:normal;font-size:18px;margin:0">🌿 Mi Jardín</h2><span id="ciudad-badge" style="color:#4a6b4a;font-size:11px;cursor:pointer" onclick="cambiarCiudad()" title="Cambiar ciudad">📍</span></div>
+      <button onclick="cerrarPanel()" style="background:none;border:1px solid rgba(134,239,172,0.3);border-radius:50%;width:32px;height:32px;color:#86efac;font-size:16px;cursor:pointer">✕</button>
+    </div>
+    <div id="user-info" style="display:none;align-items:center;justify-content:space-between">
+      <span id="user-email" style="color:#6b9c6b;font-size:11px"></span>
+      <button onclick="doLogout()" style="background:none;border:1px solid rgba(248,113,113,0.3);border-radius:8px;padding:3px 10px;color:#f87171;font-size:11px;cursor:pointer">Salir</button>
+    </div>
+    <div id="no-login-info" style="display:flex;align-items:center;justify-content:space-between;margin-top:6px;background:rgba(74,222,128,0.08);border:1px solid rgba(74,222,128,0.2);border-radius:8px;padding:6px 10px">
+      <span style="color:#4a6b4a;font-size:11px;font-style:italic">Sin cuenta — datos compartidos</span>
+      <button onclick="mostrarAuth()" style="background:rgba(74,222,128,0.2);border:1px solid rgba(74,222,128,0.5);border-radius:8px;padding:5px 14px;color:#4ade80;font-size:12px;cursor:pointer;font-weight:bold">🔑 Iniciar sesión</button>
+    </div>
+  </div>
+  <div style="display:flex;border-bottom:1px solid rgba(134,239,172,0.15);flex-shrink:0;overflow-x:auto">
+    <button class="ptab active" onclick="pTab(this,'pdiario')" style="flex:1;background:none;border:none;border-bottom:2px solid #4ade80;padding:10px 6px;color:#4ade80;font-size:11px;cursor:pointer;font-family:Georgia,serif;white-space:nowrap">📔 Diario</button>
+    <button class="ptab" onclick="pTab(this,'pfavs')" style="flex:1;background:none;border:none;border-bottom:2px solid transparent;padding:10px 6px;color:#6b9c6b;font-size:11px;cursor:pointer;font-family:Georgia,serif;white-space:nowrap">⭐ Favoritos</button>
+    <button class="ptab" onclick="pTab(this,'pcom')" style="flex:1;background:none;border:none;border-bottom:2px solid transparent;padding:10px 6px;color:#6b9c6b;font-size:11px;cursor:pointer;font-family:Georgia,serif;white-space:nowrap">💬 Comunidad</button>
+    <button class="ptab" onclick="pTab(this,'pcal')" style="flex:1;background:none;border:none;border-bottom:2px solid transparent;padding:10px 6px;color:#6b9c6b;font-size:11px;cursor:pointer;font-family:Georgia,serif;white-space:nowrap">📅 Calendario</button>
+    <button class="ptab" onclick="pTab(this,'ptiempo')" style="flex:1;background:none;border:none;border-bottom:2px solid transparent;padding:10px 6px;color:#6b9c6b;font-size:11px;cursor:pointer;font-family:Georgia,serif;white-space:nowrap">🌤️ Tiempo</button>
+    <button class="ptab" onclick="pTab(this,'pestats')" style="flex:1;background:none;border:none;border-bottom:2px solid transparent;padding:10px 6px;color:#6b9c6b;font-size:11px;cursor:pointer;font-family:Georgia,serif;white-space:nowrap">📊 Stats</button>
+    <button class="ptab" onclick="pTab(this,'pmapa')" style="flex:1;background:none;border:none;border-bottom:2px solid transparent;padding:10px 6px;color:#6b9c6b;font-size:11px;cursor:pointer;font-family:Georgia,serif;white-space:nowrap">🗺️ Mapa</button>
+  </div>
+
+  <div id="pmapa" style="padding:16px;display:none;overflow-y:auto;flex:1">
+  <div id="mapa-contenido"></div>
+</div>
+<div id="pdiario" style="padding:16px;overflow-y:auto;flex:1">
+    <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(134,239,172,0.15);border-radius:12px;padding:14px;margin-bottom:14px">
+      <select id="df-planta" style="width:100%;background:rgba(255,255,255,0.06);border:1px solid rgba(134,239,172,0.2);border-radius:8px;padding:8px 10px;color:#e8f5e8;font-family:Georgia,serif;font-size:13px;margin-bottom:8px;outline:none"></select>
+      <input type="date" id="df-fecha" style="width:100%;background:rgba(255,255,255,0.06);border:1px solid rgba(134,239,172,0.2);border-radius:8px;padding:8px 10px;color:#e8f5e8;font-family:Georgia,serif;font-size:13px;margin-bottom:8px;outline:none">
+      <select id="df-tipo" style="width:100%;background:rgba(255,255,255,0.06);border:1px solid rgba(134,239,172,0.2);border-radius:8px;padding:8px 10px;color:#e8f5e8;font-family:Georgia,serif;font-size:13px;margin-bottom:8px;outline:none">
+        <option value="siembra">🌱 Siembra</option>
+        <option value="riego">💧 Riego</option>
+        <option value="abono">🌿 Abono</option>
+        <option value="poda">✂️ Poda</option>
+        <option value="cosecha">🍅 Cosecha</option>
+        <option value="plaga">🦠 Plaga detectada</option>
+        <option value="general">📝 Nota general</option>
+      </select>
+      <textarea id="df-nota" placeholder="Que hiciste hoy en el jardin?" style="width:100%;background:rgba(255,255,255,0.06);border:1px solid rgba(134,239,172,0.2);border-radius:8px;padding:8px 10px;color:#e8f5e8;font-family:Georgia,serif;font-size:13px;margin-bottom:8px;outline:none;height:70px;resize:none"></textarea>
+      <button onclick="guardarDiario()" style="background:linear-gradient(135deg,#4ade80,#22c55e);border:none;border-radius:8px;padding:8px 18px;color:#0f1a0f;font-size:13px;font-weight:bold;cursor:pointer;width:100%">Guardar entrada</button>
+    </div>
+    <div id="lista-diario" style="color:#4a6b4a;font-size:13px;text-align:center;padding:20px;font-style:italic">Cargando...</div>
+  </div>
+
+  <div id="pfavs" style="padding:16px;display:none;overflow-y:auto;flex:1">
+    <p style="color:#6b9c6b;font-size:12px;margin-bottom:12px;font-style:italic">Abre cualquier planta y pulsa el boton Favorito para guardarla aqui</p>
+    <div id="lista-favs" style="color:#4a6b4a;font-size:13px;text-align:center;padding:20px;font-style:italic">Cargando...</div>
+  </div>
+
+  <div id="pcom" style="padding:16px;display:none;overflow-y:auto;flex:1">
+    <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(134,239,172,0.15);border-radius:12px;padding:14px;margin-bottom:14px">
+      <select id="cf-planta" style="width:100%;background:rgba(255,255,255,0.06);border:1px solid rgba(134,239,172,0.2);border-radius:8px;padding:8px 10px;color:#e8f5e8;font-family:Georgia,serif;font-size:13px;margin-bottom:8px;outline:none"></select>
+      <input type="text" id="cf-autor" placeholder="Tu nombre (opcional)" style="width:100%;background:rgba(255,255,255,0.06);border:1px solid rgba(134,239,172,0.2);border-radius:8px;padding:8px 10px;color:#e8f5e8;font-family:Georgia,serif;font-size:13px;margin-bottom:8px;outline:none">
+      <textarea id="cf-texto" placeholder="Comparte tu truco o experiencia..." style="width:100%;background:rgba(255,255,255,0.06);border:1px solid rgba(134,239,172,0.2);border-radius:8px;padding:8px 10px;color:#e8f5e8;font-family:Georgia,serif;font-size:13px;margin-bottom:8px;outline:none;height:60px;resize:none"></textarea>
+      <button onclick="guardarCom()" style="background:linear-gradient(135deg,#4ade80,#22c55e);border:none;border-radius:8px;padding:8px 18px;color:#0f1a0f;font-size:13px;font-weight:bold;cursor:pointer;width:100%">Compartir truco</button>
+    </div>
+    <div id="lista-com" style="color:#4a6b4a;font-size:13px;text-align:center;padding:20px;font-style:italic">Cargando...</div>
+  </div>
+
+  <div id="pcal" style="padding:16px;display:none;overflow-y:auto;flex:1">
+  <div id="cal-contenido"></div>
+</div>
+<div id="pestats" style="padding:16px;display:none;overflow-y:auto;flex:1">
+  <div id="stats-contenido"></div>
+</div>
+<div id="ptiempo" style="padding:16px;display:none;overflow-y:auto;flex:1">
+    <div id="tiempo-box" style="color:#4a6b4a;font-size:13px;text-align:center;padding:20px;font-style:italic">Cargando tiempo de Burgos...</div>
+  </div>
+</div>
+
+<script>
+var SBURL="https://reeaclyyhwukhwbnfacv.supabase.co";
+var SBKEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJlZWFjbHl5aHd1a2h3Ym5mYWN2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU2MzkyMjYsImV4cCI6MjA5MTIxNTIyNn0.bY4mSUz_OwfIgofqTYYZBNIYX9WzR5p6NxE28bnbB-g";
+
+function sbH(){
+  return {"Content-Type":"application/json","apikey":SBKEY,"Authorization":"Bearer "+getToken()};
+}
+async function sbGet(t,f){
+  var r=await fetch(SBURL+"/rest/v1/"+t+"?order=created_at.desc&limit=50"+(f||""),{headers:sbH()});
+  return await r.json();
+}
+async function sbPost(t,d){
+  var r=await fetch(SBURL+"/rest/v1/"+t,{method:"POST",headers:Object.assign({},sbH(),{"Prefer":"return=minimal"}),body:JSON.stringify(d)});
+  return r.ok;
+}
+async function sbDel(t,id){
+  var r=await fetch(SBURL+"/rest/v1/"+t+"?id=eq."+id,{method:"DELETE",headers:sbH()});
+  return r.ok;
+}
+
+
+// ===== AUTENTICACIÓN =====
+var currentUser = null;
+
+async function checkSession(){
+  try{
+    var r = await fetch(SBURL+"/auth/v1/user", {
+      headers: {"apikey":SBKEY, "Authorization":"Bearer "+getToken()}
+    });
+    if(r.ok){
+      var d = await r.json();
+      if(d.id){ currentUser = d; actualizarUI(); return; }
+    }
+  }catch(e){}
+  currentUser = null;
+  actualizarUI();
+}
+
+function getToken(){
+  return localStorage.getItem("sb_token") || SBKEY;
+}
+
+function actualizarUI(){
+  var ui = document.getElementById("user-info");
+  var noui = document.getElementById("no-login-info");
+  if(currentUser){
+    if(ui){ ui.style.display="flex"; }
+    if(noui){ noui.style.display="none"; }
+    var em = document.getElementById("user-email");
+    if(em) em.textContent = "✓ "+currentUser.email;
+  } else {
+    if(ui){ ui.style.display="none"; }
+    if(noui){ noui.style.display="flex"; }
+  }
+}
+
+function mostrarAuth(){
+  var o = document.getElementById("auth-overlay");
+  if(o){ o.style.display="flex"; }
+}
+
+function cerrarAuth(){
+  var o = document.getElementById("auth-overlay");
+  if(o){ o.style.display="none"; }
+}
+
+function authTab(tab){
+  var tl = document.getElementById("tab-login");
+  var tr = document.getElementById("tab-reg");
+  var btn = document.getElementById("auth-btn");
+  if(tab==="login"){
+    tl.style.color="#4ade80"; tl.style.borderBottom="2px solid #4ade80";
+    tr.style.color="#6b9c6b"; tr.style.borderBottom="2px solid transparent";
+    btn.textContent="Entrar";
+  } else {
+    tr.style.color="#4ade80"; tr.style.borderBottom="2px solid #4ade80";
+    tl.style.color="#6b9c6b"; tl.style.borderBottom="2px solid transparent";
+    btn.textContent="Crear cuenta";
+  }
+  document.getElementById("auth-error").style.display="none";
+  document.getElementById("auth-ok").style.display="none";
+}
+
+async function doAuth(){
+  var email = document.getElementById("auth-email").value.trim();
+  var pass = document.getElementById("auth-pass").value;
+  var errEl = document.getElementById("auth-error");
+  var okEl = document.getElementById("auth-ok");
+  var btn = document.getElementById("auth-btn");
+  var isReg = btn.textContent === "Crear cuenta";
+
+  errEl.style.display="none";
+  okEl.style.display="none";
+
+  if(!email || !pass){ errEl.textContent="Rellena email y contraseña"; errEl.style.display="block"; return; }
+  if(pass.length < 6){ errEl.textContent="La contraseña debe tener al menos 6 caracteres"; errEl.style.display="block"; return; }
+
+  btn.textContent = isReg ? "Creando cuenta..." : "Entrando...";
+  btn.disabled = true;
+
+  try{
+    var endpoint = isReg ? "/auth/v1/signup" : "/auth/v1/token?grant_type=password";
+    var r = await fetch(SBURL+endpoint, {
+      method:"POST",
+      headers:{"Content-Type":"application/json","apikey":SBKEY},
+      body: JSON.stringify({email:email, password:pass})
+    });
+    var d = await r.json();
+
+    if(d.access_token){
+      localStorage.setItem("sb_token", d.access_token);
+      currentUser = d.user;
+      actualizarUI();
+      cerrarAuth();
+      if(isReg){
+        okEl.textContent="Cuenta creada. Bienvenido/a!";
+        okEl.style.display="block";
+      }
+      cargarDiario();
+    } else if(isReg && d.id){
+      okEl.textContent="Cuenta creada. Revisa tu email para confirmar.";
+      okEl.style.display="block";
+    } else {
+      var msg = d.error_description || d.msg || "Error al iniciar sesión";
+      if(msg.includes("Invalid login")) msg = "Email o contraseña incorrectos";
+      if(msg.includes("already registered")) msg = "Este email ya está registrado. Usa Entrar.";
+      errEl.textContent = msg;
+      errEl.style.display="block";
+    }
+  }catch(e){
+    errEl.textContent = "Error de conexión. Inténtalo de nuevo.";
+    errEl.style.display="block";
+  }
+
+  btn.textContent = isReg ? "Crear cuenta" : "Entrar";
+  btn.disabled = false;
+}
+
+async function doLogout(){
+  try{
+    await fetch(SBURL+"/auth/v1/logout", {
+      method:"POST",
+      headers:{"apikey":SBKEY,"Authorization":"Bearer "+getToken()}
+    });
+  }catch(e){}
+  localStorage.removeItem("sb_token");
+  currentUser = null;
+  actualizarUI();
+  cargarDiario();
+  cargarFavs();
+}
+
+// Permitir Enter en los campos de login
+document.addEventListener("DOMContentLoaded", function(){
+  ["auth-email","auth-pass"].forEach(function(id){
+    var el = document.getElementById(id);
+    if(el) el.addEventListener("keydown", function(e){ if(e.key==="Enter") doAuth(); });
+  });
+  checkSession();
+});
+
+function getUserFilter(){
+  if(currentUser) return "&user_id=eq."+currentUser.id;
+  return "";
+}
+
+function getAuthHeaders(){
+  var token = getToken();
+  return {"Content-Type":"application/json","apikey":SBKEY,"Authorization":"Bearer "+token};
+}
+
+
+// ===== CIUDAD / UBICACIÓN =====
+var ciudadUsuario = "Burgos";
+var ciudadLat = 42.34;
+var ciudadLon = -3.70;
+
+var ciudadesCoords = {
+  "burgos":     {lat:42.34, lon:-3.70},
+  "madrid":     {lat:40.42, lon:-3.70},
+  "barcelona":  {lat:41.38, lon:2.17},
+  "valencia":   {lat:39.47, lon:-0.38},
+  "sevilla":    {lat:37.39, lon:-5.99},
+  "tarragona":  {lat:41.12, lon:1.24},
+  "zaragoza":   {lat:41.65, lon:-0.87},
+  "bilbao":     {lat:43.26, lon:-2.93},
+  "málaga":     {lat:36.72, lon:-4.42},
+  "malaga":     {lat:36.72, lon:-4.42},
+  "alicante":   {lat:38.35, lon:-0.48},
+  "murcia":     {lat:37.98, lon:-1.13},
+  "granada":    {lat:37.18, lon:-3.60},
+  "córdoba":    {lat:37.89, lon:-4.78},
+  "cordoba":    {lat:37.89, lon:-4.78},
+  "valladolid": {lat:41.65, lon:-4.72},
+  "salamanca":  {lat:40.97, lon:-5.66},
+  "palencia":   {lat:42.01, lon:-4.53},
+  "santander":  {lat:43.46, lon:-3.81},
+  "logroño":    {lat:42.47, lon:-2.44},
+  "logrono":    {lat:42.47, lon:-2.44},
+  "pamplona":   {lat:42.82, lon:-1.64},
+  "san sebastián": {lat:43.32, lon:-1.98},
+  "san sebastian": {lat:43.32, lon:-1.98},
+  "vitoria":    {lat:42.85, lon:-2.67},
+  "oviedo":     {lat:43.36, lon:-5.85},
+  "gijón":      {lat:43.54, lon:-5.66},
+  "gijon":      {lat:43.54, lon:-5.66},
+  "vigo":       {lat:42.23, lon:-8.71},
+  "coruña":     {lat:43.37, lon:-8.40},
+  "pontevedra": {lat:42.43, lon:-8.64},
+  "lugo":       {lat:43.01, lon:-7.55},
+  "ourense":    {lat:42.34, lon:-7.86},
+  "lleida":     {lat:41.61, lon:0.62},
+  "girona":     {lat:41.98, lon:2.82},
+  "toledo":     {lat:39.86, lon:-4.03},
+  "albacete":   {lat:38.99, lon:-1.86},
+  "cuenca":     {lat:40.07, lon:-2.13},
+  "guadalajara":{lat:40.63, lon:-3.17},
+  "ciudad real":{lat:38.99, lon:-3.92},
+  "badajoz":    {lat:38.88, lon:-6.97},
+  "cáceres":    {lat:39.47, lon:-6.37},
+  "caceres":    {lat:39.47, lon:-6.37},
+  "mérida":     {lat:38.92, lon:-6.34},
+  "merida":     {lat:38.92, lon:-6.34},
+  "huelva":     {lat:37.26, lon:-6.95},
+  "jaén":       {lat:37.77, lon:-3.79},
+  "jaen":       {lat:37.77, lon:-3.79},
+  "almería":    {lat:36.84, lon:-2.46},
+  "almeria":    {lat:36.84, lon:-2.46},
+  "cádiz":      {lat:36.53, lon:-6.30},
+  "cadiz":      {lat:36.53, lon:-6.30},
+  "castellón":  {lat:39.99, lon:-0.05},
+  "castellon":  {lat:39.99, lon:-0.05},
+  "palma":      {lat:39.57, lon:2.65},
+  "ibiza":      {lat:38.91, lon:1.43},
+  "menorca":    {lat:39.95, lon:3.83},
+  "tenerife":   {lat:28.29, lon:-16.62},
+  "las palmas": {lat:28.12, lon:-15.43},
+  "ceuta":      {lat:35.89, lon:-5.32},
+  "melilla":    {lat:35.29, lon:-2.94}
+};
+
+function elegirCiudad(btn){
+  document.getElementById("ciudad-input").value = btn.textContent;
+}
+
+function confirmarCiudad(){
+  var ciudad = document.getElementById("ciudad-input").value.trim();
+  if(!ciudad){ ciudad = "Burgos"; }
+  guardarCiudad(ciudad);
+}
+
+function saltarCiudad(){
+  guardarCiudad("Burgos");
+}
+
+function guardarCiudad(ciudad){
+  ciudadUsuario = ciudad;
+  var clave = ciudad.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"");
+  var coords = ciudadesCoords[clave];
+  if(coords){
+    ciudadLat = coords.lat;
+    ciudadLon = coords.lon;
+  } else {
+    // Ciudad no reconocida: intentar buscar coords por nombre
+    buscarCoordsCiudad(ciudad);
+  }
+  localStorage.setItem("jardin_ciudad", ciudad);
+  localStorage.setItem("jardin_lat", ciudadLat);
+  localStorage.setItem("jardin_lon", ciudadLon);
+  actualizarCiudadUI();
+  document.getElementById("bienvenida-overlay").style.display = "none";
+}
+
+async function buscarCoordsCiudad(ciudad){
+  try{
+    var r = await fetch("https://geocoding-api.open-meteo.com/v1/search?name="+encodeURIComponent(ciudad)+"&count=1&language=es&format=json");
+    var d = await r.json();
+    if(d.results && d.results.length > 0){
+      ciudadLat = d.results[0].latitude;
+      ciudadLon = d.results[0].longitude;
+      localStorage.setItem("jardin_lat", ciudadLat);
+      localStorage.setItem("jardin_lon", ciudadLon);
+    }
+  }catch(e){}
+}
+
+function actualizarCiudadUI(){
+  var badge = document.getElementById("ciudad-badge");
+  if(badge) badge.textContent = "📍 "+ciudadUsuario;
+  var header = document.getElementById("ciudad-header");
+  if(header) header.textContent = "Adaptada a "+ciudadUsuario;
+}
+
+function cargarCiudadGuardada(){
+  var ciudad = localStorage.getItem("jardin_ciudad");
+  var lat = localStorage.getItem("jardin_lat");
+  var lon = localStorage.getItem("jardin_lon");
+  if(ciudad){
+    ciudadUsuario = ciudad;
+    if(lat) ciudadLat = parseFloat(lat);
+    if(lon) ciudadLon = parseFloat(lon);
+    actualizarCiudadUI();
+    document.getElementById("bienvenida-overlay").style.display = "none";
+  }
+  // Permitir cambiar ciudad desde el panel
+}
+
+// Añadir botón para cambiar ciudad en el panel
+function cambiarCiudad(){
+  document.getElementById("ciudad-input").value = ciudadUsuario;
+  document.getElementById("bienvenida-overlay").style.display = "flex";
+}
+
+
+
+// ===== CALENDARIO Y ALERTAS =====
+var CAL = [
+  {n:"Tomate",      e:"🍅", s:[4,5],     c:[7,8,9,10]},
+  {n:"Pimiento",    e:"🫑", s:[5,6],     c:[8,9,10]},
+  {n:"Pepino",      e:"🥒", s:[5],       c:[7,8]},
+  {n:"Calabacin",   e:"🫛", s:[5],       c:[6,7,8,9]},
+  {n:"Lechuga",     e:"🥬", s:[3,4,8,9], c:[5,6,10,11]},
+  {n:"Zanahoria",   e:"🥕", s:[3,4,7,8], c:[6,7,10,11]},
+  {n:"Cebolla",     e:"🧅", s:[3,4],     c:[7,8]},
+  {n:"Ajo",         e:"🧄", s:[10,11],   c:[6,7]},
+  {n:"Puerro",      e:"🌱", s:[2,3],     c:[10,11,12,1,2]},
+  {n:"Espinaca",    e:"🌿", s:[3,4,8,9], c:[5,6,10,11]},
+  {n:"Acelga",      e:"🌿", s:[4,5,8],   c:[6,7,8,10,11]},
+  {n:"Judia verde", e:"🫘", s:[5],       c:[7,8,9]},
+  {n:"Guisante",    e:"🫛", s:[2,3],     c:[5,6]},
+  {n:"Brocoli",     e:"🥦", s:[6,7],     c:[10,11,12]},
+  {n:"Patata",      e:"🥔", s:[4],       c:[7,8,9,10]},
+  {n:"Maiz",        e:"🌽", s:[5],       c:[8,9]},
+  {n:"Rabano",      e:"🌱", s:[3,4,9],   c:[4,5,10]},
+  {n:"Remolacha",   e:"🫙", s:[4,5],     c:[7,8,9]},
+  {n:"Nabo",        e:"🌱", s:[8,9],     c:[10,11]},
+  {n:"Fresa",       e:"🍓", s:[9,10],    c:[5,6]},
+  {n:"Frambuesa",   e:"🫐", s:[12,1,2],  c:[6,7,9,10]},
+  {n:"Arandano",    e:"🫐", s:[2,3],     c:[7,8]},
+  {n:"Mora",        e:"🫐", s:[12,1],    c:[8,9]},
+  {n:"Manzano",     e:"🍎", s:[12,1,2],  c:[8,9,10]},
+  {n:"Peral",       e:"🍐", s:[12,1,2],  c:[8,9,10]},
+  {n:"Cerezo",      e:"🍒", s:[12,1,2],  c:[6]},
+  {n:"Ciruelo",     e:"🍑", s:[12,1,2],  c:[7,8,9]},
+  {n:"Nogal",       e:"🌰", s:[12,1,2],  c:[9,10]},
+  {n:"Membrillo",   e:"🍋", s:[12,1,2],  c:[10]},
+  {n:"Higuera",     e:"🌿", s:[4,5],     c:[6,8,9]},
+  {n:"Melocotonero",e:"🍑", s:[12,1,2],  c:[7,8]},
+  {n:"Almendro",    e:"🌸", s:[12,1,2],  c:[8,9]},
+  {n:"Albahaca",    e:"🌿", s:[5],       c:[6,7,8,9]},
+  {n:"Perejil",     e:"🌿", s:[3,4,8],   c:[5,6,7,9,10,11]},
+  {n:"Cilantro",    e:"🌿", s:[3,4,8,9], c:[4,5,9,10]},
+  {n:"Manzanilla",  e:"🌼", s:[3,4],     c:[6,7]},
+  {n:"Oregano",     e:"🌿", s:[4,5],     c:[6,7,8]},
+  {n:"Lavanda",     e:"💜", s:[4,5],     c:[6,7]},
+  {n:"Girasol",     e:"🌻", s:[5],       c:[9]},
+  {n:"Tulipan",     e:"🌷", s:[10,11],   c:[3,4,5]},
+  {n:"Narciso",     e:"🌼", s:[10,11],   c:[2,3,4]},
+  {n:"Gladiolo",    e:"🌸", s:[4,5],     c:[8,9]}
+];
+var MESES = ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
+
+function itemCal(p, tipo){
+  var bg = tipo==="c" ? "rgba(251,191,36,0.06)" : "rgba(74,222,128,0.06)";
+  var border = tipo==="c" ? "rgba(251,191,36,0.2)" : "rgba(74,222,128,0.15)";
+  var color = tipo==="c" ? "#fde68a" : "#86efac";
+  var div = document.createElement("div");
+  div.style.cssText = "background:"+bg+";border:1px solid "+border+";border-radius:8px;padding:8px 10px;margin-bottom:5px;display:flex;align-items:center;gap:8px;cursor:pointer";
+  div.innerHTML = "<span style='font-size:18px'>"+p.e+"</span><span style='color:"+color+";font-size:12px'>"+p.n+"</span>";
+  div.onclick = function(){ cerrarPanel(); abrir(p.n); };
+  return div;
+}
+
+function cargarCalendario(){
+  var el = document.getElementById("cal-contenido");
+  var mesActual = new Date().getMonth()+1;
+  var html = "<div style='margin-bottom:14px'><label style='color:#6b9c6b;font-size:11px;display:block;margin-bottom:6px'>Ver mes:</label><div id='meses-btns' style='display:flex;flex-wrap:wrap;gap:4px'></div></div><div id='cal-mes-contenido'></div>";
+  el.innerHTML = html;
+  var cont = document.getElementById("meses-btns");
+  for(var m=1; m<=12; m++){
+    (function(mes){
+      var b = document.createElement("button");
+      b.id = "mes-btn-"+mes;
+      b.textContent = MESES[mes-1].substring(0,3);
+      b.style.cssText = "background:rgba(255,255,255,0.04);border:1px solid rgba(134,239,172,0.15);border-radius:8px;padding:4px 8px;color:#6b9c6b;font-size:10px;cursor:pointer;font-family:Georgia,serif";
+      b.onclick = function(){ verMesCal(mes); };
+      cont.appendChild(b);
+    })(m);
+  }
+  verMesCal(mesActual);
+}
+
+function verMesCal(mes){
+  for(var m=1;m<=12;m++){
+    var b=document.getElementById("mes-btn-"+m);
+    if(!b) continue;
+    if(m===mes){ b.style.background="rgba(74,222,128,0.25)"; b.style.borderColor="rgba(74,222,128,0.5)"; b.style.color="#4ade80"; }
+    else { b.style.background="rgba(255,255,255,0.04)"; b.style.borderColor="rgba(134,239,172,0.15)"; b.style.color="#6b9c6b"; }
+  }
+  var sembrar = CAL.filter(function(p){ return p.s.indexOf(mes)>-1; });
+  var cosechar = CAL.filter(function(p){ return p.c.indexOf(mes)>-1; });
+  var el = document.getElementById("cal-mes-contenido");
+  el.innerHTML = "<div style='font-size:14px;color:#86efac;font-weight:bold;margin-bottom:12px'>"+MESES[mes-1]+"</div>";
+
+  var divS = document.createElement("div");
+  divS.style.marginBottom="14px";
+  divS.innerHTML = "<div style='color:#4ade80;font-size:12px;font-weight:bold;margin-bottom:8px'>🌱 Sembrar y plantar</div>";
+  if(sembrar.length===0){ divS.innerHTML+="<div style='color:#4a6b4a;font-size:12px;font-style:italic;padding:8px'>Poco que sembrar este mes.</div>"; }
+  else { sembrar.forEach(function(p){ divS.appendChild(itemCal(p,"s")); }); }
+  el.appendChild(divS);
+
+  var divC = document.createElement("div");
+  divC.innerHTML = "<div style='color:#fbbf24;font-size:12px;font-weight:bold;margin-bottom:8px'>🍅 Cosechar y recolectar</div>";
+  if(cosechar.length===0){ divC.innerHTML+="<div style='color:#4a6b4a;font-size:12px;font-style:italic;padding:8px'>Nada que cosechar este mes.</div>"; }
+  else { cosechar.forEach(function(p){ divC.appendChild(itemCal(p,"c")); }); }
+  el.appendChild(divC);
+}
+
+function mostrarAlertas(){
+  var el = document.getElementById("alertas-cosecha");
+  if(!el) return;
+  var mes = new Date().getMonth()+1;
+  var cosechar = CAL.filter(function(p){ return p.c.indexOf(mes)>-1; });
+  var sembrar  = CAL.filter(function(p){ return p.s.indexOf(mes)>-1; });
+  if(cosechar.length===0 && sembrar.length===0){ el.style.display="none"; return; }
+  el.innerHTML="";
+  var wrap = document.createElement("div");
+  wrap.style.cssText="background:rgba(15,26,15,0.95);border:1px solid rgba(134,239,172,0.2);border-radius:14px;padding:14px 16px";
+  wrap.innerHTML="<div style='font-size:12px;color:#86efac;font-weight:bold;margin-bottom:10px'>📅 Este mes — "+MESES[mes-1]+"</div>";
+  var inner = document.createElement("div");
+  inner.style.cssText="display:flex;flex-wrap:wrap;gap:12px";
+
+  if(cosechar.length>0){
+    var dc=document.createElement("div");
+    dc.style.cssText="flex:1;min-width:140px";
+    dc.innerHTML="<div style='color:#fbbf24;font-size:10px;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px'>🍅 Cosechar ahora</div>";
+    var tags=document.createElement("div");
+    tags.style.cssText="display:flex;flex-wrap:wrap;gap:4px";
+    cosechar.slice(0,8).forEach(function(p){
+      var sp=document.createElement("span");
+      sp.style.cssText="background:rgba(251,191,36,0.1);border:1px solid rgba(251,191,36,0.25);border-radius:20px;padding:3px 10px;color:#fde68a;font-size:11px;cursor:pointer";
+      sp.textContent=p.e+" "+p.n;
+      sp.onclick=function(){ abrir(p.n); };
+      tags.appendChild(sp);
+    });
+    dc.appendChild(tags);
+    inner.appendChild(dc);
+  }
+
+  if(sembrar.length>0){
+    var ds=document.createElement("div");
+    ds.style.cssText="flex:1;min-width:140px";
+    ds.innerHTML="<div style='color:#4ade80;font-size:10px;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px'>🌱 Sembrar ahora</div>";
+    var tags2=document.createElement("div");
+    tags2.style.cssText="display:flex;flex-wrap:wrap;gap:4px";
+    sembrar.slice(0,8).forEach(function(p){
+      var sp=document.createElement("span");
+      sp.style.cssText="background:rgba(74,222,128,0.08);border:1px solid rgba(74,222,128,0.2);border-radius:20px;padding:3px 10px;color:#86efac;font-size:11px;cursor:pointer";
+      sp.textContent=p.e+" "+p.n;
+      sp.onclick=function(){ abrir(p.n); };
+      tags2.appendChild(sp);
+    });
+    ds.appendChild(tags2);
+    inner.appendChild(ds);
+  }
+
+  wrap.appendChild(inner);
+  el.appendChild(wrap);
+  el.style.display="block";
+}
+
+function pTab(btn,id){
+  document.querySelectorAll(".ptab").forEach(function(b){
+    b.style.color="#6b9c6b";
+    b.style.borderBottom="2px solid transparent";
+  });
+  btn.style.color="#4ade80";
+  btn.style.borderBottom="2px solid #4ade80";
+  ["pdiario","pfavs","pcom","pcal","ptiempo","pestats","pmapa"].forEach(function(d){
+    document.getElementById(d).style.display="none";
+  });
+  document.getElementById(id).style.display="block";
+  if(id==="pdiario") cargarDiario();
+  if(id==="pfavs") cargarFavs();
+  if(id==="pcom") cargarCom();
+  if(id==="pcal") cargarCalendario();
+  if(id==="ptiempo") cargarTiempo();
+  if(id==="pestats") cargarStats();
+  if(id==="pmapa") cargarMapa();
+}
+
+function abrirPanel(){
+  var pl = document.getElementById("PL");
+  var po = document.getElementById("PO");
+  if(!pl || !po) return;
+  pl.style.right="0";
+  po.style.display="block";
+  document.body.style.overflow="hidden";
+  poblarSelects();
+  cargarDiario();
+  var hoy=new Date().toISOString().split("T")[0];
+  document.getElementById("df-fecha").value=hoy;
+}
+function cerrarPanel(){
+  var pl = document.getElementById("PL");
+  var po = document.getElementById("PO");
+  if(!pl || !po) return;
+  pl.style.right="-500px";
+  po.style.display="none";
+  document.getElementById("PO").style.display="none";
+  document.body.style.overflow="";
+}
+function poblarSelects(){
+  var opts=P.map(function(p){return "<option value=\""+p.n+"\">"+p.e+" "+p.n+"</option>";}).join("");
+  var base="<option value=\"\">-- Selecciona planta --</option>"+opts;
+  document.getElementById("df-planta").innerHTML=base;
+  document.getElementById("cf-planta").innerHTML=base;
+}
+
+// DIARIO
+async function cargarDiario(){
+  var el=document.getElementById("lista-diario");
+  el.innerHTML="<div style='color:#4a6b4a;text-align:center;padding:20px;font-style:italic'>Cargando...</div>";
+  try{
+    var d=await sbGet("diario", currentUser ? "&user_id=eq."+currentUser.id : "");
+    if(!d||d.length===0){el.innerHTML="<div style='color:#4a6b4a;text-align:center;padding:20px;font-style:italic'>Sin entradas aun. Escribe tu primera nota!</div>";return;}
+    var icons={"siembra":"🌱","riego":"💧","abono":"🌿","poda":"✂️","cosecha":"🍅","plaga":"🦠","general":"📝"};
+    el.innerHTML=d.map(function(x){
+      var pp=P.find(function(q){return q.n===x.planta;});
+      var em=pp?pp.e:"🌱";
+      var ic=icons[x.tipo]||"📝";
+      return "<div style='background:rgba(255,255,255,0.04);border:1px solid rgba(134,239,172,0.12);border-radius:10px;padding:12px;margin-bottom:8px'>"
+        +"<div style='display:flex;align-items:center;gap:6px;margin-bottom:6px'>"
+        +"<span style='font-size:18px'>"+em+"</span>"
+        +"<span style='color:#86efac;font-size:12px;font-weight:bold'>"+x.planta+"</span>"
+        +"<span style='font-size:10px;border-radius:6px;padding:2px 7px;background:rgba(74,222,128,0.15);color:#4ade80'>"+ic+" "+x.tipo+"</span>"
+        +"<span style='color:#4a6b4a;font-size:11px;margin-left:auto'>"+x.fecha+"</span>"
+        +"<button onclick=\"borrarD('"+x.id+"')\" style='background:none;border:none;color:#f87171;font-size:11px;cursor:pointer'>✕</button>"
+        +"</div>"
+        +"<div style='color:#a3c4a3;font-size:12px;line-height:1.5'>"+x.nota+"</div>"
+        +"</div>";
+    }).join("");
+  }catch(e){el.innerHTML="<div style='color:#f87171;text-align:center;padding:20px'>Error al cargar</div>";}
+}
+async function guardarDiario(){
+  var pl=document.getElementById("df-planta").value;
+  var fe=document.getElementById("df-fecha").value;
+  var ti=document.getElementById("df-tipo").value;
+  var no=document.getElementById("df-nota").value.trim();
+  if(!pl||!fe||!no){alert("Rellena todos los campos");return;}
+  var pp=P.find(function(q){return q.n===pl;});
+  var uid = currentUser ? currentUser.id : null; var ok=await sbPost("diario",{planta:pl,emoji:pp?pp.e:"🌱",fecha:fe,tipo:ti,nota:no,user_id:uid});
+  if(ok){document.getElementById("df-nota").value="";cargarDiario();}
+  else alert("Error al guardar");
+}
+async function borrarD(id){
+  if(!confirm("Borrar esta entrada?"))return;
+  await sbDel("diario",id);
+  cargarDiario();
+}
+
+// FAVORITOS
+async function cargarFavs(){
+  var el=document.getElementById("lista-favs");
+  el.innerHTML="<div style='color:#4a6b4a;text-align:center;padding:20px;font-style:italic'>Cargando...</div>";
+  try{
+    var d=await sbGet("favoritos", currentUser ? "&user_id=eq."+currentUser.id : "");
+    if(!d||d.length===0){el.innerHTML="<div style='color:#4a6b4a;text-align:center;padding:20px;font-style:italic'>Sin favoritos. Abre una planta y pulsa el boton Favorito</div>";return;}
+    el.innerHTML=d.map(function(x){
+      return "<div style='background:rgba(255,255,255,0.04);border:1px solid rgba(134,239,172,0.12);border-radius:10px;padding:10px 12px;margin-bottom:8px;display:flex;align-items:center;gap:10px;cursor:pointer' onclick=\"abrirFav('"+x.planta+"')\">"
+        +"<span style='font-size:24px'>"+x.emoji+"</span>"
+        +"<span style='color:#86efac;font-size:13px;flex:1'>"+x.planta+"</span>"
+        +"<button onclick=\"event.stopPropagation();quitarFav('"+x.id+"')\" style='background:none;border:none;color:#f87171;font-size:14px;cursor:pointer'>✕</button>"
+        +"</div>";
+    }).join("");
+  }catch(e){el.innerHTML="<div style='color:#f87171;text-align:center;padding:20px'>Error al cargar</div>";}
+}
+async function toggleFav(nombre,emoji){
+  try{
+    var uid_filter = currentUser ? "&user_id=eq."+currentUser.id : ""; var d=await sbGet("favoritos","&planta=eq."+encodeURIComponent(nombre)+uid_filter);
+    if(d&&d.length>0){
+      await sbDel("favoritos",d[0].id);
+      alert("Quitado de favoritos");
+    }else{
+      var uid = currentUser ? currentUser.id : null; await sbPost("favoritos",{planta:nombre,emoji:emoji,user_id:uid});
+      alert("Anadido a favoritos!");
+    }
+  }catch(e){alert("Error al guardar favorito");}
+}
+async function quitarFav(id){
+  await sbDel("favoritos",id);
+  cargarFavs();
+}
+function abrirFav(nombre){
+  cerrarPanel();
+  abrir(nombre);
+}
+
+// COMUNIDAD
+async function cargarCom(){
+  var el=document.getElementById("lista-com");
+  el.innerHTML="<div style='color:#4a6b4a;text-align:center;padding:20px;font-style:italic'>Cargando...</div>";
+  try{
+    var d=await sbGet("comentarios");
+    if(!d||d.length===0){el.innerHTML="<div style='color:#4a6b4a;text-align:center;padding:20px;font-style:italic'>Sin comentarios. Se el primero en compartir un truco!</div>";return;}
+    el.innerHTML=d.map(function(x){
+      var fe=new Date(x.created_at).toLocaleDateString("es-ES");
+      return "<div style='background:rgba(255,255,255,0.04);border:1px solid rgba(134,239,172,0.12);border-radius:10px;padding:12px;margin-bottom:8px'>"
+        +"<div style='display:flex;align-items:center;gap:8px;margin-bottom:5px'>"
+        +"<span style='color:#4ade80;font-size:12px;font-weight:bold'>"+x.autor+"</span>"
+        +"<span style='color:#4a6b4a;font-size:11px'>sobre "+x.planta+"</span>"
+        +"<span style='color:#4a6b4a;font-size:10px;margin-left:auto'>"+fe+"</span>"
+        +"</div>"
+        +"<div style='color:#a3c4a3;font-size:12px;line-height:1.5'>"+x.texto+"</div>"
+        +"</div>";
+    }).join("");
+  }catch(e){el.innerHTML="<div style='color:#f87171;text-align:center;padding:20px'>Error al cargar</div>";}
+}
+async function guardarCom(){
+  var pl=document.getElementById("cf-planta").value;
+  var au=document.getElementById("cf-autor").value.trim()||"Anonimo";
+  var tx=document.getElementById("cf-texto").value.trim();
+  if(!pl||!tx){alert("Selecciona una planta y escribe tu truco");return;}
+  if(tx.length<10){alert("Escribe al menos 10 caracteres");return;}
+  var ok=await sbPost("comentarios",{planta:pl,autor:au,texto:tx});
+  if(ok){document.getElementById("cf-texto").value="";cargarCom();}
+  else alert("Error al guardar");
+}
+
+// TIEMPO BURGOS
+async function cargarTiempo(){
+  var el=document.getElementById("tiempo-box");
+  try{
+    var r=await fetch("https://api.open-meteo.com/v1/forecast?latitude="+ciudadLat+"&longitude="+ciudadLon+"&current=temperature_2m,precipitation,weathercode,windspeed_10m&timezone=auto");
+    var d=await r.json();
+    var c=d.current;
+    var temp=Math.round(c.temperature_2m);
+    var lluvia=c.precipitation;
+    var viento=Math.round(c.windspeed_10m);
+    var cod=c.weathercode;
+    var ico="☀️",desc="Despejado";
+    if(cod>=1&&cod<=3){ico="⛅";desc="Parcialmente nublado";}
+    if(cod>=45&&cod<=48){ico="🌫️";desc="Niebla";}
+    if(cod>=51&&cod<=67){ico="🌧️";desc="Lluvia";}
+    if(cod>=71&&cod<=77){ico="❄️";desc="Nieve";}
+    if(cod>=80&&cod<=82){ico="🌦️";desc="Chubascos";}
+    if(cod>=95){ico="⛈️";desc="Tormenta";}
+    var consejo="";
+    if(lluvia>0)consejo="Hay lluvia hoy. No es necesario regar. Aprovecha para labores de interior.";
+    else if(temp>25)consejo="Hace calor. Riega al atardecer. Protege las plantas mas delicadas del sol directo.";
+    else if(temp<5)consejo="Temperatura muy baja. Protege las plantas sensibles. No plantes nada hoy.";
+    else if(temp>=5&&temp<=15)consejo="Temperatura ideal para trabajar en el jardin. Buena epoca para plantar ajo, cebolla o hacer labores de poda.";
+    else consejo="Tiempo agradable para el jardin. Revisa tus plantas y aprovecha para sembrar o trasplantar.";
+    el.innerHTML="<div style='background:rgba(74,222,128,0.08);border:1px solid rgba(134,239,172,0.2);border-radius:14px;padding:20px;text-align:center;margin-bottom:14px'>"
+      +"<div style='font-size:52px'>"+ico+"</div>"
+      +"<div style='font-size:44px;color:#86efac;margin:8px 0'>"+temp+"°C</div>"
+      +"<div style='color:#a3c4a3;font-size:14px'>"+desc+"</div>"
+      +"<div style='color:#6b9c6b;font-size:12px;margin-top:8px'>Viento: "+viento+" km/h · Lluvia: "+lluvia+" mm</div>"
+      +"</div>"
+      +"<div style='background:rgba(251,191,36,0.1);border:1px solid rgba(251,191,36,0.3);border-radius:10px;padding:12px;color:#fde68a;font-size:12px;line-height:1.5'>"+consejo+"</div>"
+      +"<p style='color:#4a6b4a;font-size:11px;text-align:center;margin-top:10px'>"+ciudadUsuario+" · Datos de Open-Meteo</p>";
+  }catch(e){
+    el.innerHTML="<div style='color:#f87171;text-align:center;padding:20px'>No se pudo cargar el tiempo</div>";
+  }
+}
+
+
+// ===== PWA - MANIFEST Y SERVICE WORKER =====
+function instalarPWA(){
+  var manifest = {
+    name: "Guia de Jardin",
+    short_name: "Jardin",
+    description: "Guia completa de jardineria adaptada a tu ciudad",
+    start_url: "/",
+    display: "standalone",
+    background_color: "#0f1a0f",
+    theme_color: "#0f1a0f",
+    icons: [
+      {src:"data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌱</text></svg>",sizes:"192x192",type:"image/svg+xml"},
+      {src:"data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌱</text></svg>",sizes:"512x512",type:"image/svg+xml"}
+    ]
+  };
+  var blob = new Blob([JSON.stringify(manifest)], {type:"application/json"});
+  var url = URL.createObjectURL(blob);
+  document.getElementById("manifest-placeholder").setAttribute("href", url);
+
+  if("serviceWorker" in navigator){
+    var sw = "self.addEventListener('fetch',function(e){e.respondWith(fetch(e.request).catch(function(){return caches.match(e.request);}));});self.addEventListener('install',function(e){e.waitUntil(caches.open('jardin-v1').then(function(c){return c.addAll(['/']);}));});";
+    var swBlob = new Blob([sw], {type:"application/javascript"});
+    var swUrl = URL.createObjectURL(swBlob);
+    navigator.serviceWorker.register(swUrl).catch(function(){});
+  }
+}
+
+var deferredPrompt = null;
+window.addEventListener("beforeinstallprompt", function(e){
+  e.preventDefault();
+  deferredPrompt = e;
+  mostrarBotonInstalar();
+});
+
+function mostrarBotonInstalar(){
+  var btn = document.getElementById("btn-instalar");
+  if(btn) btn.style.display = "flex";
+}
+
+function instalarApp(){
+  if(deferredPrompt){
+    deferredPrompt.prompt();
+    deferredPrompt.userChoice.then(function(){ deferredPrompt = null; });
+  }
+}
+
+// ===== PREVISIÓN 7 DÍAS =====
+async function cargarTiempo(){
+  var el = document.getElementById("tiempo-box");
+  try{
+    var r = await fetch("https://api.open-meteo.com/v1/forecast?latitude="+ciudadLat+"&longitude="+ciudadLon+"&current=temperature_2m,precipitation,weathercode,windspeed_10m&daily=temperature_2m_max,temperature_2m_min,weathercode,precipitation_sum&timezone=auto&forecast_days=7");
+    var d = await r.json();
+    var c = d.current;
+    var temp = Math.round(c.temperature_2m);
+    var lluvia = c.precipitation;
+    var viento = Math.round(c.windspeed_10m);
+    var cod = c.weathercode;
+
+    function getIco(code){
+      if(code===0) return "☀️";
+      if(code<=3) return "⛅";
+      if(code<=48) return "🌫️";
+      if(code<=67) return "🌧️";
+      if(code<=77) return "❄️";
+      if(code<=82) return "🌦️";
+      return "⛈️";
+    }
+    function getDesc(code){
+      if(code===0) return "Despejado";
+      if(code<=3) return "Parcialmente nublado";
+      if(code<=48) return "Niebla";
+      if(code<=67) return "Lluvia";
+      if(code<=77) return "Nieve";
+      if(code<=82) return "Chubascos";
+      return "Tormenta";
+    }
+
+    var consejo = "";
+    if(lluvia>0) consejo = "Hay lluvia hoy. No es necesario regar.";
+    else if(temp>25) consejo = "Hace calor. Riega al atardecer.";
+    else if(temp<5) consejo = "Temperatura muy baja. Protege las plantas sensibles.";
+    else if(temp>=5&&temp<=15) consejo = "Temperatura ideal para trabajar en el jardin.";
+    else consejo = "Tiempo agradable para el jardin.";
+
+    var html = "<div style='background:rgba(74,222,128,0.08);border:1px solid rgba(134,239,172,0.2);border-radius:14px;padding:20px;text-align:center;margin-bottom:14px'>"
+      +"<div style='font-size:52px'>"+getIco(cod)+"</div>"
+      +"<div style='font-size:44px;color:#86efac;margin:8px 0'>"+temp+"°C</div>"
+      +"<div style='color:#a3c4a3;font-size:14px'>"+getDesc(cod)+"</div>"
+      +"<div style='color:#6b9c6b;font-size:12px;margin-top:8px'>Viento: "+viento+" km/h · Lluvia: "+lluvia+" mm</div>"
+      +"</div>"
+      +"<div style='background:rgba(251,191,36,0.1);border:1px solid rgba(251,191,36,0.3);border-radius:10px;padding:12px;color:#fde68a;font-size:12px;margin-bottom:14px'>"+consejo+"</div>";
+
+    // Previsión 7 días
+    if(d.daily){
+      var dias = ["Dom","Lun","Mar","Mie","Jue","Vie","Sab"];
+      html += "<div style='font-size:13px;color:#86efac;font-weight:bold;margin-bottom:8px'>Proximos 7 dias</div>";
+      html += "<div style='display:flex;flex-direction:column;gap:6px'>";
+      for(var i=0;i<7;i++){
+        var fecha = new Date(d.daily.time[i]);
+        var diaNom = dias[fecha.getDay()];
+        var max = Math.round(d.daily.temperature_2m_max[i]);
+        var min = Math.round(d.daily.temperature_2m_min[i]);
+        var lluviaD = d.daily.precipitation_sum[i];
+        var icoD = getIco(d.daily.weathercode[i]);
+        html += "<div style='background:rgba(255,255,255,0.03);border:1px solid rgba(134,239,172,0.1);border-radius:8px;padding:8px 12px;display:flex;align-items:center;gap:10px'>"
+          +"<span style='color:#6b9c6b;font-size:12px;width:28px'>"+diaNom+"</span>"
+          +"<span style='font-size:18px'>"+icoD+"</span>"
+          +"<span style='color:#86efac;font-size:13px;font-weight:bold;flex:1'>"+max+"°</span>"
+          +"<span style='color:#4a6b4a;font-size:12px'>"+min+"°</span>"
+          +(lluviaD>0?"<span style='color:#60a5fa;font-size:11px'>"+lluviaD+"mm</span>":"")
+          +"</div>";
+      }
+      html += "</div>";
+    }
+    html += "<p style='color:#4a6b4a;font-size:11px;text-align:center;margin-top:10px'>"+ciudadUsuario+" · Open-Meteo</p>";
+    el.innerHTML = html;
+  }catch(e){
+    el.innerHTML = "<div style='color:#f87171;text-align:center;padding:20px'>No se pudo cargar el tiempo</div>";
+  }
+}
+
+// ===== RECORDATORIOS DE RIEGO =====
+var riegoData = JSON.parse(localStorage.getItem("jardin_riego")||"{}");
+
+function guardarRiego(planta){
+  riegoData[planta] = new Date().toISOString().split("T")[0];
+  localStorage.setItem("jardin_riego", JSON.stringify(riegoData));
+}
+
+function diasSinRegar(planta){
+  if(!riegoData[planta]) return null;
+  var ultimo = new Date(riegoData[planta]);
+  var hoy = new Date();
+  return Math.floor((hoy-ultimo)/(1000*60*60*24));
+}
+
+function mostrarRecordatoriosRiego(){
+  var alertas = [];
+  P.forEach(function(p){
+    var dias = diasSinRegar(p.n);
+    if(dias !== null && dias >= 3){
+      alertas.push({planta:p.n, emoji:p.e, dias:dias});
+    }
+  });
+  if(alertas.length === 0) return;
+  var el = document.getElementById("alertas-cosecha");
+  if(!el) return;
+  var wrap = document.createElement("div");
+  wrap.style.cssText = "background:rgba(96,165,250,0.08);border:1px solid rgba(96,165,250,0.25);border-radius:14px;padding:12px 16px;margin-top:10px";
+  wrap.innerHTML = "<div style='font-size:12px;color:#60a5fa;font-weight:bold;margin-bottom:8px'>💧 Pendiente de regar</div>";
+  var tags = document.createElement("div");
+  tags.style.cssText = "display:flex;flex-wrap:wrap;gap:6px";
+  alertas.slice(0,6).forEach(function(a){
+    var sp = document.createElement("span");
+    sp.style.cssText = "background:rgba(96,165,250,0.1);border:1px solid rgba(96,165,250,0.25);border-radius:20px;padding:4px 12px;color:#93c5fd;font-size:11px;cursor:pointer";
+    sp.textContent = a.emoji+" "+a.planta+" ("+a.dias+"d)";
+    sp.onclick = function(){ abrir(a.planta); };
+    tags.appendChild(sp);
+  });
+  wrap.appendChild(tags);
+  el.appendChild(wrap);
+}
+
+// ===== ESTADÍSTICAS =====
+async function cargarStats(){
+  var el = document.getElementById("stats-contenido");
+  el.innerHTML = "<div style='color:#4a6b4a;text-align:center;padding:20px;font-style:italic'>Cargando estadisticas...</div>";
+  try{
+    var diario = await sbGet("diario", currentUser ? "&user_id=eq."+currentUser.id : "");
+    var favs = await sbGet("favoritos", currentUser ? "&user_id=eq."+currentUser.id : "");
+    var coms = await sbGet("comentarios");
+
+    var totalEntradas = diario ? diario.length : 0;
+    var totalFavs = favs ? favs.length : 0;
+    var totalComs = coms ? coms.length : 0;
+
+    // Contar por tipo
+    var porTipo = {};
+    if(diario) diario.forEach(function(d){ porTipo[d.tipo] = (porTipo[d.tipo]||0)+1; });
+
+    // Planta más anotada
+    var porPlanta = {};
+    if(diario) diario.forEach(function(d){ porPlanta[d.planta] = (porPlanta[d.planta]||0)+1; });
+    var topPlanta = Object.keys(porPlanta).sort(function(a,b){ return porPlanta[b]-porPlanta[a]; })[0];
+
+    var tipoIcons = {"siembra":"🌱","riego":"💧","abono":"🌿","poda":"✂️","cosecha":"🍅","plaga":"🦠","general":"📝"};
+
+    var html = "";
+    // Cards de resumen
+    html += "<div style='display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px'>";
+    html += "<div style='background:rgba(74,222,128,0.08);border:1px solid rgba(74,222,128,0.2);border-radius:10px;padding:14px;text-align:center'><div style='font-size:28px;color:#4ade80;font-weight:bold'>"+totalEntradas+"</div><div style='color:#6b9c6b;font-size:11px;margin-top:4px'>Entradas en el diario</div></div>";
+    html += "<div style='background:rgba(251,191,36,0.08);border:1px solid rgba(251,191,36,0.2);border-radius:10px;padding:14px;text-align:center'><div style='font-size:28px;color:#fbbf24;font-weight:bold'>"+totalFavs+"</div><div style='color:#6b9c6b;font-size:11px;margin-top:4px'>Plantas favoritas</div></div>";
+    html += "<div style='background:rgba(167,139,250,0.08);border:1px solid rgba(167,139,250,0.2);border-radius:10px;padding:14px;text-align:center'><div style='font-size:28px;color:#a78bfa;font-weight:bold'>"+totalComs+"</div><div style='color:#6b9c6b;font-size:11px;margin-top:4px'>Trucos en comunidad</div></div>";
+    html += "<div style='background:rgba(96,165,250,0.08);border:1px solid rgba(96,165,250,0.2);border-radius:10px;padding:14px;text-align:center'><div style='font-size:28px;color:#60a5fa;font-weight:bold'>"+Object.keys(riegoData).length+"</div><div style='color:#6b9c6b;font-size:11px;margin-top:4px'>Plantas regadas</div></div>";
+    html += "</div>";
+
+    // Planta más anotada
+    if(topPlanta){
+      var pp = P.find(function(x){ return x.n===topPlanta; });
+      html += "<div style='background:rgba(74,222,128,0.06);border:1px solid rgba(74,222,128,0.15);border-radius:10px;padding:12px;margin-bottom:12px;display:flex;align-items:center;gap:10px'>";
+      html += "<span style='font-size:28px'>"+(pp?pp.e:"🌱")+"</span>";
+      html += "<div><div style='color:#86efac;font-size:12px;font-weight:bold'>Tu planta mas cuidada</div><div style='color:#a3c4a3;font-size:13px'>"+topPlanta+" ("+porPlanta[topPlanta]+" entradas)</div></div></div>";
+    }
+
+    // Actividad por tipo
+    if(Object.keys(porTipo).length > 0){
+      html += "<div style='font-size:12px;color:#86efac;font-weight:bold;margin-bottom:8px'>Actividad por tipo</div>";
+      var maxVal = Math.max.apply(null, Object.values(porTipo));
+      Object.keys(porTipo).forEach(function(tipo){
+        var pct = Math.round((porTipo[tipo]/maxVal)*100);
+        html += "<div style='margin-bottom:6px'>";
+        html += "<div style='display:flex;justify-content:space-between;margin-bottom:3px'><span style='color:#a3c4a3;font-size:11px'>"+(tipoIcons[tipo]||"📝")+" "+tipo+"</span><span style='color:#6b9c6b;font-size:11px'>"+porTipo[tipo]+"</span></div>";
+        html += "<div style='background:rgba(255,255,255,0.05);border-radius:4px;height:6px'><div style='background:linear-gradient(90deg,#4ade80,#22c55e);height:6px;border-radius:4px;width:"+pct+"%'></div></div>";
+        html += "</div>";
+      });
+    }
+
+    if(totalEntradas===0 && totalFavs===0){
+      html += "<div style='color:#4a6b4a;font-size:12px;text-align:center;font-style:italic;margin-top:10px'>Usa el diario y los favoritos para ver tus estadisticas aqui</div>";
+    }
+
+    el.innerHTML = html;
+  }catch(e){
+    el.innerHTML = "<div style='color:#f87171;text-align:center;padding:20px'>Error al cargar estadisticas</div>";
+  }
+}
+
+// ===== INICIALIZAR TODO =====
+document.addEventListener("DOMContentLoaded", function(){
+  instalarPWA();
+  // Actualizar el panel de selects con las plantas extra
+  setTimeout(poblarSelects, 500);
+  setTimeout(mostrarRecordatoriosRiego, 1000);
+});
+
+
+// ===== MAPA DEL JARDÍN =====
+var mapaData = JSON.parse(localStorage.getItem("jardin_mapa")||"{}");
+var mapaSeleccionada = null;
+var MAPA_FILAS = 8;
+var MAPA_COLS = 10;
+
+function cargarMapa(){
+  var el = document.getElementById("mapa-contenido");
+  var html = "";
+  html += "<div style='margin-bottom:12px'>";
+  html += "<div style='color:#86efac;font-size:13px;font-weight:bold;margin-bottom:4px'>🗺️ Mi jardín / huerto</div>";
+  html += "<div style='color:#6b9c6b;font-size:11px;margin-bottom:10px'>Pulsa una celda para asignar una planta. Arrastra para ver el jardín completo.</div>";
+  html += "</div>";
+
+  // Selector de planta
+  html += "<div style='margin-bottom:10px'>";
+  html += "<select id='mapa-select' style='width:100%;background:rgba(255,255,255,0.06);border:1px solid rgba(134,239,172,0.2);border-radius:8px;padding:8px;color:#e8f5e8;font-family:Georgia,serif;font-size:12px;outline:none;margin-bottom:6px'>";
+  html += "<option value=''>-- Selecciona planta para colocar --</option>";
+  P.forEach(function(p){ html += "<option value='"+p.n+"'>"+p.e+" "+p.n+"</option>"; });
+  html += "</select>";
+  html += "<div style='display:flex;gap:6px'>";
+  html += "<button onclick='limpiarMapa()' style='flex:1;background:rgba(248,113,113,0.1);border:1px solid rgba(248,113,113,0.3);border-radius:8px;padding:6px;color:#f87171;font-size:11px;cursor:pointer'>🗑️ Limpiar todo</button>";
+  html += "<button onclick='guardarMapaImg()' style='flex:1;background:rgba(74,222,128,0.1);border:1px solid rgba(74,222,128,0.3);border-radius:8px;padding:6px;color:#4ade80;font-size:11px;cursor:pointer'>💾 Guardado auto</button>";
+  html += "</div></div>";
+
+  // Cuadrícula del mapa
+  html += "<div style='overflow-x:auto'><div id='mapa-grid' style='display:grid;grid-template-columns:repeat("+MAPA_COLS+",1fr);gap:3px;min-width:280px'>";
+  for(var f=0;f<MAPA_FILAS;f++){
+    for(var c=0;c<MAPA_COLS;c++){
+      var key = f+"-"+c;
+      var val = mapaData[key];
+      var pp = val ? P.find(function(x){ return x.n===val; }) : null;
+      (function(){
+        var cell = document.createElement("div");
+        cell.id = "mc-"+key;
+        cell.title = val||"Vacio";
+        cell.style.cssText = "aspect-ratio:1;background:"+(pp?"rgba(74,222,128,0.15)":"rgba(255,255,255,0.03)")+";border:1px solid rgba(134,239,172,"+(pp?"0.3":"0.1")+");border-radius:4px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;transition:all .15s;user-select:none";
+        cell.textContent = pp?pp.e:"";
+        (function(k){ cell.onclick = function(){ clickCelda(k); }; })(key);
+        gridEl.appendChild(cell);
+      })();
+    }
+  }
+  // Leyenda
+  var plantasMapa = {};
+  Object.values(mapaData).forEach(function(v){ if(v) plantasMapa[v]=(plantasMapa[v]||0)+1; });
+  if(Object.keys(plantasMapa).length>0){
+    html += "<div style='margin-top:12px'><div style='color:#86efac;font-size:11px;font-weight:bold;margin-bottom:6px'>Plantas en tu jardín:</div><div style='display:flex;flex-wrap:wrap;gap:4px'>";
+    Object.keys(plantasMapa).forEach(function(n){
+      var pp=P.find(function(x){return x.n===n;});
+      html += "<span style='background:rgba(74,222,128,0.1);border:1px solid rgba(74,222,128,0.2);border-radius:12px;padding:2px 8px;color:#86efac;font-size:10px'>"+(pp?pp.e:"🌱")+" "+n+" x"+plantasMapa[n]+"</span>";
+    });
+    html += "</div></div>";
+  }
+
+}
+
+function clickCelda(key){
+  var sel = document.getElementById("mapa-select");
+  var planta = sel ? sel.value : "";
+  var celda = document.getElementById("mc-"+key);
+  if(!celda) return;
+
+  if(!planta){
+    // Si no hay planta seleccionada, borrar la celda
+    if(mapaData[key]){
+      delete mapaData[key];
+      celda.textContent="";
+      celda.style.background="rgba(255,255,255,0.03)";
+      celda.style.borderColor="rgba(134,239,172,0.1)";
+      celda.title="Vacío";
+      guardarMapa();
+    }
+    return;
+  }
+
+  var pp = P.find(function(x){ return x.n===planta; });
+  if(!pp) return;
+  mapaData[key] = planta;
+  celda.textContent = pp.e;
+  celda.style.background = "rgba(74,222,128,0.15)";
+  celda.style.borderColor = "rgba(74,222,128,0.3)";
+  celda.title = planta;
+  guardarMapa();
+}
+
+function guardarMapa(){
+  localStorage.setItem("jardin_mapa", JSON.stringify(mapaData));
+}
+
+function limpiarMapa(){
+  if(!confirm("Borrar todo el mapa?")) return;
+  mapaData = {};
+  guardarMapa();
+  cargarMapa();
+}
+
+function guardarMapaImg(){
+  alert("El mapa se guarda automaticamente en tu dispositivo cada vez que añades una planta.");
+}
+
+// ===== MÁS PLANTAS - añadir al array P =====
+var plantasExtra = [
+  {n:"Boniato",e:"🍠",c:"Hortalizas",d:"Moderado",desc:"El boniato necesita calor y una temporada larga. En Burgos es difícil al exterior pero posible en años cálidos.",ep:"Planta en mayo en lugar muy soleado. Cosecha en octubre antes de las heladas.",dat:{p:"10 cm",s:"40 cm",r:"Moderado",sol:"Sol pleno",co:"120-150 días"},pa:[{t:"Plantación",d:"Planta los esquejes o brotes en mayo cuando el suelo esté caliente."},{t:"Riego moderado",d:"Riega regularmente pero sin encharcar."},{t:"Cosecha",d:"Cuando las hojas empiecen a amarillear en otoño."}],co:["En Burgos mejor en zona muy resguardada o macrotúnel","Las hojas también son comestibles","Muy nutritivo, rico en betacarotenos"],er:["Frío paraliza el crecimiento","Exceso de riego pudre los tubérculos","Dejar en tierra cuando lleguen las heladas"]},
+  {n:"Alcachofa",e:"🌿",c:"Hortalizas",d:"Moderado",desc:"La alcachofa es una planta perenne que puede durar varios años. Necesita espacio.",ep:"Planta en marzo-abril. Cosecha de mayo a julio en el primer año completo.",dat:{p:"30 cm hoyo",s:"80-100 cm",r:"Regular",sol:"Sol pleno",co:"2º año"},pa:[{t:"Plantación",d:"Planta esquejes laterales o plantas en primavera."},{t:"Riego regular",d:"Necesita agua constante especialmente en verano."},{t:"Poda otoñal",d:"Corta los tallos en otoño dejando 10 cm."},{t:"Cosecha",d:"Corta las alcachofas antes de que abran."}],co:["Planta perenne que dura 4-5 años","Las flores abiertas son muy decorativas","Protege el pie con paja en invierno en Burgos"],er:["Sin riego suficiente las alcachofas son pequeñas y duras","Dejar que abran: las flores son bonitas pero ya no se comen","Sin protección invernal en Burgos puede morir"]},
+  {n:"Endivia",e:"🥬",c:"Hortalizas",d:"Moderado",desc:"La endivia requiere un proceso de blanqueo en oscuridad. Muy apreciada en cocina.",ep:"Siembra en junio-julio. Cosecha con blanqueo en noviembre-enero.",dat:{p:"1 cm",s:"25 cm",r:"Regular",sol:"Sol pleno",co:"150-180 días con blanqueo"},pa:[{t:"Siembra en verano",d:"Siembra en junio-julio directamente."},{t:"Primera cosecha de raíz",d:"En noviembre arranca las plantas y guarda las raíces."},{t:"Blanqueo",d:"Mete las raíces en cajones con arena en oscuridad total a 15°C."},{t:"Cosechar brotes",d:"En 3-4 semanas salen los brotes blancos: las endivias."}],co:["El blanqueo elimina el amargor","Se puede hacer en el sótano o bodega","Las raíces aguantan meses en arena fría"],er:["Sin oscuridad total los brotes son verdes y muy amargos","Temperatura demasiado alta acelera y endurece","Sin paciencia no funciona"]},
+  {n:"Cardo",e:"🌿",c:"Hortalizas",d:"Difícil",desc:"El cardo es muy tradicional en Castilla. Su cultivo requiere espacio y blanqueo.",ep:"Siembra en mayo. Cosecha en noviembre-diciembre tras el blanqueo.",dat:{p:"2 cm",s:"80-100 cm",r:"Abundante",sol:"Sol pleno",co:"180-200 días"},pa:[{t:"Siembra directa",d:"Siembra en mayo en posición definitiva. Ocupa mucho espacio."},{t:"Riego abundante",d:"El cardo necesita mucha agua para crecer bien."},{t:"Blanqueo en otoño",d:"En octubre ata las hojas y envuelve con paja o papel durante 3-4 semanas."},{t:"Cosecha",d:"Cuando esté blanqueado, corta en la base."}],co:["Muy típico en Navidad en Castilla","El blanqueo elimina el amargor","Planta muy decorativa durante el verano"],er:["Sin espacio suficiente el cardo no se desarrolla","Sin blanqueo es muy amargo","En Burgos puede necesitar protección de heladas tempranas"]},
+  {n:"Melon",e:"🍈",c:"Frutas",d:"Dificil",desc:"El melón necesita mucho calor y en Burgos es complicado al aire libre.",ep:"Siembra en mayo en interior, trasplanta en junio. Cosecha en agosto si el verano es cálido.",dat:{p:"2-3 cm semilla",s:"100 cm",r:"Moderado",sol:"Sol pleno, mucho calor",co:"90-110 días"},pa:[{t:"Semillero en mayo",d:"En interior con calor. No soporta el trasplante tardío."},{t:"Trasplante cuidadoso",d:"Con cuidado de no romper el cepellón."},{t:"Poda de formación",d:"Pinza la guía principal para que ramifique."},{t:"Control de frutos",d:"Deja solo 2-3 frutos por planta."}],co:["En Burgos mejor bajo túnel de plástico","Coloca los melones sobre teja para que no toquen el suelo húmedo","El melón piel de sapo aguanta algo más el frío"],er:["Frío por debajo de 15°C los paraliza","Exceso de agua antes de madurez reduce el dulzor","Regar en exceso al final hace melones insípidos"]},
+  {n:"Sandia",e:"🍉",c:"Frutas",d:"Dificil",desc:"La sandía necesita calor y espacio. En Burgos solo en invernadero o zonas muy cálidas.",ep:"Mayo en semillero interior, junio al exterior en lugar muy cálido.",dat:{p:"2-3 cm semilla",s:"150 cm",r:"Moderado",sol:"Sol pleno, mucho calor",co:"80-100 días"},pa:[{t:"Semillero cálido",d:"Siembra en mayo en interior con mucho calor."},{t:"Lugar más cálido",d:"El más soleado y resguardado del jardín."},{t:"Mulch negro",d:"Cubre el suelo con plástico negro para calentar."},{t:"Cosecha",d:"Golpea la sandía: sonido hueco indica madurez."}],co:["Las variedades mini tipo Sugar Baby van mejor","El plástico negro en el suelo marca la diferencia","Orienta las sandías al sur"],er:["Sin suficiente calor no madura","Exceso de riego hace sandías acuosas","En Burgos al aire libre raramente madura bien"]},
+  {n:"Peonia",e:"🌸",c:"Flores",d:"Facil",desc:"La peonía es una flor de jardín espectacular y muy resistente al frío de Burgos.",ep:"Planta raíces en otoño. Floración en mayo-junio. Perenne y muy longeva.",dat:{p:"5 cm raíz",s:"80-100 cm",r:"Moderado",sol:"Sol o semisombra",co:"Floración mayo-junio"},pa:[{t:"Plantar en otoño",d:"Las raíces se plantan en septiembre-octubre con las yemas mirando hacia arriba."},{t:"Poca profundidad",d:"Las yemas deben quedar a solo 2-3 cm de la superficie. Si están demasiado profundas no florecen."},{t:"Paciencia",d:"El primer año apenas florece. A partir del 3º año es espectacular."},{t:"Sin trasplantar",d:"La peonía no le gusta que la muevan. Escoge bien el sitio."}],co:["Las peonías pueden vivir más de 50 años en el mismo sitio","El perfume de algunas variedades es extraordinario","Las flores duran poco en la planta pero mucho en jarrón"],er:["Plantar demasiado profundo: no florece nunca","Trasplantar frecuentemente: pierde vigor","Sin paciencia los primeros años: merece la espera"]},
+  {n:"Iris",e:"🌸",c:"Flores",d:"Facil",desc:"El iris es una planta de bulbo (rizoma) espectacular y muy resistente al frío.",ep:"Planta rizomas en agosto-septiembre. Floración en mayo-junio.",dat:{p:"Rizoma a nivel del suelo",s:"40-50 cm",r:"Mínimo",sol:"Sol pleno",co:"Floración mayo-junio"},pa:[{t:"Plantar a ras del suelo",d:"Los rizomas deben quedar a nivel del suelo, casi visibles. No los entierres."},{t:"Suelo bien drenado",d:"El iris odia el agua estancada en los rizomas."},{t:"Dividir cada 3-4 años",d:"Se reproducen solos. Divide y replanta para rejuvenecer."},{t:"Poco riego",d:"Una vez establecidos prácticamente no necesitan riego."}],co:["Hay miles de variedades de colores increíbles","Perfectos para bordes y jardines secos","Los iris barbados son los más fáciles"],er:["Enterrar los rizomas: no florecen","Suelo encharcado: los rizomas se pudren","Sin dividir cada 4 años: florecen cada vez menos"]},
+  {n:"Agapanto",e:"💙",c:"Flores",d:"Moderado",desc:"El agapanto da flores azules o blancas en bola muy vistosas en verano.",ep:"Planta en primavera. Floración en julio-agosto. En Burgos mejor en maceta para proteger en invierno.",dat:{p:"En maceta o suelo resguardado",s:"50-60 cm",r:"Moderado",sol:"Sol pleno",co:"Floración julio-agosto"},pa:[{t:"Maceta en Burgos",d:"En Burgos mejor en maceta grande para meter en interior en invierno."},{t:"Plantación",d:"Planta el rizoma en primavera en sustrato bien drenado."},{t:"Riego moderado",d:"Riega regularmente en verano. Reduce en invierno."},{t:"Protección invernal",d:"En octubre lleva al interior o protege bien."}],co:["Las flores azules son muy poco comunes en el jardín","Se multiplica solo dividiendo las matas","En maceta grande dura muchos años"],er:["Sin protección invernal en Burgos: muere","Suelo encharcado: rizomas podridos","Sin dividir cada 4-5 años: menos flores"]},
+  {n:"Lavanda francesa",e:"💜",c:"Flores",d:"Facil",desc:"La lavanda francesa tiene flores con pétalos en la punta muy decorativas. Más delicada que la española.",ep:"Planta en primavera. Floración de mayo a octubre en varios ciclos.",dat:{p:"30 cm hoyo",s:"40-50 cm",r:"Mínimo",sol:"Sol pleno",co:"Floración mayo-octubre"},pa:[{t:"Suelo drenado",d:"Como toda la lavanda, odia el suelo húmedo."},{t:"Poda tras cada floración",d:"Poda ligeramente tras cada ciclo de flores para estimular el siguiente."},{t:"Protección en Burgos",d:"La francesa es menos resistente al frío que la española. Protege en inviernos muy duros."},{t:"Sin abono",d:"Prefiere suelo pobre."}],co:["Florece durante muchos meses","Las flores son muy decorativas y aromáticas","Perfecta en maceta en terraza soleada"],er:["Menos resistente al frío que la lavanda española","Suelo húmedo: muere rápido","Sin poda tras floración: pocas flores nuevas"]},
+  {n:"Verbena",e:"🌸",c:"Flores",d:"Facil",desc:"La verbena es una planta tapizante con flores de colores intensos durante todo el verano.",ep:"Planta en mayo. Floración de junio a octubre. Muy prolífica.",dat:{p:"En maceta o suelo",s:"30-40 cm",r:"Regular",sol:"Sol pleno",co:"Floración junio-octubre"},pa:[{t:"Compra plantas en mayo",d:"Las semillas son lentas. Mejor comprar plantas."},{t:"Sol pleno",d:"Sin sol pleno florece poco."},{t:"Riego regular",d:"Riega sin mojar las flores."},{t:"Corte",d:"Poda ligeramente cada mes para estimular más flores."}],co:["Perfecta para cubrir suelos y bordes","Atrae mariposas","Combina bien con otras plantas de verano"],er:["Sombra: pocas flores","Sin corte periódico se pone leggy","Exceso de riego en suelo mal drenado"]},
+  {n:"Salvia ornamental",e:"💙",c:"Flores",d:"Facil",desc:"La salvia ornamental da espigas de flores azules, rojas o blancas muy llamativas en verano.",ep:"Planta en mayo. Floración de junio a octubre.",dat:{p:"En suelo o maceta",s:"40-50 cm",r:"Moderado",sol:"Sol pleno",co:"Floración junio-octubre"},pa:[{t:"Plantación en mayo",d:"Compra plantas en primavera."},{t:"Riego moderado",d:"Tolera algo de sequía una vez establecida."},{t:"Poda tras floración",d:"Corta las espigas marchitas para estimular nuevas."},{t:"Invierno",d:"La salvia nemorosa es perenne y aguanta bien el frío de Burgos."}],co:["La salvia nemorosa azul es muy resistente en Burgos","Atrae abejas y mariposas","Combina muy bien con rosas y lavanda"],er:["Suelo encharcado","Sin poda de espigas marchitas: menos flores nuevas","Confundir con la salvia culinaria: diferentes plantas"]},
+  {n:"Equilegia",e:"🌸",c:"Flores",d:"Facil",desc:"La aguileña o equilegia es una flor silvestre de primavera con flores únicas en forma de espolón.",ep:"Siembra en otoño o compra plantas. Floración en mayo-junio. Perenne.",dat:{p:"0.5 cm",s:"30-40 cm",r:"Moderado",sol:"Sol o semisombra",co:"Floración mayo-junio"},pa:[{t:"Siembra en otoño",d:"Las semillas necesitan frío para germinar bien."},{t:"Semisombra",d:"Prefiere sol de mañana y sombra de tarde."},{t:"Resiembra sola",d:"Deja que forme semillas. Se resiembra sola cada año."},{t:"División",d:"Divide las matas cada 3-4 años."}],co:["Se hibrida fácilmente dando colores únicos cada año","Perfecta para jardines de estilo natural","Las flores son únicas y muy elegantes"],er:["Sol directo en verano: hojas quemadas","Sin resiembra no vuelve","Muy sensible al mildiu en zonas húmedas"]},
+  {n:"Estefanote",e:"🌸",c:"Interior",d:"Moderado",desc:"La estefanote es una trepadora de interior con flores blancas muy perfumadas.",ep:"Planta de interior todo el año. Floración en verano con mucha luz.",dat:{p:"En maceta",s:"En maceta con soporte",r:"Regular",sol:"Luz brillante sin sol directo",co:"Floración verano"},pa:[{t:"Mucha luz",d:"Necesita mucha luz indirecta brillante."},{t:"Soporte",d:"Necesita soporte para trepar."},{t:"Riego regular",d:"Mantén el sustrato húmedo pero sin encharcar."},{t:"Humedad ambiental",d:"Vaporiza las hojas regularmente."}],co:["El perfume de sus flores es extraordinario","No la muevas una vez que está en un sitio","Perfecta para novias: flores muy usadas en ramos"],er:["Moverla: pierde hojas y botones","Frío por debajo de 13°C la daña","Exceso de riego: raíz podrida"]},
+  {n:"Lavanda de mar",e:"💜",c:"Flores",d:"Facil",desc:"El limonium o lavanda de mar da pequeñas flores muy decorativas que se secan perfectamente.",ep:"Siembra en primavera o compra plantas. Floración en julio-septiembre.",dat:{p:"En suelo bien drenado",s:"30-40 cm",r:"Mínimo",sol:"Sol pleno",co:"Floración julio-septiembre"},pa:[{t:"Suelo pobre y seco",d:"Le gustan los suelos pobres y bien drenados."},{t:"Sin riego",d:"Una vez establecido prácticamente no necesita riego."},{t:"Cosechar para secar",d:"Corta las flores a punto de abrirse para secar."},{t:"Secar",d:"Cuelga boca abajo en lugar seco y ventilado."}],co:["Las flores secas conservan el color meses","Perfecta para arreglos de flores secas","Muy resistente a la sequía"],er:["Suelo húmedo o encharcado","Exceso de riego","Secar demasiado tarde cuando ya están abiertas del todo"]},
+  {n:"Tagete",e:"🌼",c:"Flores",d:"Facil",desc:"Los tagetes o claveles de moro son plantas repelentes de plagas. Muy útiles junto al huerto.",ep:"Siembra en mayo directamente. Floración de junio hasta las heladas.",dat:{p:"1 cm",s:"20-30 cm",r:"Moderado",sol:"Sol pleno",co:"Floración junio-octubre"},pa:[{t:"Siembra directa en mayo",d:"Germina rápido con calor."},{t:"Junto al huerto",d:"Planta alrededor del huerto para repeler plagas."},{t:"Riego moderado",d:"Resistentes una vez establecidos."},{t:"Cosecha de flores",d:"Cortar flores estimula más producción."}],co:["Repelen nemátodos del suelo del huerto","Ahuyentan pulgones, mosca blanca y ácaros","Las flores son comestibles y decorativas en ensaladas"],er:["Sombra: pocas flores","Sin corte de flores marchitas","Demasiada agua en suelo arcilloso"]},
+  {n:"Celosia",e:"🌺",c:"Flores",d:"Facil",desc:"La celosia tiene flores en forma de pluma o cresta de colores muy intensos.",ep:"Siembra en mayo. Floración de julio a octubre.",dat:{p:"0.5 cm",s:"20-30 cm",r:"Regular",sol:"Sol pleno",co:"Floración julio-octubre"},pa:[{t:"Siembra en mayo",d:"En exterior cuando no haya heladas."},{t:"Sin trasplante brusco",d:"No tolera bien el trasplante. Hazlo con cuidado."},{t:"Riego regular",d:"Sin encharcar."},{t:"Flores decorativas",d:"Las flores secas son preciosas para arreglos."}],co:["Los colores son espectaculares: rojo, naranja, amarillo, rosa","Perfecta para dar color intenso al jardín en verano","Las flores secas conservan el color meses"],er:["Frío: no plantes antes de mayo","Suelo encharcado","Sombra: pierde el color intenso"]}
+];
+
+</script>
+</body>
+</html>
