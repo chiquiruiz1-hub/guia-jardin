@@ -1,18 +1,20 @@
-// ===== AUTENTICACIÓN =====
+// ===== AUTENTICACIÓN (Firebase) =====
 var currentUser = null;
 
-async function checkSession() {
-  try {
-    var r = await fetch(SBURL + "/auth/v1/user", {
-      headers: { "apikey": SBKEY, "Authorization": "Bearer " + getToken() }
-    });
-    if (r.ok) {
-      var d = await r.json();
-      if (d.id) { currentUser = d; actualizarUI(); return; }
+// Escucha el estado de sesión. Se dispara al cargar y en cada login/logout.
+function checkSession() {
+  auth.onAuthStateChanged(function (user) {
+    if (user) {
+      currentUser = { id: user.uid, uid: user.uid, email: user.email };
+    } else {
+      currentUser = null;
     }
-  } catch (e) { }
-  currentUser = null;
-  actualizarUI();
+    actualizarUI();
+    // Recargar datos que dependen del usuario
+    if (typeof cargarDiario === "function") cargarDiario();
+    if (typeof cargarFavs === "function") cargarFavs();
+    if (typeof cargarHuerto === "function") cargarHuerto();
+  });
 }
 
 function actualizarUI() {
@@ -74,36 +76,23 @@ async function doAuth() {
   btn.disabled = true;
 
   try {
-    var endpoint = isReg ? "/auth/v1/signup" : "/auth/v1/token?grant_type=password";
-    var r = await fetch(SBURL + endpoint, {
-      method: "POST",
-      headers: { "Content-Type": "application/json", "apikey": SBKEY },
-      body: JSON.stringify({ email: email, password: pass })
-    });
-    var d = await r.json();
-
-    if (d.access_token) {
-      localStorage.setItem("sb_token", d.access_token);
-      currentUser = d.user;
-      actualizarUI();
-      cerrarAuth();
-      if (isReg) {
-        okEl.textContent = "Cuenta creada. Bienvenido/a!";
-        okEl.style.display = "block";
-      }
-      cargarDiario();
-    } else if (isReg && d.id) {
-      okEl.textContent = "Cuenta creada. Revisa tu email para confirmar.";
-      okEl.style.display = "block";
+    if (isReg) {
+      await auth.createUserWithEmailAndPassword(email, pass);
     } else {
-      var msg = d.error_description || d.msg || "Error al iniciar sesión";
-      if (msg.includes("Invalid login")) msg = "Email o contraseña incorrectos";
-      if (msg.includes("already registered")) msg = "Este email ya está registrado. Usa Entrar.";
-      errEl.textContent = msg;
-      errEl.style.display = "block";
+      await auth.signInWithEmailAndPassword(email, pass);
     }
+    // onAuthStateChanged se encarga de currentUser, la UI y recargar los datos.
+    cerrarAuth();
+    if (typeof toast === "function") toast(isReg ? "🌱 Cuenta creada. ¡Bienvenido/a!" : "✓ Sesión iniciada");
   } catch (e) {
-    errEl.textContent = "Error de conexión. Inténtalo de nuevo.";
+    var msg = "Error al iniciar sesión";
+    var code = e && e.code ? e.code : "";
+    if (code === "auth/invalid-credential" || code === "auth/wrong-password" || code === "auth/user-not-found") msg = "Email o contraseña incorrectos";
+    else if (code === "auth/email-already-in-use") msg = "Este email ya está registrado. Usa Entrar.";
+    else if (code === "auth/weak-password") msg = "La contraseña debe tener al menos 6 caracteres";
+    else if (code === "auth/invalid-email") msg = "Email no válido";
+    else if (code === "auth/network-request-failed") msg = "Error de conexión. Inténtalo de nuevo.";
+    errEl.textContent = msg;
     errEl.style.display = "block";
   }
 
@@ -113,14 +102,8 @@ async function doAuth() {
 
 async function doLogout() {
   try {
-    await fetch(SBURL + "/auth/v1/logout", {
-      method: "POST",
-      headers: { "apikey": SBKEY, "Authorization": "Bearer " + getToken() }
-    });
+    await auth.signOut();
+    // onAuthStateChanged actualiza la UI y limpia los datos.
+    if (typeof toast === "function") toast("Sesión cerrada");
   } catch (e) { }
-  localStorage.removeItem("sb_token");
-  currentUser = null;
-  actualizarUI();
-  cargarDiario();
-  cargarFavs();
 }
