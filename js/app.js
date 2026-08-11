@@ -168,10 +168,10 @@ function abrir(nombre) {
 async function actualizarBtnFav(nombre) {
   var btn = document.getElementById("btn-fav-modal");
   if (!btn) return;
+  if (typeof currentUser === "undefined" || !currentUser) { pintarBtnFav(btn, false); return; }
   try {
-    var uid_filter = (typeof currentUser !== "undefined" && currentUser) ? "&user_id=eq." + currentUser.id : "";
-    var d = await sbGet("favoritos", "&planta=eq." + encodeURIComponent(nombre) + uid_filter);
-    var esFav = d && d.length > 0;
+    var mine = await fsGetMine("favoritos");
+    var esFav = mine.some(function (f) { return f.planta === nombre; });
     pintarBtnFav(btn, esFav);
   } catch (e) { }
 }
