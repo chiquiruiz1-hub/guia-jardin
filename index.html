@@ -78,7 +78,7 @@
     <div style="text-align:center;margin-bottom:20px">
       <div style="font-size:40px;margin-bottom:8px">🌱</div>
       <h2 style="color:#86efac;font-weight:normal;font-size:20px;margin:0 0 4px">Mi Jardín</h2>
-      <p style="color:#6b9c6b;font-size:12px;margin:0">Tu diario y favoritos privados</p>
+      <p style="color:#6b9c6b;font-size:12px;margin:0">Tu diario, favoritos y huerto privados</p>
     </div>
 
     <div style="display:flex;border-bottom:1px solid rgba(134,239,172,0.15);margin-bottom:18px">
@@ -94,7 +94,7 @@
 
     <button id="auth-btn" onclick="doAuth()" style="width:100%;background:linear-gradient(135deg,#4ade80,#22c55e);border:none;border-radius:10px;padding:12px;color:#0f1a0f;font-size:14px;font-weight:bold;cursor:pointer;font-family:Georgia,serif">Entrar</button>
 
-    <button onclick="cerrarAuth()" style="width:100%;background:none;border:none;padding:10px;color:#4a6b4a;font-size:12px;cursor:pointer;margin-top:8px;font-family:Georgia,serif">Usar sin cuenta (datos compartidos)</button>
+    <button onclick="cerrarAuth()" style="width:100%;background:none;border:none;padding:10px;color:#4a6b4a;font-size:12px;cursor:pointer;margin-top:8px;font-family:Georgia,serif">Seguir sin cuenta (solo consulta)</button>
   </div>
 </div>
 
@@ -114,7 +114,7 @@
       <button onclick="doLogout()" style="background:none;border:1px solid rgba(248,113,113,0.3);border-radius:8px;padding:3px 10px;color:#f87171;font-size:11px;cursor:pointer">Salir</button>
     </div>
     <div id="no-login-info" style="display:flex;align-items:center;justify-content:space-between;margin-top:6px;background:rgba(74,222,128,0.08);border:1px solid rgba(74,222,128,0.2);border-radius:8px;padding:6px 10px">
-      <span style="color:#4a6b4a;font-size:11px;font-style:italic">Sin cuenta — datos compartidos</span>
+      <span style="color:#4a6b4a;font-size:11px;font-style:italic">Sin cuenta — inicia sesión para guardar</span>
       <button onclick="mostrarAuth()" style="background:rgba(74,222,128,0.2);border:1px solid rgba(74,222,128,0.5);border-radius:8px;padding:5px 14px;color:#4ade80;font-size:12px;cursor:pointer;font-weight:bold">🔑 Iniciar sesión</button>
     </div>
   </div>
@@ -187,6 +187,10 @@
 <script src="js/plantas-arboles.js"></script>
 <script src="js/plantas-huerto.js"></script>
 <script src="js/plantas-varias.js"></script>
+<!-- Firebase SDK (compat) -->
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
 <script src="js/config.js"></script>
 <script src="js/auth.js"></script>
 <script src="js/panel.js"></script>
