@@ -156,9 +156,11 @@ function poblarSelects() {
 // ===== DIARIO =====
 async function cargarDiario() {
   var el = document.getElementById("lista-diario");
+  if (!el) return;
+  if (!currentUser) { el.innerHTML = "<div style='color:#4a6b4a;text-align:center;padding:20px;font-style:italic'>Inicia sesion para llevar tu diario.</div>"; return; }
   el.innerHTML = "<div style='color:#4a6b4a;text-align:center;padding:20px;font-style:italic'>Cargando...</div>";
   try {
-    var d = await sbGet("diario", currentUser ? "&user_id=eq." + currentUser.id : "");
+    var d = ordenarPorFecha(await fsGetMine("diario"));
     if (!d || d.length === 0) { el.innerHTML = "<div style='color:#4a6b4a;text-align:center;padding:20px;font-style:italic'>Sin entradas aun. Escribe tu primera nota!</div>"; return; }
     var icons = { "siembra": "🌱", "riego": "💧", "abono": "🌿", "poda": "✂️", "cosecha": "🍅", "plaga": "🦠", "general": "📝" };
     el.innerHTML = d.map(function (x) {
@@ -184,26 +186,29 @@ async function guardarDiario() {
   var fe = document.getElementById("df-fecha").value;
   var ti = document.getElementById("df-tipo").value;
   var no = document.getElementById("df-nota").value.trim();
+  if (!currentUser) { toast("Inicia sesion para guardar", "error"); mostrarAuth(); return; }
   if (!pl || !fe || !no) { toast("Rellena todos los campos", "error"); return; }
   var pp = P.find(function (q) { return q.n === pl; });
-  var uid = currentUser ? currentUser.id : null;
-  var ok = await sbPost("diario", { planta: pl, emoji: pp ? pp.e : "🌱", fecha: fe, tipo: ti, nota: no, user_id: uid });
-  if (ok) { document.getElementById("df-nota").value = ""; cargarDiario(); toast("📔 Entrada guardada"); }
-  else toast("Error al guardar", "error");
+  try {
+    await fsAdd("diario", { uid: currentUser.id, planta: pl, emoji: pp ? pp.e : "🌱", fecha: fe, tipo: ti, nota: no });
+    document.getElementById("df-nota").value = ""; cargarDiario(); toast("📔 Entrada guardada");
+  } catch (e) { toast("Error al guardar", "error"); }
 }
 
 async function borrarD(id) {
   if (!confirm("Borrar esta entrada?")) return;
-  await sbDel("diario", id);
+  await fsDel("diario", id);
   cargarDiario();
 }
 
 // ===== FAVORITOS =====
 async function cargarFavs() {
   var el = document.getElementById("lista-favs");
+  if (!el) return;
+  if (!currentUser) { el.innerHTML = "<div style='color:#4a6b4a;text-align:center;padding:20px;font-style:italic'>Inicia sesion para guardar favoritos.</div>"; return; }
   el.innerHTML = "<div style='color:#4a6b4a;text-align:center;padding:20px;font-style:italic'>Cargando...</div>";
   try {
-    var d = await sbGet("favoritos", currentUser ? "&user_id=eq." + currentUser.id : "");
+    var d = ordenarPorFecha(await fsGetMine("favoritos"));
     if (!d || d.length === 0) { el.innerHTML = "<div style='color:#4a6b4a;text-align:center;padding:20px;font-style:italic'>Sin favoritos. Abre una planta y pulsa el boton Favorito</div>"; return; }
     el.innerHTML = d.map(function (x) {
       return "<div style='background:rgba(255,255,255,0.04);border:1px solid rgba(134,239,172,0.12);border-radius:10px;padding:10px 12px;margin-bottom:8px;display:flex;align-items:center;gap:10px;cursor:pointer' onclick=\"abrirFav('" + x.planta + "')\">"
@@ -215,31 +220,34 @@ async function cargarFavs() {
   } catch (e) { el.innerHTML = "<div style='color:#f87171;text-align:center;padding:20px'>Error al cargar</div>"; }
 }
 
-// Devuelve true si quedó como favorito, false si se quitó.
-// Si silent=true no muestra alert (el llamador se encarga del feedback).
+// Devuelve true si quedó como favorito, false si se quitó (o no hay sesión).
+// Si silent=true no muestra feedback (el llamador se encarga).
 async function toggleFav(nombre, emoji, silent) {
+  if (!currentUser) {
+    if (typeof toast === "function") toast("Inicia sesion para guardar favoritos", "error");
+    if (typeof mostrarAuth === "function") mostrarAuth();
+    return false;
+  }
   try {
-    var uid_filter = currentUser ? "&user_id=eq." + currentUser.id : "";
-    var d = await sbGet("favoritos", "&planta=eq." + encodeURIComponent(nombre) + uid_filter);
-    if (d && d.length > 0) {
-      await sbDel("favoritos", d[0].id);
-      if (!silent) alert("Quitado de favoritos");
+    var mine = await fsGetMine("favoritos");
+    var existente = mine.find(function (f) { return f.planta === nombre; });
+    if (existente) {
+      await fsDel("favoritos", existente.id);
+      if (!silent && typeof toast === "function") toast("Quitada de favoritos");
       return false;
     } else {
-      var uid = currentUser ? currentUser.id : null;
-      await sbPost("favoritos", { planta: nombre, emoji: emoji, user_id: uid });
-      if (!silent) alert("Anadido a favoritos!");
+      await fsAdd("favoritos", { uid: currentUser.id, planta: nombre, emoji: emoji });
+      if (!silent && typeof toast === "function") toast("⭐ Anadida a favoritos");
       return true;
     }
   } catch (e) {
     if (typeof toast === "function") toast("Error al guardar favorito", "error");
-    else alert("Error al guardar favorito");
     return false;
   }
 }
 
 async function quitarFav(id) {
-  await sbDel("favoritos", id);
+  await fsDel("favoritos", id);
   cargarFavs();
 }
 
@@ -253,10 +261,10 @@ async function cargarCom() {
   var el = document.getElementById("lista-com");
   el.innerHTML = "<div style='color:#4a6b4a;text-align:center;padding:20px;font-style:italic'>Cargando...</div>";
   try {
-    var d = await sbGet("comentarios");
+    var d = ordenarPorFecha(await fsGetAll("comentarios"));
     if (!d || d.length === 0) { el.innerHTML = "<div style='color:#4a6b4a;text-align:center;padding:20px;font-style:italic'>Sin comentarios. Se el primero en compartir un truco!</div>"; return; }
     el.innerHTML = d.map(function (x) {
-      var fe = new Date(x.created_at).toLocaleDateString("es-ES");
+      var fe = (x.created && x.created.toDate) ? x.created.toDate().toLocaleDateString("es-ES") : "";
       return "<div style='background:rgba(255,255,255,0.04);border:1px solid rgba(134,239,172,0.12);border-radius:10px;padding:12px;margin-bottom:8px'>"
         + "<div style='display:flex;align-items:center;gap:8px;margin-bottom:5px'>"
         + "<span style='color:#4ade80;font-size:12px;font-weight:bold'>" + x.autor + "</span>"
@@ -273,11 +281,13 @@ async function guardarCom() {
   var pl = document.getElementById("cf-planta").value;
   var au = document.getElementById("cf-autor").value.trim() || "Anonimo";
   var tx = document.getElementById("cf-texto").value.trim();
+  if (!currentUser) { toast("Inicia sesion para compartir", "error"); mostrarAuth(); return; }
   if (!pl || !tx) { toast("Selecciona una planta y escribe tu truco", "error"); return; }
   if (tx.length < 10) { toast("Escribe al menos 10 caracteres", "error"); return; }
-  var ok = await sbPost("comentarios", { planta: pl, autor: au, texto: tx });
-  if (ok) { document.getElementById("cf-texto").value = ""; cargarCom(); toast("💬 Truco compartido"); }
-  else toast("Error al guardar", "error");
+  try {
+    await fsAdd("comentarios", { uid: currentUser.id, planta: pl, autor: au, texto: tx });
+    document.getElementById("cf-texto").value = ""; cargarCom(); toast("💬 Truco compartido");
+  } catch (e) { toast("Error al guardar", "error"); }
 }
 
 // ===== TIEMPO =====
@@ -354,12 +364,36 @@ async function cargarTiempo() {
   }
 }
 
+// ===== HUERTO EN LA NUBE (mapa + riego por cuenta) =====
+async function cargarHuerto() {
+  if (!currentUser) return;
+  try {
+    var doc = await db.collection("huerto").doc(currentUser.id).get();
+    if (doc.exists) {
+      var data = doc.data();
+      if (data.mapa) { mapaData = data.mapa; localStorage.setItem("jardin_mapa", JSON.stringify(mapaData)); }
+      if (data.riego) { riegoData = data.riego; localStorage.setItem("jardin_riego", JSON.stringify(riegoData)); }
+    }
+  } catch (e) { }
+  if (typeof mostrarRecordatoriosRiego === "function") mostrarRecordatoriosRiego();
+  var pmapa = document.getElementById("pmapa");
+  if (pmapa && pmapa.style.display !== "none" && typeof cargarMapa === "function") cargarMapa();
+}
+
+async function guardarHuerto() {
+  if (!currentUser) return;
+  try {
+    await db.collection("huerto").doc(currentUser.id).set({ mapa: mapaData, riego: riegoData }, { merge: true });
+  } catch (e) { }
+}
+
 // ===== RECORDATORIOS DE RIEGO =====
 var riegoData = JSON.parse(localStorage.getItem("jardin_riego") || "{}");
 
 function guardarRiego(planta) {
   riegoData[planta] = new Date().toISOString().split("T")[0];
   localStorage.setItem("jardin_riego", JSON.stringify(riegoData));
+  guardarHuerto();
 }
 
 function diasSinRegar(planta) {
@@ -370,6 +404,8 @@ function diasSinRegar(planta) {
 }
 
 function mostrarRecordatoriosRiego() {
+  var previo = document.getElementById("riego-reminder");
+  if (previo) previo.remove();
   var alertas = [];
   P.forEach(function (p) {
     var dias = diasSinRegar(p.n);
@@ -381,6 +417,7 @@ function mostrarRecordatoriosRiego() {
   var el = document.getElementById("alertas-cosecha");
   if (!el) return;
   var wrap = document.createElement("div");
+  wrap.id = "riego-reminder";
   wrap.style.cssText = "background:rgba(96,165,250,0.08);border:1px solid rgba(96,165,250,0.25);border-radius:14px;padding:12px 16px;margin-top:10px";
   wrap.innerHTML = "<div style='font-size:12px;color:#60a5fa;font-weight:bold;margin-bottom:8px'>💧 Pendiente de regar</div>";
   var tags = document.createElement("div");
@@ -401,9 +438,9 @@ async function cargarStats() {
   var el = document.getElementById("stats-contenido");
   el.innerHTML = "<div style='color:#4a6b4a;text-align:center;padding:20px;font-style:italic'>Cargando estadisticas...</div>";
   try {
-    var diario = await sbGet("diario", currentUser ? "&user_id=eq." + currentUser.id : "");
-    var favs = await sbGet("favoritos", currentUser ? "&user_id=eq." + currentUser.id : "");
-    var coms = await sbGet("comentarios");
+    var diario = await fsGetMine("diario");
+    var favs = await fsGetMine("favoritos");
+    var coms = await fsGetAll("comentarios");
 
     var totalEntradas = diario ? diario.length : 0;
     var totalFavs = favs ? favs.length : 0;
@@ -555,6 +592,7 @@ function clickCelda(key) {
 
 function guardarMapa() {
   localStorage.setItem("jardin_mapa", JSON.stringify(mapaData));
+  guardarHuerto();
 }
 
 function limpiarMapa() {
