@@ -184,12 +184,12 @@ async function guardarDiario() {
   var fe = document.getElementById("df-fecha").value;
   var ti = document.getElementById("df-tipo").value;
   var no = document.getElementById("df-nota").value.trim();
-  if (!pl || !fe || !no) { alert("Rellena todos los campos"); return; }
+  if (!pl || !fe || !no) { toast("Rellena todos los campos", "error"); return; }
   var pp = P.find(function (q) { return q.n === pl; });
   var uid = currentUser ? currentUser.id : null;
   var ok = await sbPost("diario", { planta: pl, emoji: pp ? pp.e : "🌱", fecha: fe, tipo: ti, nota: no, user_id: uid });
-  if (ok) { document.getElementById("df-nota").value = ""; cargarDiario(); }
-  else alert("Error al guardar");
+  if (ok) { document.getElementById("df-nota").value = ""; cargarDiario(); toast("📔 Entrada guardada"); }
+  else toast("Error al guardar", "error");
 }
 
 async function borrarD(id) {
@@ -215,19 +215,27 @@ async function cargarFavs() {
   } catch (e) { el.innerHTML = "<div style='color:#f87171;text-align:center;padding:20px'>Error al cargar</div>"; }
 }
 
-async function toggleFav(nombre, emoji) {
+// Devuelve true si quedó como favorito, false si se quitó.
+// Si silent=true no muestra alert (el llamador se encarga del feedback).
+async function toggleFav(nombre, emoji, silent) {
   try {
     var uid_filter = currentUser ? "&user_id=eq." + currentUser.id : "";
     var d = await sbGet("favoritos", "&planta=eq." + encodeURIComponent(nombre) + uid_filter);
     if (d && d.length > 0) {
       await sbDel("favoritos", d[0].id);
-      alert("Quitado de favoritos");
+      if (!silent) alert("Quitado de favoritos");
+      return false;
     } else {
       var uid = currentUser ? currentUser.id : null;
       await sbPost("favoritos", { planta: nombre, emoji: emoji, user_id: uid });
-      alert("Anadido a favoritos!");
+      if (!silent) alert("Anadido a favoritos!");
+      return true;
     }
-  } catch (e) { alert("Error al guardar favorito"); }
+  } catch (e) {
+    if (typeof toast === "function") toast("Error al guardar favorito", "error");
+    else alert("Error al guardar favorito");
+    return false;
+  }
 }
 
 async function quitarFav(id) {
@@ -265,11 +273,11 @@ async function guardarCom() {
   var pl = document.getElementById("cf-planta").value;
   var au = document.getElementById("cf-autor").value.trim() || "Anonimo";
   var tx = document.getElementById("cf-texto").value.trim();
-  if (!pl || !tx) { alert("Selecciona una planta y escribe tu truco"); return; }
-  if (tx.length < 10) { alert("Escribe al menos 10 caracteres"); return; }
+  if (!pl || !tx) { toast("Selecciona una planta y escribe tu truco", "error"); return; }
+  if (tx.length < 10) { toast("Escribe al menos 10 caracteres", "error"); return; }
   var ok = await sbPost("comentarios", { planta: pl, autor: au, texto: tx });
-  if (ok) { document.getElementById("cf-texto").value = ""; cargarCom(); }
-  else alert("Error al guardar");
+  if (ok) { document.getElementById("cf-texto").value = ""; cargarCom(); toast("💬 Truco compartido"); }
+  else toast("Error al guardar", "error");
 }
 
 // ===== TIEMPO =====
