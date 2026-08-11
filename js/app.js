@@ -1,6 +1,29 @@
 // ===== LÓGICA PRINCIPAL DE LA APP =====
 var filtro = "Todas", busq = "";
 
+// ===== TOAST (notificación discreta) =====
+function toast(msg, tipo) {
+  var t = document.getElementById("toast-jardin");
+  if (!t) {
+    t = document.createElement("div");
+    t.id = "toast-jardin";
+    t.style.cssText = "position:fixed;bottom:96px;left:50%;transform:translateX(-50%) translateY(20px);background:#14321e;border:1px solid rgba(74,222,128,0.4);border-radius:24px;padding:11px 20px;color:#86efac;font-family:Georgia,serif;font-size:13px;z-index:900;box-shadow:0 6px 20px rgba(0,0,0,0.4);opacity:0;transition:opacity .25s ease,transform .25s ease;pointer-events:none;max-width:90vw;text-align:center";
+    document.body.appendChild(t);
+  }
+  if (tipo === "error") { t.style.borderColor = "rgba(248,113,113,0.5)"; t.style.color = "#fca5a5"; }
+  else { t.style.borderColor = "rgba(74,222,128,0.4)"; t.style.color = "#86efac"; }
+  t.textContent = msg;
+  requestAnimationFrame(function () {
+    t.style.opacity = "1";
+    t.style.transform = "translateX(-50%) translateY(0)";
+  });
+  clearTimeout(window._toastTimer);
+  window._toastTimer = setTimeout(function () {
+    t.style.opacity = "0";
+    t.style.transform = "translateX(-50%) translateY(20px)";
+  }, 2600);
+}
+
 function init() {
   var ce = document.getElementById("CT");
   CATS.forEach(function (c) {
@@ -72,7 +95,12 @@ function abrir(nombre) {
   html += '<div><div class="modal-name">' + p.n + '</div>';
   html += '<span class="badge" style="background:' + col + '22;border:1px solid ' + col + '44;color:' + col + '">' + p.d + '</span>';
   html += ' <span style="color:#4a6b4a;font-size:11px">' + p.c + '</span>';
-  html += '</div><div style="margin-top:8px"><button id="btn-fav-modal" onclick="toggleFavModal()" style="background:none;border:1px solid rgba(251,191,36,0.35);border-radius:20px;padding:5px 14px;color:#fbbf24;font-size:12px;cursor:pointer">⭐ Añadir a favoritos</button></div></div>';
+  var dias = (typeof diasSinRegar === "function") ? diasSinRegar(p.n) : null;
+  var regarTxt = dias === null ? "💧 Regar hoy" : (dias === 0 ? "💧 Regada hoy ✓" : "💧 Regar hoy");
+  html += '</div><div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap">';
+  html += '<button id="btn-fav-modal" onclick="toggleFavModal()" style="background:none;border:1px solid rgba(251,191,36,0.35);border-radius:20px;padding:5px 14px;color:#fbbf24;font-size:12px;cursor:pointer">⭐ Añadir a favoritos</button>';
+  html += '<button id="btn-regar-modal" onclick="regarModal()" style="background:none;border:1px solid rgba(96,165,250,0.35);border-radius:20px;padding:5px 14px;color:#60a5fa;font-size:12px;cursor:pointer">' + regarTxt + '</button>';
+  html += '</div></div>';
   html += '<p class="modal-desc">' + p.desc + '</p>';
 
   if (p.po) {
@@ -133,6 +161,47 @@ function abrir(nombre) {
   document.getElementById("MD").innerHTML = html;
   document.getElementById("OV").classList.add("open");
   document.body.style.overflow = "hidden";
+  actualizarBtnFav(p.n);
+}
+
+// Marca el estado real del botón de favoritos según lo guardado
+async function actualizarBtnFav(nombre) {
+  var btn = document.getElementById("btn-fav-modal");
+  if (!btn) return;
+  try {
+    var uid_filter = (typeof currentUser !== "undefined" && currentUser) ? "&user_id=eq." + currentUser.id : "";
+    var d = await sbGet("favoritos", "&planta=eq." + encodeURIComponent(nombre) + uid_filter);
+    var esFav = d && d.length > 0;
+    pintarBtnFav(btn, esFav);
+  } catch (e) { }
+}
+
+function pintarBtnFav(btn, esFav) {
+  if (!btn) return;
+  if (esFav) {
+    btn.textContent = "⭐ En favoritos";
+    btn.style.background = "rgba(251,191,36,0.18)";
+    btn.style.borderColor = "rgba(251,191,36,0.6)";
+  } else {
+    btn.textContent = "⭐ Añadir a favoritos";
+    btn.style.background = "none";
+    btn.style.borderColor = "rgba(251,191,36,0.35)";
+  }
+}
+
+// Marca la planta abierta como regada hoy
+function regarModal() {
+  var nm = document.querySelector(".modal-name");
+  if (!nm) return;
+  var nombre = nm.textContent;
+  guardarRiego(nombre);
+  var btn = document.getElementById("btn-regar-modal");
+  if (btn) {
+    btn.textContent = "💧 Regada hoy ✓";
+    btn.style.background = "rgba(96,165,250,0.18)";
+    btn.style.borderColor = "rgba(96,165,250,0.6)";
+  }
+  toast("💧 Riego registrado para " + nombre);
 }
 
 function cerrar(e) {
@@ -142,10 +211,14 @@ function cerrar(e) {
   }
 }
 
-function toggleFavModal() {
+async function toggleFavModal() {
   var nombre = document.querySelector(".modal-name").textContent;
   var p = P.find(function (x) { return x.n === nombre; });
-  if (p) toggleFav(p.n, p.e);
+  if (!p) return;
+  var btn = document.getElementById("btn-fav-modal");
+  var añadido = await toggleFav(p.n, p.e, true);
+  pintarBtnFav(btn, añadido);
+  toast(añadido ? "⭐ Añadida a favoritos" : "Quitada de favoritos");
 }
 
 // ===== CIUDAD / UBICACIÓN =====
@@ -390,4 +463,13 @@ document.addEventListener("DOMContentLoaded", function () {
   instalarPWA();
   setTimeout(poblarSelects, 500);
   setTimeout(mostrarRecordatoriosRiego, 1000);
+
+  // Cerrar modal / panel con la tecla Escape
+  document.addEventListener("keydown", function (e) {
+    if (e.key !== "Escape") return;
+    var ov = document.getElementById("OV");
+    var pl = document.getElementById("PL");
+    if (ov && ov.classList.contains("open")) { cerrar(); return; }
+    if (pl && pl.style.right === "0px") { cerrarPanel(); return; }
+  });
 });
