@@ -30,7 +30,7 @@
 <!-- ===== BÚSQUEDA ===== -->
 <div class="search-wrap">
   <div class="search-box">
-    <input type="search" id="SI" name="buscar_planta" placeholder="Buscar planta, síntoma o plaga... ej: pulgon, mildiu, tomate" oninput="filtrar()" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" data-form-type="other" data-lpignore="true" data-1p-ignore>
+    <input type="search" id="SI" name="buscar_planta_noauto" placeholder="Buscar planta, síntoma o plaga... ej: pulgon, mildiu, tomate" oninput="filtrar()" readonly onfocus="this.removeAttribute('readonly')" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" data-form-type="other" data-lpignore="true" data-1p-ignore>
     <button class="btn-buscar" onclick="filtrar()">🔍</button>
   </div>
 </div>
@@ -196,6 +196,22 @@
 <script src="js/panel.js"></script>
 <script src="js/pwa.js"></script>
 <script src="js/app.js"></script>
+<script>
+// Anti-autofill: si el navegador cuela texto en el buscador sin que el usuario escriba, lo limpiamos
+(function(){
+  var SI=document.getElementById('SI');
+  if(!SI) return;
+  var usuarioEscribio=false;
+  SI.addEventListener('keydown',function(){usuarioEscribio=true;});
+  function limpiarSiAutofill(){
+    if(!usuarioEscribio && SI.value){
+      SI.value='';
+      if(typeof filtrar==='function') filtrar();
+    }
+  }
+  [150,400,800,1500].forEach(function(ms){setTimeout(limpiarSiAutofill,ms);});
+})();
+</script>
 
 </body>
 </html>
