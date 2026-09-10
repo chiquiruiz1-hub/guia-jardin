@@ -1,56 +1,76 @@
 /* ===== GUÍA DE JARDÍN - ESTILOS ===== */
 
 *{box-sizing:border-box;margin:0;padding:0}
+html,body{max-width:100vw;overflow-x:hidden}
 body{min-height:100vh;background:linear-gradient(160deg,#0a1a0a 0%,#0f2010 40%,#0a1a0f 100%);font-family:Georgia,serif;color:#e8f5e8;padding-bottom:60px}
 @keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.7}}
 button{font-family:Georgia,serif;cursor:pointer}
 
+/* Accesibilidad */
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border-width:0}
+
 /* ===== HEADER ===== */
-.header{text-align:center;padding:40px 20px 20px;position:relative}
+.header{text-align:center;padding:36px 20px 18px;position:relative}
 .header .logo{font-size:56px;margin-bottom:8px;filter:drop-shadow(0 4px 12px rgba(74,222,128,0.3))}
 .header h1{font-size:clamp(24px,5vw,48px);font-weight:normal;color:#86efac;margin-bottom:6px;letter-spacing:3px;text-shadow:0 2px 20px rgba(74,222,128,0.2)}
 .header p{color:#6b9c6b;font-style:italic;font-size:13px;letter-spacing:0.5px}
 
+/* ===== ALERTAS Y TAREAS ===== */
+.alerta-tag{font-family:inherit;cursor:pointer;transition:all .2s ease;display:inline-flex;align-items:center;min-height:34px;text-decoration:none}
+.alerta-tag:hover{filter:brightness(1.2);transform:translateY(-1px)}
+.alerta-tag:focus-visible{outline:2px solid #4ade80;outline-offset:2px}
+
+/* ===== FILTROS RÁPIDOS ===== */
+.quick-filters{max-width:900px;margin:0 auto 12px;padding:0 16px;display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.qf-btn{background:rgba(255,255,255,0.04);border:1px solid rgba(134,239,172,0.2);border-radius:20px;padding:8px 16px;color:#c8e6c9;font-size:12px;transition:all .2s;min-height:38px;display:inline-flex;align-items:center;justify-content:center}
+.qf-btn:hover{background:rgba(74,222,128,0.12);border-color:rgba(74,222,128,0.4);color:#86efac}
+.qf-btn.active{background:linear-gradient(135deg,rgba(74,222,128,0.25),rgba(34,197,94,0.2));border-color:#4ade80;color:#4ade80;font-weight:bold;box-shadow:0 2px 8px rgba(74,222,128,0.2)}
+.qf-btn:focus-visible{outline:2px solid #4ade80;outline-offset:2px}
+
 /* ===== CATEGORÍAS ===== */
 .cats{max-width:900px;margin:0 auto 16px;padding:0 16px;display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
-.cat-btn{background:rgba(74,222,128,0.06);border:1px solid rgba(74,222,128,0.18);border-radius:20px;padding:6px 16px;color:#86efac;font-size:12px;transition:all .2s;letter-spacing:0.3px}
+.cat-btn{background:rgba(74,222,128,0.06);border:1px solid rgba(74,222,128,0.18);border-radius:20px;padding:6px 16px;color:#86efac;font-size:12px;transition:all .2s;letter-spacing:0.3px;min-height:36px}
 .cat-btn:hover{background:rgba(74,222,128,0.12);border-color:rgba(74,222,128,0.35)}
 .cat-btn.active{background:linear-gradient(135deg,rgba(74,222,128,0.25),rgba(34,197,94,0.2));border-color:rgba(74,222,128,0.55);color:#4ade80;box-shadow:0 2px 8px rgba(74,222,128,0.15)}
+.cat-btn:focus-visible{outline:2px solid #4ade80;outline-offset:2px}
 
 /* ===== BÚSQUEDA ===== */
 .search-wrap{max-width:600px;margin:0 auto 16px;padding:0 16px}
-.search-box{display:flex;gap:8px;background:rgba(255,255,255,0.06);border:1px solid rgba(134,239,172,0.3);border-radius:50px;padding:8px 8px 8px 22px;transition:border-color .2s,box-shadow .2s}
-.search-box:focus-within{border-color:rgba(74,222,128,0.5);box-shadow:0 0 0 3px rgba(74,222,128,0.08)}
-.search-box input{flex:1;background:none;border:none;outline:none;color:#e8f5e8;font-size:14px;font-family:Georgia,serif}
-.search-box input::placeholder{color:#4a6b4a}
-.btn-buscar{background:linear-gradient(135deg,#4ade80,#22c55e);border:none;border-radius:50px;padding:8px 20px;color:#0f1a0f;font-size:13px;font-weight:bold}
-.count{text-align:center;color:#4a6b4a;font-size:12px;margin-bottom:14px;font-style:italic}
+.search-box{display:flex;gap:8px;background:rgba(255,255,255,0.06);border:1px solid rgba(134,239,172,0.3);border-radius:50px;padding:6px 6px 6px 20px;transition:border-color .2s,box-shadow .2s;min-height:46px;align-items:center}
+.search-box:focus-within{border-color:rgba(74,222,128,0.6);box-shadow:0 0 0 3px rgba(74,222,128,0.12)}
+.search-box input{flex:1;background:none;border:none;outline:none;color:#e8f5e8;font-size:15px;font-family:Georgia,serif;min-width:0}
+.search-box input::placeholder{color:#6b9c6b}
+.btn-buscar{background:linear-gradient(135deg,#4ade80,#22c55e);border:none;border-radius:50px;padding:10px 20px;color:#0f1a0f;font-size:14px;font-weight:bold;min-height:38px;display:inline-flex;align-items:center;justify-content:center}
+.btn-buscar:focus-visible{outline:2px solid #fff;outline-offset:2px}
+.count{text-align:center;color:#6b9c6b;font-size:13px;margin-bottom:14px;font-style:italic}
 
 /* ===== GRID DE PLANTAS ===== */
 .grid{max-width:1100px;margin:0 auto;padding:0 16px;display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px}
-.plant-card{background:rgba(255,255,255,0.04);border:1px solid rgba(134,239,172,0.12);border-radius:18px;padding:18px 16px;cursor:pointer;transition:all .25s cubic-bezier(0.4,0,0.2,1);animation:fadeIn .3s ease;position:relative;overflow:hidden}
-.plant-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(74,222,128,0.03),transparent);opacity:0;transition:opacity .25s}
+.plant-card{display:flex;flex-direction:column;align-items:flex-start;text-align:left;width:100%;background:rgba(255,255,255,0.04);border:1px solid rgba(134,239,172,0.12);border-radius:18px;padding:18px 16px;cursor:pointer;transition:all .25s cubic-bezier(0.4,0,0.2,1);animation:fadeIn .3s ease;position:relative;overflow:hidden;font-family:inherit}
+.plant-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(74,222,128,0.04),transparent);opacity:0;transition:opacity .25s}
 .plant-card:hover{background:rgba(74,222,128,0.08);border-color:rgba(74,222,128,0.4);transform:translateY(-4px);box-shadow:0 8px 32px rgba(74,222,128,0.12)}
 .plant-card:hover::before{opacity:1}
-.plant-card .emoji{font-size:34px;margin-bottom:7px}
-.plant-card .name{color:#86efac;font-size:14px;margin-bottom:3px}
-.plant-card .cat-label{color:#4a6b4a;font-size:10px;text-transform:uppercase;letter-spacing:1px}
+.plant-card:focus-visible{outline:2px solid #4ade80;outline-offset:2px;border-color:rgba(74,222,128,0.6)}
+.plant-card .emoji{font-size:34px;margin-bottom:7px;display:block}
+.plant-card .name{color:#86efac;font-size:15px;margin-bottom:3px;font-weight:bold;line-height:1.2}
+.plant-card .cat-label{color:#6b9c6b;font-size:10px;text-transform:uppercase;letter-spacing:1px}
 .plant-card .dif{font-size:10px;margin-top:5px;border-radius:10px;padding:2px 8px;display:inline-block}
 
 /* ===== MODAL PLANTA ===== */
-.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:100;overflow-y:auto;padding:20px}
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.8);z-index:100;overflow-y:auto;padding:20px}
 .overlay.open{display:flex;align-items:flex-start;justify-content:center}
-.modal{background:#111e11;border:1px solid rgba(134,239,172,0.25);border-radius:22px;padding:26px;max-width:700px;width:100%;margin:auto;animation:fadeIn .25s ease}
+.modal{background:#111e11;border:1px solid rgba(134,239,172,0.3);border-radius:22px;padding:26px;max-width:700px;width:100%;margin:auto;animation:fadeIn .25s ease}
+.modal:focus{outline:none}
 .modal-header{display:flex;align-items:center;gap:14px;margin-bottom:14px;flex-wrap:wrap}
 .modal-emoji{font-size:48px}
-.modal-name{font-size:clamp(18px,4vw,28px);color:#86efac;font-weight:normal;margin-bottom:5px}
+.modal-name{font-size:clamp(20px,4vw,28px);color:#86efac;font-weight:normal;margin-bottom:5px}
 .badge{border-radius:10px;padding:3px 10px;font-size:11px}
-.modal-desc{color:#a3c4a3;font-size:13px;line-height:1.7;font-style:italic;margin-bottom:16px}
+.modal-desc{color:#a3c4a3;font-size:13.5px;line-height:1.7;font-style:italic;margin-bottom:16px}
 .epoca-box{background:rgba(74,222,128,0.1);border:1px solid rgba(74,222,128,0.3);border-radius:12px;padding:12px 16px;margin-bottom:14px;display:flex;gap:10px}
 .epoca-title{color:#4ade80;font-size:10px;font-weight:bold;text-transform:uppercase;letter-spacing:1px;margin-bottom:3px}
 .epoca-text{color:#c8e6c9;font-size:13px;line-height:1.5}
-.datos-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));gap:8px;margin-bottom:14px}
+.datos-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:8px;margin-bottom:14px}
 .dato{background:rgba(255,255,255,0.04);border:1px solid rgba(134,239,172,0.12);border-radius:10px;padding:10px 8px;text-align:center}
 .dato-icon{font-size:16px;margin-bottom:3px}
 .dato-label{font-size:9px;color:#6b9c6b;text-transform:uppercase;letter-spacing:1px;margin-bottom:2px}
@@ -75,7 +95,8 @@ button{font-family:Georgia,serif;cursor:pointer}
 .tips li{font-size:12px;line-height:1.5;margin-bottom:5px}
 .tips.green li{color:#a3c4a3}
 .tips.red li{color:#fca5a5}
-.btn-cerrar{background:none;border:1px solid rgba(134,239,172,0.3);border-radius:30px;padding:8px 24px;color:#86efac;font-size:13px;margin-top:18px;display:block;margin-left:auto}
+.btn-cerrar{background:none;border:1px solid rgba(134,239,172,0.3);border-radius:30px;padding:10px 24px;color:#86efac;font-size:13px;margin-top:18px;display:block;margin-left:auto;min-height:42px;cursor:pointer}
+.btn-cerrar:focus-visible{outline:2px solid #4ade80;outline-offset:2px}
 
 /* ===== PANEL LATERAL ===== */
 .panel-btn{position:fixed;bottom:24px;right:24px;background:linear-gradient(135deg,#4ade80,#22c55e);border:none;border-radius:50%;width:56px;height:56px;font-size:22px;cursor:pointer;z-index:200;box-shadow:0 4px 16px rgba(74,222,128,0.4)}
@@ -133,22 +154,27 @@ button{font-family:Georgia,serif;cursor:pointer}
 
 /* ===== RESPONSIVE ===== */
 @media(max-width:640px){
-  .header h1{font-size:28px;letter-spacing:1px}
-  .header .logo{font-size:44px}
-  .grid{grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;padding:0 12px}
-  .plant-card{padding:14px 12px}
+  .header{padding:24px 16px 14px}
+  .header h1{font-size:26px;letter-spacing:1px}
+  .header .logo{font-size:42px}
+  .grid{grid-template-columns:repeat(auto-fill,minmax(145px,1fr));gap:10px;padding:0 12px}
+  .plant-card{padding:14px 12px;border-radius:14px}
   .plant-card .emoji{font-size:28px}
   .cats{padding:0 12px;gap:6px}
-  .cat-btn{padding:5px 12px;font-size:11px}
+  .cat-btn{padding:6px 12px;font-size:11.5px;min-height:36px}
+  .quick-filters{padding:0 12px;gap:6px}
+  .qf-btn{padding:6px 12px;font-size:11.5px;min-height:36px}
   .search-wrap{padding:0 12px}
   #PL{width:100vw !important;max-width:100vw !important}
   #PL.open-panel{right:0 !important}
-  .modal{padding:20px 16px;border-radius:16px}
+  .modal{padding:20px 16px;border-radius:18px;max-height:88vh}
   .modal-emoji{font-size:40px}
   .datos-grid{grid-template-columns:repeat(2,1fr)}
   #alertas-cosecha{padding:0 12px}
 }
 @media(max-width:400px){
-  .grid{grid-template-columns:repeat(2,1fr)}
+  .grid{grid-template-columns:repeat(2,1fr);gap:8px}
+  .plant-card{padding:12px 10px}
   .plant-card .name{font-size:13px}
+  .plant-card .cat-label{font-size:9px}
 }

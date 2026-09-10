@@ -30,19 +30,28 @@
 <!-- ===== BÚSQUEDA ===== -->
 <div class="search-wrap">
   <div class="search-box">
-    <input type="search" id="SI" name="buscar_planta_noauto" placeholder="Buscar planta, síntoma o plaga... ej: pulgon, mildiu, tomate" oninput="filtrar()" readonly onfocus="this.removeAttribute('readonly')" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" data-form-type="other" data-lpignore="true" data-1p-ignore>
-    <button class="btn-buscar" onclick="filtrar()">🔍</button>
+    <label for="SI" class="sr-only">Buscar una planta</label>
+    <input type="search" id="SI" name="buscar_planta_noauto" aria-label="Buscar una planta" placeholder="Buscar una planta... ej: tomate, albahaca, mildiu" oninput="filtrar()" readonly onfocus="this.removeAttribute('readonly')" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" data-form-type="other" data-lpignore="true" data-1p-ignore>
+    <button class="btn-buscar" aria-label="Buscar" onclick="filtrar()">🔍</button>
   </div>
 </div>
 
+<!-- ===== FILTROS RÁPIDOS ===== -->
+<div class="quick-filters" id="QF" role="toolbar" aria-label="Filtros rápidos del catálogo">
+  <button class="qf-btn active" data-qf="todas" onclick="setQuickFilter('todas')">🌿 Todas</button>
+  <button class="qf-btn" data-qf="mes" onclick="setQuickFilter('mes')">🌱 Recomendadas este mes</button>
+  <button class="qf-btn" data-qf="faciles" onclick="setQuickFilter('faciles')">✨ Fáciles</button>
+  <button class="qf-btn" data-qf="favs" onclick="setQuickFilter('favs')">⭐ Favoritas</button>
+</div>
+
 <!-- ===== CATEGORÍAS Y GRID ===== -->
-<div class="cats" id="CT"></div>
-<div class="count" id="CN"></div>
+<div class="cats" id="CT" role="tablist" aria-label="Categorías de plantas"></div>
+<div class="count" id="CN" aria-live="polite"></div>
 <div class="grid" id="GR"></div>
 
 <!-- ===== MODAL PLANTA ===== -->
-<div class="overlay" id="OV" onclick="cerrar(event)">
-  <div class="modal" id="MD"></div>
+<div class="overlay" id="OV" onclick="cerrar(event)" role="dialog" aria-modal="true" aria-labelledby="modal-plant-name" aria-hidden="true">
+  <div class="modal" id="MD" tabindex="-1"></div>
 </div>
 
 <!-- ===== MODAL BIENVENIDA / CIUDAD ===== -->
@@ -114,7 +123,7 @@
       <button onclick="doLogout()" style="background:none;border:1px solid rgba(248,113,113,0.3);border-radius:8px;padding:3px 10px;color:#f87171;font-size:11px;cursor:pointer">Salir</button>
     </div>
     <div id="no-login-info" style="display:flex;align-items:center;justify-content:space-between;margin-top:6px;background:rgba(74,222,128,0.08);border:1px solid rgba(74,222,128,0.2);border-radius:8px;padding:6px 10px">
-      <span style="color:#4a6b4a;font-size:11px;font-style:italic">Sin cuenta — inicia sesión para guardar</span>
+      <span style="color:#86efac;font-size:11px;font-style:italic">📱 Guardado en este dispositivo (sin cuenta)</span>
       <button onclick="mostrarAuth()" style="background:rgba(74,222,128,0.2);border:1px solid rgba(74,222,128,0.5);border-radius:8px;padding:5px 14px;color:#4ade80;font-size:12px;cursor:pointer;font-weight:bold">🔑 Iniciar sesión</button>
     </div>
   </div>
@@ -148,14 +157,14 @@
         <option value="plaga">🦠 Plaga detectada</option>
         <option value="general">📝 Nota general</option>
       </select>
-      <textarea id="df-nota" placeholder="Que hiciste hoy en el jardin?" style="width:100%;background:rgba(255,255,255,0.06);border:1px solid rgba(134,239,172,0.2);border-radius:8px;padding:8px 10px;color:#e8f5e8;font-family:Georgia,serif;font-size:13px;margin-bottom:8px;outline:none;height:70px;resize:none"></textarea>
+      <textarea id="df-nota" placeholder="¿Qué hiciste hoy en el jardín?" style="width:100%;background:rgba(255,255,255,0.06);border:1px solid rgba(134,239,172,0.2);border-radius:8px;padding:8px 10px;color:#e8f5e8;font-family:Georgia,serif;font-size:13px;margin-bottom:8px;outline:none;height:70px;resize:none"></textarea>
       <button onclick="guardarDiario()" style="background:linear-gradient(135deg,#4ade80,#22c55e);border:none;border-radius:8px;padding:8px 18px;color:#0f1a0f;font-size:13px;font-weight:bold;cursor:pointer;width:100%">Guardar entrada</button>
     </div>
     <div id="lista-diario" style="color:#4a6b4a;font-size:13px;text-align:center;padding:20px;font-style:italic">Cargando...</div>
   </div>
 
   <div id="pfavs" style="padding:16px;display:none;overflow-y:auto;flex:1">
-    <p style="color:#6b9c6b;font-size:12px;margin-bottom:12px;font-style:italic">Abre cualquier planta y pulsa el boton Favorito para guardarla aqui</p>
+    <p style="color:#6b9c6b;font-size:12px;margin-bottom:12px;font-style:italic">Abre cualquier planta y pulsa «⭐ Añadir a favoritos» para guardarla aquí.</p>
     <div id="lista-favs" style="color:#4a6b4a;font-size:13px;text-align:center;padding:20px;font-style:italic">Cargando...</div>
   </div>
 
