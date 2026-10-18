@@ -133,6 +133,7 @@ function pTab(btn, id) {
   if (id === "ptiempo") cargarTiempo();
   if (id === "pestats") cargarStats();
   if (id === "pmapa") cargarMapa();
+  if (id === "pidentificar") cargarFotosIdentificar();
 }
 
 function abrirPanel() {
@@ -752,28 +753,210 @@ function limpiarMapa() {
   cargarMapa();
 }
 
-// ===== IDENTIFICAR PLANTA (Vista previa en pantalla) =====
-function mostrarFotoIdentificar(input) {
-  if (!input || !input.files || !input.files[0]) return;
-  var archivo = input.files[0];
+// ===== IDENTIFICAR PLANTA (Vista previa y guardado en Firestore) =====
+var fotoIdentificarActual = "";
+var LIMITE_FOTOS_USUARIO = 30;
+
+function mostrarAvisoIdentificar(texto, tipo) {
+  var el = document.getElementById("identificar-aviso");
+  if (!el) return;
+  if (!texto) {
+    el.style.display = "none";
+    el.textContent = "";
+    return;
+  }
+  el.style.display = "block";
+  if (tipo === "error") {
+    el.style.background = "rgba(248,113,113,0.12)";
+    el.style.border = "1px solid rgba(248,113,113,0.35)";
+    el.style.color = "#fca5a5";
+  } else {
+    el.style.background = "rgba(74,222,128,0.1)";
+    el.style.border = "1px solid rgba(74,222,128,0.3)";
+    el.style.color = "#86efac";
+  }
+  el.textContent = texto;
+}
+
+// Reduce la imagen en el navegador: máx 800px lado largo, JPEG calidad ~0.7 (<150 KB)
+function reducirImagenJPEG(archivo, callback) {
   var reader = new FileReader();
   reader.onload = function (e) {
-    var img = document.getElementById("identificar-img");
-    var preview = document.getElementById("identificar-preview");
-    if (img && preview) {
-      img.src = e.target.result;
-      preview.style.display = "block";
-    }
+    var imgObj = new Image();
+    imgObj.onload = function () {
+      var w = imgObj.width;
+      var h = imgObj.height;
+      var maxLado = 800;
+      if (w > maxLado || h > maxLado) {
+        if (w >= h) {
+          h = Math.round((h * maxLado) / w);
+          w = maxLado;
+        } else {
+          w = Math.round((w * maxLado) / h);
+          h = maxLado;
+        }
+      }
+      var canvas = document.createElement("canvas");
+      canvas.width = w;
+      canvas.height = h;
+      var ctx = canvas.getContext("2d");
+      ctx.drawImage(imgObj, 0, 0, w, h);
+
+      var calidad = 0.7;
+      var dataUrl = canvas.toDataURL("image/jpeg", calidad);
+      // Asegurar que el resultado pese menos de 150 KB (~200.000 caracteres en Base64)
+      while (dataUrl.length > 195000 && calidad > 0.3) {
+        calidad -= 0.1;
+        dataUrl = canvas.toDataURL("image/jpeg", calidad);
+      }
+      callback(dataUrl);
+    };
+    imgObj.src = e.target.result;
   };
   reader.readAsDataURL(archivo);
 }
 
+function mostrarFotoIdentificar(input) {
+  if (!input || !input.files || !input.files[0]) return;
+  var archivo = input.files[0];
+  mostrarAvisoIdentificar("");
+  reducirImagenJPEG(archivo, function (dataUrl) {
+    fotoIdentificarActual = dataUrl;
+    var img = document.getElementById("identificar-img");
+    var preview = document.getElementById("identificar-preview");
+    if (img && preview) {
+      img.src = dataUrl;
+      preview.style.display = "block";
+    }
+  });
+}
+
 function quitarFotoIdentificar() {
+  fotoIdentificarActual = "";
   var img = document.getElementById("identificar-img");
   var preview = document.getElementById("identificar-preview");
   var input = document.getElementById("identificar-input");
+  var nota = document.getElementById("identificar-nota");
   if (img) img.src = "";
   if (preview) preview.style.display = "none";
   if (input) input.value = "";
+  if (nota) nota.value = "";
+  mostrarAvisoIdentificar("");
+}
+
+async function guardarFotoIdentificar() {
+  if (typeof currentUser === "undefined" || !currentUser) {
+    mostrarAvisoIdentificar("Inicia sesión para guardar tus fotos", "error");
+    if (typeof toast === "function") toast("Inicia sesión para guardar tus fotos", "error");
+    return;
+  }
+  if (!fotoIdentificarActual) {
+    mostrarAvisoIdentificar("Selecciona una foto primero", "error");
+    return;
+  }
+
+  var btn = document.getElementById("btn-guardar-foto");
+  if (btn) {
+    btn.disabled = true;
+    btn.textContent = "Guardando...";
+  }
+
+  try {
+    var mias = await fsGetMine("fotos");
+    if (mias.length >= LIMITE_FOTOS_USUARIO) {
+      var msgLimite = "Has llegado al límite de " + LIMITE_FOTOS_USUARIO + " fotos guardadas. Borra alguna para guardar nuevas.";
+      mostrarAvisoIdentificar(msgLimite, "error");
+      if (typeof toast === "function") toast(msgLimite, "error");
+      if (btn) {
+        btn.disabled = false;
+        btn.textContent = "Guardar foto";
+      }
+      return;
+    }
+
+    var notaInput = document.getElementById("identificar-nota");
+    var nota = notaInput ? notaInput.value.trim() : "";
+    var hoy = new Date().toISOString().split("T")[0];
+
+    await fsAdd("fotos", {
+      uid: currentUser.id,
+      imagen: fotoIdentificarActual,
+      fecha: hoy,
+      nota: nota
+    });
+
+    if (notaInput) notaInput.value = "";
+    mostrarAvisoIdentificar("✓ Foto guardada correctamente", "ok");
+    if (typeof toast === "function") toast("📷 Foto guardada en tu cuenta");
+    cargarFotosIdentificar();
+  } catch (e) {
+    mostrarAvisoIdentificar("Error al guardar la foto. Revisa tu conexión o permisos.", "error");
+    if (typeof toast === "function") toast("Error al guardar la foto", "error");
+  }
+
+  if (btn) {
+    btn.disabled = false;
+    btn.textContent = "Guardar foto";
+  }
+}
+
+function escaparHtml(str) {
+  return (str || "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+}
+
+async function cargarFotosIdentificar() {
+  var el = document.getElementById("lista-fotos-identificar");
+  if (!el) return;
+
+  if (typeof currentUser === "undefined" || !currentUser) {
+    el.innerHTML = "<div style='color:#86efac;background:rgba(74,222,128,0.08);border:1px solid rgba(74,222,128,0.2);border-radius:10px;padding:14px;text-align:center;font-style:normal;font-size:12.5px'>Inicia sesión para guardar tus fotos</div>";
+    return;
+  }
+
+  el.innerHTML = "<div style='color:#4a6b4a;text-align:center;padding:20px;font-style:italic'>Cargando tus fotos...</div>";
+  try {
+    var fotos = ordenarPorFecha(await fsGetMine("fotos"));
+    if (!fotos || fotos.length === 0) {
+      el.innerHTML = "<div style='color:#6b9c6b;text-align:center;padding:20px;font-style:italic'>Aún no tienes fotos guardadas.</div>";
+      return;
+    }
+
+    var contador = "<div style='color:#6b9c6b;font-size:11px;margin-bottom:8px;text-align:right;font-style:normal'>" + fotos.length + " / " + LIMITE_FOTOS_USUARIO + " fotos</div>";
+    el.innerHTML = contador + fotos.map(function (x) {
+      var notaHtml = x.nota
+        ? "<div style='color:#a3c4a3;font-size:12px;line-height:1.4;margin-top:3px;word-break:break-word'>" + escaparHtml(x.nota) + "</div>"
+        : "<div style='color:#4a6b4a;font-size:11px;font-style:italic;margin-top:3px'>Sin nota</div>";
+      return "<div style='background:rgba(255,255,255,0.04);border:1px solid rgba(134,239,172,0.12);border-radius:10px;padding:10px;margin-bottom:8px;display:flex;align-items:center;gap:10px;text-align:left;font-style:normal'>"
+        + "<img src=\"" + x.imagen + "\" alt=\"Miniatura\" style=\"width:60px;height:60px;object-fit:cover;border-radius:8px;border:1px solid rgba(134,239,172,0.25);flex-shrink:0\">"
+        + "<div style='flex:1;min-width:0'>"
+        + "<div style='color:#86efac;font-size:11.5px;font-weight:bold'>📅 " + escaparHtml(x.fecha || "") + "</div>"
+        + notaHtml
+        + "</div>"
+        + "<button type='button' onclick=\"borrarFotoIdentificar('" + x.id + "')\" title='Borrar foto' style='background:rgba(248,113,113,0.1);border:1px solid rgba(248,113,113,0.3);border-radius:8px;color:#f87171;font-size:12px;cursor:pointer;padding:6px 10px;flex-shrink:0'>Borrar</button>"
+        + "</div>";
+    }).join("");
+  } catch (e) {
+    el.innerHTML = "<div style='color:#f87171;text-align:center;padding:20px;font-style:normal'>Error al cargar las fotos guardadas</div>";
+  }
+}
+
+async function borrarFotoIdentificar(id) {
+  if (!confirm("¿Deseas borrar esta foto guardada?")) return;
+  try {
+    await fsDel("fotos", id);
+    cargarFotosIdentificar();
+    if (typeof toast === "function") toast("Foto eliminada");
+  } catch (e) {
+    if (typeof toast === "function") toast("Error al eliminar la foto", "error");
+  }
+}
+
+if (typeof auth !== "undefined" && auth && typeof auth.onAuthStateChanged === "function") {
+  auth.onAuthStateChanged(function () {
+    var tabIdentificar = document.getElementById("pidentificar");
+    if (tabIdentificar && tabIdentificar.style.display !== "none") {
+      cargarFotosIdentificar();
+    }
+  });
 }
 
