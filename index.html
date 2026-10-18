@@ -137,9 +137,21 @@
     <button class="ptab" onclick="pTab(this,'ptiempo')" style="flex:1;background:none;border:none;border-bottom:2px solid transparent;padding:10px 6px;color:#6b9c6b;font-size:11px;cursor:pointer;font-family:Georgia,serif;white-space:nowrap">🌤️ Tiempo</button>
     <button class="ptab" onclick="pTab(this,'pestats')" style="flex:1;background:none;border:none;border-bottom:2px solid transparent;padding:10px 6px;color:#6b9c6b;font-size:11px;cursor:pointer;font-family:Georgia,serif;white-space:nowrap">📊 Stats</button>
     <button class="ptab" onclick="pTab(this,'pmapa')" style="flex:1;background:none;border:none;border-bottom:2px solid transparent;padding:10px 6px;color:#6b9c6b;font-size:11px;cursor:pointer;font-family:Georgia,serif;white-space:nowrap">🗺️ Mapa</button>
+    <button class="ptab" onclick="pTab(this,'pidentificar')" style="flex:1;background:none;border:none;border-bottom:2px solid transparent;padding:10px 6px;color:#6b9c6b;font-size:11px;cursor:pointer;font-family:Georgia,serif;white-space:nowrap">📷 Identificar</button>
   </div>
 
   <!-- Contenido de tabs -->
+  <div id="pidentificar" style="padding:16px;display:none;overflow-y:auto;flex:1">
+    <input type="file" id="identificar-input" accept="image/*" capture="environment" onchange="mostrarFotoIdentificar(this)" style="display:none">
+    <button type="button" onclick="document.getElementById('identificar-input').click()" style="width:100%;background:linear-gradient(135deg,#4ade80,#22c55e);border:none;border-radius:12px;padding:16px;color:#0f1a0f;font-size:15px;font-weight:bold;cursor:pointer;font-family:Georgia,serif;margin-bottom:16px;box-shadow:0 4px 14px rgba(74,222,128,0.25)">📷 Hacer foto o subir imagen</button>
+
+    <div id="identificar-preview" style="display:none;background:rgba(255,255,255,0.04);border:1px solid rgba(134,239,172,0.2);border-radius:16px;padding:14px;text-align:center">
+      <img id="identificar-img" src="" alt="Vista previa de la planta" style="width:100%;max-height:320px;object-fit:contain;border-radius:12px;display:block;margin:0 auto 12px">
+      <button type="button" onclick="quitarFotoIdentificar()" style="background:rgba(248,113,113,0.12);border:1px solid rgba(248,113,113,0.35);border-radius:8px;padding:8px 16px;color:#f87171;font-size:12px;cursor:pointer;font-family:Georgia,serif;margin-bottom:12px">Quitar foto</button>
+      <p style="color:#86efac;font-size:13px;line-height:1.5;margin:0;padding:10px;background:rgba(74,222,128,0.08);border:1px solid rgba(74,222,128,0.2);border-radius:10px">Próximamente: aquí verás qué planta es y cómo está.</p>
+    </div>
+  </div>
+
   <div id="pmapa" style="padding:16px;display:none;overflow-y:auto;flex:1">
     <div id="mapa-contenido"></div>
   </div>
