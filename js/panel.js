@@ -120,7 +120,7 @@ function pTab(btn, id) {
   });
   btn.style.color = "#4ade80";
   btn.style.borderBottom = "2px solid #4ade80";
-  ["pdiario", "pfavs", "pcom", "pcal", "ptiempo", "pestats", "pmapa", "pidentificar"].forEach(function (d) {
+  ["pdiario", "pfavs", "pcom", "pcal", "ptiempo", "pestats", "pmapa"].forEach(function (d) {
     var tabContent = document.getElementById(d);
     if (tabContent) tabContent.style.display = "none";
   });
@@ -750,30 +750,5 @@ function limpiarMapa() {
   mapaData = {};
   guardarMapa();
   cargarMapa();
-}
-
-// ===== IDENTIFICAR PLANTA (Vista previa en pantalla) =====
-function mostrarFotoIdentificar(input) {
-  if (!input || !input.files || !input.files[0]) return;
-  var archivo = input.files[0];
-  var reader = new FileReader();
-  reader.onload = function (e) {
-    var img = document.getElementById("identificar-img");
-    var preview = document.getElementById("identificar-preview");
-    if (img && preview) {
-      img.src = e.target.result;
-      preview.style.display = "block";
-    }
-  };
-  reader.readAsDataURL(archivo);
-}
-
-function quitarFotoIdentificar() {
-  var img = document.getElementById("identificar-img");
-  var preview = document.getElementById("identificar-preview");
-  var input = document.getElementById("identificar-input");
-  if (img) img.src = "";
-  if (preview) preview.style.display = "none";
-  if (input) input.value = "";
 }
 
